@@ -1,15 +1,15 @@
 version: 2
 mergeable:
-  - when: pull_request.*, pull_request_review.*
+  - when: pull_request.*
+    name: 'Check decoration'
     validate:
       - do: title
-        must_include:
-          regex: ^(feat|docs|chore|fix|refactor|test|style|perf)(\(\w+\))?:.+$
-          message: Semantic release conventions must be followed.
+        must_exclude:
+          regex: ^\[WIP\]
+      - do: label
+        must_exclude:
+          regex: 'wip'
       - do: description
-        must_include:
-          regex: ^.+$
-          message: Must have not empty description
-      - do: approvals
-        min:
-          count: 1
+        no_empty:
+          enabled: true
+          message: Description matter and should not be empty. Provide detail with **what** was changed, **why** it was changed, and **how** it was changed.
