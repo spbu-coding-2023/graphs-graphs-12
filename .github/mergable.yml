@@ -1,0 +1,15 @@
+version: 2
+mergeable:
+  - when: pull_request.*, pull_request_review.*
+    validate:
+      - do: title
+        must_include:
+          regex: ^(feat|docs|chore|fix|refactor|test|style|perf)(\(\w+\))?:.+$
+          message: Semantic release conventions must be followed.
+      - do: description
+        must_include:
+          regex: ^\S+$
+          message: Must have not empty description and can't start with space symbol
+      - do: approvals
+        min:
+          count: 1
