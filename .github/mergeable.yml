@@ -18,3 +18,4 @@ mergeable:
           count: 1
         required:
           assignees: true
+
