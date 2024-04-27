@@ -6,20 +6,15 @@
  * This project uses @Incubating APIs which are subject to change.
  */
 plugins {
-	kotlin("jvm") version "1.9.23"
+	kotlin("jvm") version "1.9.20"
 }
 
 repositories {
 	mavenCentral()
+	maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+	google()
 }
 
-dependencies {
-	testImplementation("org.jetbrains.kotlin:kotlin-test")
-}
-
-tasks.test {
-	useJUnitPlatform()
-}
 kotlin {
-	jvmToolchain(17)
+	jvmToolchain(21)
 }
