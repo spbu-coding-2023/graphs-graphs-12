@@ -19,3 +19,4 @@ plugins {
 
 rootProject.name = "graphs-graphs-12"
 include("application")
+include("graphs-lab")
