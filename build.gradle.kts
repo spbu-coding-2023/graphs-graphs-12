@@ -7,6 +7,7 @@
  */
 plugins {
 	kotlin("jvm") version "1.9.20"
+	id("io.gitlab.arturbosch.detekt").version("1.23.3")
 }
 
 repositories {
@@ -16,5 +17,30 @@ repositories {
 }
 
 kotlin {
-	jvmToolchain(21)
+	jvmToolchain(17)
+}
+
+val reportMerge by tasks.registering(io.gitlab.arturbosch.detekt.report.ReportMergeTask::class) {
+	output.set(rootProject.layout.buildDirectory.file("reports/detekt/merge.sarif"))
+}
+
+subprojects {
+	apply(plugin = "io.gitlab.arturbosch.detekt")
+
+	tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+		finalizedBy(reportMerge)
+	}
+
+	reportMerge {
+		input.from(tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().map { it.sarifReportFile })
+	}
+}
+
+detekt {
+	basePath = projectDir.absolutePath
+	config.setFrom("$basePath/scripts/detekt-config.yml")
+}
+
+dependencies {
+	detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.3")
 }
