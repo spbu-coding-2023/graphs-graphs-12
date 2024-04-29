@@ -24,6 +24,10 @@ val reportMerge by tasks.registering(io.gitlab.arturbosch.detekt.report.ReportMe
 	output.set(rootProject.layout.buildDirectory.file("reports/detekt/merge.sarif"))
 }
 
+tasks.check {
+	dependsOn("detekt")
+}
+
 subprojects {
 	apply(plugin = "io.gitlab.arturbosch.detekt")
 
