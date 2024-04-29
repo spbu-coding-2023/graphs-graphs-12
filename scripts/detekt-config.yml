@@ -52,7 +52,17 @@ output-reports:
 formatting:
   active: true
   android: false
-  autoCorrect: true
+  autoCorrect: false
   SpacingAroundColon:
-    active: false
+    active: true
     autoCorrect: true
+
+complexity:
+  active: true
+  TooManyFunctions:
+    active: false
+
+naming:
+  active: true
+  PackageNaming:
+    packagePattern: '[a-z]+([\_\.][a-z][A-Za-z0-9]*)*'

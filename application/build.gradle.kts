@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     implementation(compose.desktop.currentOs)
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.3")
 }
 
 compose.desktop {
@@ -22,4 +23,8 @@ compose.desktop {
 
 kotlin {
     jvmToolchain(17)
+}
+
+detekt {
+    config.setFrom("../scripts/detekt-config.yml")
 }

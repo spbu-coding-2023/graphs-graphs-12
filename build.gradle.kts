@@ -35,12 +35,3 @@ subprojects {
 		input.from(tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().map { it.sarifReportFile })
 	}
 }
-
-detekt {
-	basePath = projectDir.absolutePath
-	config.setFrom("$basePath/scripts/detekt-config.yml")
-}
-
-dependencies {
-	detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.3")
-}
