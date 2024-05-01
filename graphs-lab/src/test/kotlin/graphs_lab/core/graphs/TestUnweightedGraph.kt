@@ -39,8 +39,8 @@ class TestUnweightedGraph {
 	}
 
 	@Test
-    @DisplayName("remove edge with exists source and target")
-    fun testRemoveEdgeWithExistsSourceAndTarget() {
+	@DisplayName("remove edge with exists source and target")
+	fun testRemoveEdgeWithExistsSourceAndTarget() {
 		fillGraphVertices(graph, listOf(1, 2, 3, 5))
 		fillGraphEdges(
 			graph, listOf(

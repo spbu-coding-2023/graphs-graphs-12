@@ -71,9 +71,9 @@ abstract class Graph<I, E : Edge<I>>(
 	}
 
 	/**
-     * Аinds all edges coming from a vertex with the ID
-     *
-     * @param id the identifier of the source vertex
+	 * Аinds all edges coming from a vertex with the ID
+	 *
+	 * @param id the identifier of the source vertex
 	 * @return set if edges by type [E], if vertex is not contained in the graph return empty set
 	 */
 	fun vertexEdges(id: I): Set<E> {

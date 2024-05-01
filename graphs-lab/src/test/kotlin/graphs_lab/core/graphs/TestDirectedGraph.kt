@@ -17,7 +17,7 @@ class TestDirectedGraph {
 		graph = UnweightedGraph(
 			GRAPH_LABEL,
 			isDirected = true,
-            isAutoAddVertex = true
+			isAutoAddVertex = true
 		)
 	}
 
