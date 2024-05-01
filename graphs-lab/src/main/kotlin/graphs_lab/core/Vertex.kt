@@ -1,6 +1,12 @@
 package graphs_lab.core
 
-open class Vertex<I>(
+/**
+ * Represents a vertex in a graph.
+ *
+ * @param I the type of the vertex id
+ * @property id the identifier of the vertex
+ */
+class Vertex<I>(
 	val id: I
 ) {
 

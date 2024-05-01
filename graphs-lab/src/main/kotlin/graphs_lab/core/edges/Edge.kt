@@ -1,5 +1,12 @@
 package graphs_lab.core.edges
 
+/**
+ * Represents an edge in a graph.
+ *
+ * @param I the type of the edge identifiers
+ * @property idSource the identifier of the source vertex of the edge
+ * @property idTarget the identifier of the target vertex of the edge
+ */
 open class Edge<I>(
 	val idSource: I,
 	val idTarget: I
