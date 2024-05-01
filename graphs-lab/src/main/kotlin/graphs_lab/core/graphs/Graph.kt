@@ -12,6 +12,9 @@ import graphs_lab.core.Vertex
  * @property label the label or name of the graph
  * @property isDirected indicates whether the graph is directed or not
  * @property isAutoAddVertex specifies whether new vertices should be automatically added when adding edges
+ * @property idVertices set of all vertex's IDs  which were added at the moment, not updated
+ * 						if graph will updated after get it
+ * @property size count of vertices in the graph
  */
 abstract class Graph<I, E : Edge<I>>(
 	val label: String,
@@ -20,6 +23,10 @@ abstract class Graph<I, E : Edge<I>>(
 ) {
 	private val vertices = mutableMapOf<I, Vertex<I>>()
 	private val edges = mutableMapOf<I, MutableSet<E>>()
+	val idVertices
+		get() = vertices.keys.toSet()
+	val size: Int
+		get() = vertices.size
 
 	/**
 	 * Adds a vertex to the graph with the specified id.
@@ -59,6 +66,16 @@ abstract class Graph<I, E : Edge<I>>(
 	 */
 	fun containsVertex(id: I): Boolean {
 		return vertices[id] != null
+	}
+
+	/**
+     * Аinds all edges coming from a vertex with the ID
+     *
+     * @param id the identifier of the source vertex
+	 * @return set if edges by type [E], if vertex is not contained in the graph return empty set
+	 */
+	fun vertexEdges(id: I): Set<E> {
+		return edges.getOrDefault(id, mutableSetOf())
 	}
 
 	override fun toString(): String {
