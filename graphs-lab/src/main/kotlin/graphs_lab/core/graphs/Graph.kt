@@ -43,6 +43,7 @@ abstract class Graph<I, E : Edge<I>>(
 	 * @param id the identifier of the vertex to remove
 	 */
 	fun removeVertex(id: I) {
+		if (id !in idVertices) return
 		vertices.remove(id)
 		clearEdgesVertex(id)
 	}
@@ -54,6 +55,7 @@ abstract class Graph<I, E : Edge<I>>(
 	 * @param idTarget the identifier of the target vertex
 	 */
 	fun removeEdge(idSource: I, idTarget: I) {
+		if (idSource !in idVertices || idTarget !in idVertices) return
 		removeDirectedEdge(idSource, idTarget)
 		if (!isDirected) removeDirectedEdge(idTarget, idSource)
 	}
