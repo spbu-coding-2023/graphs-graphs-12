@@ -12,11 +12,11 @@ import graphs_lab.core.edges.WeightedEdge
  * @property isDirected indicates whether the graph is directed or not
  * @property isAutoAddVertex specifies whether new vertices should be automatically added when adding edges
  */
-class WeightedGraph<I, W : Number>(
+class WeightedGraph<I>(
 	id: String,
 	isDirected: Boolean = false,
 	isAutoAddVertex: Boolean = false
-) : Graph<I, WeightedEdge<I, W>>(id, isDirected, isAutoAddVertex) {
+) : Graph<I, WeightedEdge<I>>(id, isDirected, isAutoAddVertex) {
 
 	/**
 	 * Adds a weighted edge between the vertices with the specified ids and the specified weight to the graph.
@@ -25,15 +25,15 @@ class WeightedGraph<I, W : Number>(
 	 * @param idTarget the identifier of the target vertex
 	 * @param weight the weight of the edge
 	 */
-	fun addEdge(idSource: I, idTarget: I, weight: W) = addEdge(
+	fun addEdge(idSource: I, idTarget: I, weight: Double) = addEdge(
 		WeightedEdge(idSource, idTarget, weight)
 	)
 
-	protected override fun edgeToString(edge: WeightedEdge<I, W>): String {
+	protected override fun edgeToString(edge: WeightedEdge<I>): String {
 		return "{${edge.idSource}, ${edge.idTarget}, ${edge.weight}}"
 	}
 
-	protected override fun reverseEdge(edge: WeightedEdge<I, W>): WeightedEdge<I, W> {
+	protected override fun reverseEdge(edge: WeightedEdge<I>): WeightedEdge<I> {
 		return WeightedEdge(edge.idTarget, edge.idSource, edge.weight)
 	}
 

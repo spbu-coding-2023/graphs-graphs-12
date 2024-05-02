@@ -35,7 +35,7 @@ fun <I> fillGraphEdges(graph: UnweightedGraph<I>, edges: Iterable<Pair<I, I>>) {
  * @param graph The weighted graph to be filled with edges.
  * @param edges An iterable of links to be added as edges to the graph.
  */
-fun <I, W : Number> fillGraphEdges(graph: WeightedGraph<I, W>, edges: Iterable<Triple<I, I, W>>) {
+fun <I> fillGraphEdges(graph: WeightedGraph<I>, edges: Iterable<Triple<I, I, Double>>) {
 	for (edge in edges) {
 		graph.addEdge(edge.first, edge.second, edge.third)
 	}

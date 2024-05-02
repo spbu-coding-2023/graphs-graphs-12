@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 
 class TestWeightedGraph {
 	private val GRAPH_LABEL = "weighted-graph"
-	private lateinit var graph: WeightedGraph<Int, Int>
+	private lateinit var graph: WeightedGraph<Int>
 
 	@BeforeEach
 	fun setUp() {
@@ -21,11 +21,11 @@ class TestWeightedGraph {
 	fun testAddInvalidEdgeGraph() {
 		Assertions.assertThrows(
 			AssertionError::class.java
-		) { fillGraphEdges(graph, listOf(Triple(1, 2, 1))) }
+		) { fillGraphEdges(graph, listOf(Triple(1, 2, 1.0))) }
 		graph.addVertex(1)
 		Assertions.assertThrows(
 			AssertionError::class.java
-		) { fillGraphEdges(graph, listOf(Triple(1, 2, -1))) }
+		) { fillGraphEdges(graph, listOf(Triple(1, 2, -1.0))) }
 	}
 
 	@Test
@@ -44,11 +44,11 @@ class TestWeightedGraph {
 		fillGraphEdges(
 			graph,
 			listOf(
-				Triple(1, 1, -1),
-				Triple(2, 3, 5),
+				Triple(1, 1, -1.0),
+				Triple(2, 3, 5.0),
 			)
 		)
-		val edgesView = "[{1, 1, -1}, {2, 3, 5}, {3, 2, 5}]"
+		val edgesView = "[{1, 1, -1.0}, {2, 3, 5.0}, {3, 2, 5.0}]"
 		Assertions.assertEquals(
 			"${graph.javaClass.name}(label = $GRAPH_LABEL, vertices = [1, 2, 3, 4, 5], edges = $edgesView)",
 			graph.toString()
