@@ -8,7 +8,7 @@ package graphs_lab.algs.utils
  * @property priority The priority of the pair.
  * @property value The value associated with the priority.
  */
-data class PriorityPair<P: Comparable<P>,I>(val priority: P, val value: I) : Comparable<PriorityPair<P, I>> {
+data class PriorityPair<P : Comparable<P>, I>(val priority: P, val value: I) : Comparable<PriorityPair<P, I>> {
 
 	override fun compareTo(other: PriorityPair<P, I>): Int {
 		return priority.compareTo(other.priority)
@@ -31,7 +31,8 @@ data class PriorityPair<P: Comparable<P>,I>(val priority: P, val value: I) : Com
 	}
 
 	override fun hashCode(): Int {
-		var result = priority.hashCode()
+		var result = javaClass.name.hashCode()
+		result = 31 * result + priority.hashCode()
 		result = 31 * result + (value?.hashCode() ?: 0)
 		return result
 	}

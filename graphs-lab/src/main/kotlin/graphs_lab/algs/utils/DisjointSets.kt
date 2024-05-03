@@ -6,13 +6,16 @@ package graphs_lab.algs.utils
  * @param T The type of elements in the Disjoint Sets.
  * @property size counts of disjoint sets at objects
  */
-class DisjointSets<T>(elements: Set<T>) {
+class DisjointSets<T>(elements: Collection<T>) {
 	private val parents: MutableMap<T, T> = mutableMapOf()
 	private val rangs: MutableMap<T, Int> = mutableMapOf()
-	var size = elements.size
+	var size = elements.toSet().size
 		private set
 
 	init {
+		if (elements.isEmpty()) throw IllegalArgumentException(
+			"Empty elements collection, can't init disjoint sets"
+		)
 		elements.forEach() { element ->
 			parents.putIfAbsent(element, element)
 			rangs.putIfAbsent(element, 0)
@@ -133,7 +136,7 @@ class DisjointSets<T>(elements: Set<T>) {
 	}
 
 	override fun toString(): String {
-		return "DisjointSet(${getDisjointSets()})"
+		return "DisjointSets${getDisjointSets()}"
 	}
 
 }
