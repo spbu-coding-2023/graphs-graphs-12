@@ -1,5 +1,11 @@
 package graphs_lab.algs.utils
 
+/**
+ * Represents a Disjoint Sets data structure.
+ *
+ * @param T The type of elements in the Disjoint Sets.
+ * @property size counts of disjoint sets at objects
+ */
 class DisjointSets<T>(elements: Set<T>) {
 	private val parents: MutableMap<T, T> = mutableMapOf()
 	private val rangs: MutableMap<T, Int> = mutableMapOf()
@@ -13,6 +19,13 @@ class DisjointSets<T>(elements: Set<T>) {
 		}
 	}
 
+	/**
+	 * Finds the root of the set that the element belongs to.
+	 *
+	 * @param element The element to find the root for.
+	 * @return The root of the set that the element belongs to.
+	 * @throws IllegalArgumentException if the element is not found in the Disjoint Sets.
+	 */
 	fun findRoot(element: T): T {
 		if (element !in parents.keys) throw IllegalArgumentException(
 			"DisjointSet structure is not contains element $element"
@@ -23,6 +36,13 @@ class DisjointSets<T>(elements: Set<T>) {
 		return root
 	}
 
+	/**
+	 * Checks if two elements are connected in the Disjoint Sets.
+	 *
+	 * @param firstElement The first element to check.
+	 * @param secondElement The second element to check.
+	 * @return True if the elements are connected (belong to the same set), false otherwise.
+	 */
 	fun isConnected(firstElement: T, secondElement: T): Boolean {
 		val firstRoot = findRoot(firstElement)
 		val secondRoot = findRoot(secondElement)
@@ -30,6 +50,12 @@ class DisjointSets<T>(elements: Set<T>) {
 		return firstRoot == secondRoot
 	}
 
+	/**
+	 * Unites the sets that contain the given two elements.
+	 *
+	 * @param firstElement The first element to unite.
+	 * @param secondElement The second element to unite.
+	 */
 	fun unionSets(firstElement: T, secondElement: T) {
 		val firstRoot = findRoot(firstElement)
 		val secondRoot = findRoot(secondElement)
@@ -47,6 +73,11 @@ class DisjointSets<T>(elements: Set<T>) {
 		size--
 	}
 
+	/**
+	 * Returns the sets of disjoint sets in the structure.
+	 *
+	 * @return A set of sets representing the disjoint sets in the structure.
+	 */
 	fun getDisjointSets(): Set<Set<T>> {
 		val mappedSets = mutableMapOf<T, MutableSet<T>>()
 		for (element in parents.keys) {
@@ -59,10 +90,22 @@ class DisjointSets<T>(elements: Set<T>) {
 		return mappedSets.values.toSet()
 	}
 
+	/**
+	 * Returns the rang of set which contains [element].
+	 *
+	 * @param element the element of disjoint sets
+	 * @return rang of set which contains [element] or 0 by default value
+	 */
 	private fun getSetRang(element: T): Int {
 		return rangs.getOrDefault(element, 0)
 	}
 
+	/**
+	 * Updates the root of the set that the element belongs to.
+	 *
+	 * @param element The element to update the root for.
+	 * @param root The new root of the set that the element belongs to.
+	 */
 	private fun updateRoot(element: T, root: T) {
 		var current: T = element
 		while (true) {
@@ -73,6 +116,12 @@ class DisjointSets<T>(elements: Set<T>) {
 		}
 	}
 
+	/**
+	 * Returns the parent of the given element in the Disjoint Sets.
+	 *
+	 * @param element The element to find the parent for.
+	 * @return The parent of the given element in the Disjoint Sets.
+	 */
 	private fun getParent(element: T): T {
 		var current: T = element
 		while (true) {
