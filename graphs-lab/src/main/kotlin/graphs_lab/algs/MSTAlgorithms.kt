@@ -32,19 +32,14 @@ class MSTAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	 */
 	fun kruskalAlgorithm(): Set<E> {
 		val mst = mutableSetOf<E>()
-		val unvisitedVertices: MutableSet<I> = graph.idVertices.toMutableSet()
 		val (priorityQueue, verticesComponents) = initKruskal()
 		while (priorityQueue.isNotEmpty()) {
 			val priorityPair: PriorityPair<Double, E> = priorityQueue.poll()
 			val edge: E = priorityPair.value
-			unvisitedVertices.remove(edge.idSource)
-			unvisitedVertices.remove(edge.idTarget)
 
 			if (verticesComponents.isConnected(edge.idSource, edge.idTarget)) continue
 			verticesComponents.unionSets(edge.idSource, edge.idTarget)
 			mst.add(edge)
-
-			if (unvisitedVertices.isEmpty()) break
 		}
 		return mst
 	}
@@ -71,8 +66,7 @@ class MSTAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 
 			if (edge.idTarget in unvisitedVertices) primAddVertex(edge.idTarget, priorityQueue)
 			if (unvisitedVertices.isEmpty()) break
-			if (priorityQueue.isEmpty()) primAddVertex(unvisitedVertices.first(), priorityQueue)
-
+			if (priorityQueue.isEmpty()) expandQueue(priorityQueue, unvisitedVertices)
 		}
 		return mst.toSet()
 	}
@@ -108,7 +102,7 @@ class MSTAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	 */
 	private fun initPrim(): Pair<PriorityQueue<PriorityPair<Double, E>>, DisjointSets<I>> {
 		val priorityQueue = PriorityQueue<PriorityPair<Double, E>>()
-		primAddVertex(graph.idVertices.first(), priorityQueue)
+		expandQueue(priorityQueue, graph.idVertices)
 		return Pair(priorityQueue, DisjointSets(graph.idVertices))
 	}
 
@@ -123,6 +117,15 @@ class MSTAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 					edge
 				)
 			)
+		}
+	}
+
+	private fun expandQueue(priorityQueue: PriorityQueue<PriorityPair<Double, E>>, vertices: Set<I>) {
+		if (priorityQueue.isNotEmpty()) return
+
+		for (vertex in vertices) {
+			primAddVertex(vertex, priorityQueue)
+			if (priorityQueue.isNotEmpty()) break
 		}
 	}
 
