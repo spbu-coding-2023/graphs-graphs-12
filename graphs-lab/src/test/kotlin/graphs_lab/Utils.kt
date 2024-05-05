@@ -66,6 +66,7 @@ fun <I, E : Edge<I>> assertEdgesCollection(
 			val firstDirection = edge.idSource == edgeView.first && edge.idTarget == edgeView.second
 			val secondDirection = edge.idSource == edgeView.second && edge.idTarget == edgeView.first
 			if (firstDirection || (!isDirected && secondDirection)) {
+				// Comparing double or float numbers by epsilon method
 				if (abs(getEdgeWeight(edge) - edgeView.third) >= 1e-9) continue
 				isFind = true
 				break
