@@ -1,9 +1,12 @@
 package graphs_lab
 
+import graphs_lab.algs.utils.getEdgeWeight
 import graphs_lab.core.edges.Edge
 import graphs_lab.core.graphs.Graph
 import graphs_lab.core.graphs.UnweightedGraph
 import graphs_lab.core.graphs.WeightedGraph
+import org.junit.jupiter.api.Assertions
+import kotlin.math.abs
 
 /**
  * Fills the graph with vertices from the provided iterable of elements.
@@ -39,4 +42,42 @@ fun <I> fillGraphEdges(graph: WeightedGraph<I>, edges: Iterable<Triple<I, I, Dou
 	for (edge in edges) {
 		graph.addEdge(edge.first, edge.second, edge.third)
 	}
+}
+
+fun <I, E : Edge<I>> assertEdgesCollection(
+	expected: Collection<Triple<I, I, Double>>,
+	edges: Collection<E>,
+	isDirected: Boolean
+) {
+	Assertions.assertEquals(expected.size, edges.size) {
+		"Invalid count of edges:\nexpected: $expected\nfind: $edges"
+	}
+	expected.forEach() { edgeView: Triple<I, I, Double> ->
+		var isFind = false
+		for (edge in edges) {
+			val firstDirection = edge.idSource == edgeView.first && edge.idTarget == edgeView.second
+			val secondDirection = edge.idSource == edgeView.second && edge.idTarget == edgeView.first
+			if (firstDirection || (!isDirected && secondDirection)) {
+				if (abs(getEdgeWeight(edge) - edgeView.third) >= 1e-9) continue
+				isFind = true
+				break
+			}
+		}
+		Assertions.assertTrue(isFind) {
+			"Can't find {${edgeView.first}, ${edgeView.second}, ${edgeView.third}}.\nFound edges: $edges."
+		}
+	}
+}
+
+fun <I, E : Edge<I>> isValidEdgeCollection(
+	expected: Collection<Triple<I, I, Double>>,
+	edges: Collection<E>,
+	isDirected: Boolean
+): Pair<Boolean, AssertionError?> {
+	try {
+		assertEdgesCollection(expected, edges, isDirected)
+	} catch (ex: AssertionError) {
+		return Pair(false, ex)
+	}
+	return Pair(true, null)
 }
