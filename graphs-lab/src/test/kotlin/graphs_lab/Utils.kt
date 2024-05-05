@@ -11,8 +11,8 @@ import kotlin.math.abs
 /**
  * Fills the graph with vertices from the provided iterable of elements.
  *
- * @param graph The graph to be filled with vertices.
- * @param elements An iterable of elements to be added as vertices to the graph.
+ * @param graph The graph to be filled with vertices
+ * @param elements An iterable of elements to be added as vertices to the graph
  */
 fun <I, E : Edge<I>> fillGraphVertices(graph: Graph<I, E>, elements: Iterable<I>) {
 	for (element in elements) {
@@ -23,8 +23,8 @@ fun <I, E : Edge<I>> fillGraphVertices(graph: Graph<I, E>, elements: Iterable<I>
 /**
  * Fills the unweighted graph with edges from the provided iterable of links.
  *
- * @param graph The unweighted graph to be filled with edges.
- * @param edges An iterable of links to be added as edges to the graph.
+ * @param graph The unweighted graph to be filled with edges
+ * @param edges An iterable of links to be added as edges to the graph
  */
 fun <I> fillGraphEdges(graph: UnweightedGraph<I>, edges: Iterable<Pair<I, I>>) {
 	for (edge in edges) {
@@ -35,8 +35,8 @@ fun <I> fillGraphEdges(graph: UnweightedGraph<I>, edges: Iterable<Pair<I, I>>) {
 /**
  * Fills the weighted graph with edges from the provided iterable of links.
  *
- * @param graph The weighted graph to be filled with edges.
- * @param edges An iterable of links to be added as edges to the graph.
+ * @param graph The weighted graph to be filled with edges
+ * @param edges An iterable of links to be added as edges to the graph
  */
 fun <I> fillGraphEdges(graph: WeightedGraph<I>, edges: Iterable<Triple<I, I, Double>>) {
 	for (edge in edges) {
@@ -47,9 +47,9 @@ fun <I> fillGraphEdges(graph: WeightedGraph<I>, edges: Iterable<Triple<I, I, Dou
 /**
  * A function to assert the correctness of a collection of edges against the expected edges.
  *
- * @param expected the expected collection of edge triples consisting of source vertex, target vertex, and weight.
- * @param edges the actual collection of edges to be validated.
- * @param isDirected a flag indicating whether the graph is directed or not.
+ * @param expected the expected collection of edge triples consisting of source vertex, target vertex, and weight
+ * @param edges the actual collection of edges to be validated
+ * @param isDirected a flag indicating whether the graph is directed or not
  * @throws AssertionError if can't find expected edge in [edges] or if size of [expected] equals size of [edges]
  */
 fun <I, E : Edge<I>> assertEdgesCollection(
@@ -80,11 +80,11 @@ fun <I, E : Edge<I>> assertEdgesCollection(
 /**
  * A function to validate whether a collection of edges matches the expected edge collection.
  *
- * @param expected the expected collection of edge triples consisting of source vertex, target vertex, and weight.
- * @param edges the actual collection of edges to be validated.
- * @param isDirected a flag indicating whether the graph is directed or not.
+ * @param expected the expected collection of edge triples consisting of source vertex, target vertex, and weight
+ * @param edges the actual collection of edges to be validated
+ * @param isDirected a flag indicating whether the graph is directed or not
  * @return a pair consisting of a boolean representing the validation result
- * 		   (true if valid, false otherwise) and an optional AssertionError if validation fails.
+ * 			(true if valid, false otherwise) and an optional AssertionError if validation fails
  */
 fun <I, E : Edge<I>> isValidEdgeCollection(
 	expected: Collection<Triple<I, I, Double>>,

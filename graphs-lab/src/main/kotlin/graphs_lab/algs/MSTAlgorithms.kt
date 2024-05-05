@@ -76,7 +76,7 @@ class MSTAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	 * Priority queue contains edges, which sorted by weight.
 	 * Disjoint sets contains [graph]'s vertices splitting.
 	 *
-	 * @return Pair containing priority queue of edge weights and disjoint sets.
+	 * @return Pair containing priority queue of edge weights and disjoint sets
 	 */
 	private fun initKruskal(): Pair<PriorityQueue<PriorityPair<Double, E>>, DisjointSets<I>> {
 		val priorityQueue = PriorityQueue<PriorityPair<Double, E>>()
@@ -98,7 +98,7 @@ class MSTAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	 * Priority queue contains edges, which sorted by weight from one of [graph]'s vertex.
 	 * Disjoint sets contains [graph]'s vertices splitting.
 	 *
-	 * @return Pair containing priority queue of edge weights and disjoint sets.
+	 * @return Pair containing priority queue of edge weights and disjoint sets
 	 */
 	private fun initPrim(): Pair<PriorityQueue<PriorityPair<Double, E>>, DisjointSets<I>> {
 		val priorityQueue = PriorityQueue<PriorityPair<Double, E>>()
@@ -125,8 +125,8 @@ class MSTAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	 * by iteratively adding vertices to it until the queue is no longer empty.
 	 * It calls the [primAddVertex] function to add vertices based on the provided set of vertices.
 	 *
-	 * @param priorityQueue the priority queue containing the edge weights.
-	 * @param vertices the set of vertices to be considered for adding to the priority queue.
+	 * @param priorityQueue the priority queue containing the edge weights
+	 * @param vertices the set of vertices to be considered for adding to the priority queue
 	 */
 	private fun expandQueue(priorityQueue: PriorityQueue<PriorityPair<Double, E>>, vertices: Set<I>) {
 		if (priorityQueue.isNotEmpty()) return

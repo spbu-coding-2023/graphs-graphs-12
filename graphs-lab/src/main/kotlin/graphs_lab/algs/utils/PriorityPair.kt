@@ -3,10 +3,10 @@ package graphs_lab.algs.utils
 /**
  * Represents a pair of priority and value.
  *
- * @param P The type of priority, which must be Comparable.
- * @param I The type of value.
- * @property priority The priority of the pair.
- * @property value The value associated with the priority.
+ * @param P The type of priority, which must be Comparable
+ * @param I The type of value
+ * @property priority The priority of the pair
+ * @property value The value associated with the priority
  */
 data class PriorityPair<P : Comparable<P>, I>(val priority: P, val value: I) : Comparable<PriorityPair<P, I>> {
 

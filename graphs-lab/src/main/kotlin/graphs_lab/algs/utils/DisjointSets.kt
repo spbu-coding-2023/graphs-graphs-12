@@ -3,7 +3,7 @@ package graphs_lab.algs.utils
 /**
  * Represents a Disjoint Sets data structure.
  *
- * @param T The type of elements in the Disjoint Sets.
+ * @param T the type of elements in the disjoint sets
  * @property size counts of disjoint sets at objects
  */
 class DisjointSets<T>(elements: Collection<T>) {
@@ -25,9 +25,9 @@ class DisjointSets<T>(elements: Collection<T>) {
 	/**
 	 * Finds the root of the set that the element belongs to.
 	 *
-	 * @param element The element to find the root for.
-	 * @return The root of the set that the element belongs to.
-	 * @throws IllegalArgumentException if the element is not found in the Disjoint Sets.
+	 * @param element The element to find the root for
+	 * @return The root of the set that the element belongs to
+	 * @throws IllegalArgumentException if the element is not found in the disjoint sets
 	 */
 	fun findRoot(element: T): T {
 		if (element !in parents.keys) throw IllegalArgumentException(
@@ -40,11 +40,11 @@ class DisjointSets<T>(elements: Collection<T>) {
 	}
 
 	/**
-	 * Checks if two elements are connected in the Disjoint Sets.
+	 * Checks if two elements are connected in the disjoint sets.
 	 *
-	 * @param firstElement The first element to check.
-	 * @param secondElement The second element to check.
-	 * @return True if the elements are connected (belong to the same set), false otherwise.
+	 * @param firstElement The first element to check
+	 * @param secondElement The second element to check
+	 * @return True if the elements are connected (belong to the same set), false otherwise
 	 */
 	fun isConnected(firstElement: T, secondElement: T): Boolean {
 		val firstRoot = findRoot(firstElement)
@@ -56,8 +56,8 @@ class DisjointSets<T>(elements: Collection<T>) {
 	/**
 	 * Unites the sets that contain the given two elements.
 	 *
-	 * @param firstElement The first element to unite.
-	 * @param secondElement The second element to unite.
+	 * @param firstElement The first element to unite
+	 * @param secondElement The second element to unite
 	 */
 	fun unionSets(firstElement: T, secondElement: T) {
 		val firstRoot = findRoot(firstElement)
@@ -79,7 +79,7 @@ class DisjointSets<T>(elements: Collection<T>) {
 	/**
 	 * Returns the sets of disjoint sets in the structure.
 	 *
-	 * @return A set of sets representing the disjoint sets in the structure.
+	 * @return A set of sets representing the disjoint sets in the structure
 	 */
 	fun getDisjointSets(): Set<Set<T>> {
 		val mappedSets = mutableMapOf<T, MutableSet<T>>()
@@ -106,8 +106,8 @@ class DisjointSets<T>(elements: Collection<T>) {
 	/**
 	 * Updates the root of the set that the element belongs to.
 	 *
-	 * @param element The element to update the root for.
-	 * @param root The new root of the set that the element belongs to.
+	 * @param element The element to update the root for
+	 * @param root The new root of the set that the element belongs to
 	 */
 	private fun updateRoot(element: T, root: T) {
 		var current: T = element
@@ -122,8 +122,8 @@ class DisjointSets<T>(elements: Collection<T>) {
 	/**
 	 * Returns the parent of the given element in the Disjoint Sets.
 	 *
-	 * @param element The element to find the parent for.
-	 * @return The parent of the given element in the Disjoint Sets.
+	 * @param element The element to find the parent for
+	 * @return The parent of the given element in the disjoint sets
 	 */
 	private fun getParent(element: T): T {
 		var current: T = element
