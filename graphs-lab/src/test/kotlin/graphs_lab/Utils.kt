@@ -44,6 +44,14 @@ fun <I> fillGraphEdges(graph: WeightedGraph<I>, edges: Iterable<Triple<I, I, Dou
 	}
 }
 
+/**
+ * A function to assert the correctness of a collection of edges against the expected edges.
+ *
+ * @param expected the expected collection of edge triples consisting of source vertex, target vertex, and weight.
+ * @param edges the actual collection of edges to be validated.
+ * @param isDirected a flag indicating whether the graph is directed or not.
+ * @throws AssertionError if can't find expected edge in [edges] or if size of [expected] equals size of [edges]
+ */
 fun <I, E : Edge<I>> assertEdgesCollection(
 	expected: Collection<Triple<I, I, Double>>,
 	edges: Collection<E>,
@@ -69,6 +77,15 @@ fun <I, E : Edge<I>> assertEdgesCollection(
 	}
 }
 
+/**
+ * A function to validate whether a collection of edges matches the expected edge collection.
+ *
+ * @param expected the expected collection of edge triples consisting of source vertex, target vertex, and weight.
+ * @param edges the actual collection of edges to be validated.
+ * @param isDirected a flag indicating whether the graph is directed or not.
+ * @return a pair consisting of a boolean representing the validation result
+ * 		   (true if valid, false otherwise) and an optional AssertionError if validation fails.
+ */
 fun <I, E : Edge<I>> isValidEdgeCollection(
 	expected: Collection<Triple<I, I, Double>>,
 	edges: Collection<E>,

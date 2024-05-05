@@ -120,6 +120,14 @@ class MSTAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 		}
 	}
 
+	/**
+	 * This function expands the priority queue
+	 * by iteratively adding vertices to it until the queue is no longer empty.
+	 * It calls the [primAddVertex] function to add vertices based on the provided set of vertices.
+	 *
+	 * @param priorityQueue the priority queue containing the edge weights.
+	 * @param vertices the set of vertices to be considered for adding to the priority queue.
+	 */
 	private fun expandQueue(priorityQueue: PriorityQueue<PriorityPair<Double, E>>, vertices: Set<I>) {
 		if (priorityQueue.isNotEmpty()) return
 
