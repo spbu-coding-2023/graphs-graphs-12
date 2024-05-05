@@ -7,6 +7,15 @@ import graphs_lab.core.edges.Edge
 import graphs_lab.core.graphs.Graph
 import java.util.PriorityQueue
 
+/**
+ * Provides algorithms for finding the Minimum Spanning Tree (MST) of an undirected graph.
+ *
+ * @param I the type of the vertex identifiers in the graph
+ * @param E the type of the edges in the graph, which must implement the [Edge] interface
+ * @property graph the input graph for which the MST will be computed
+ *
+ * @throws IllegalArgumentException if the input graph is directed, as MST algorithms only work for undirected graphs
+ */
 class MSTAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 
 	init {
@@ -15,6 +24,12 @@ class MSTAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 		)
 	}
 
+	/**
+	 * Computes the Minimum Spanning Tree (MST) of the input graph using Kruskal's algorithm.
+	 * More information: [Wiki](https://en.wikipedia.org/wiki/Kruskal%27s_algorithm).
+	 *
+	 * @return a set of edges that form the MST
+	 */
 	fun kruskalAlgorithm(): Set<E> {
 		val mst = mutableSetOf<E>()
 		val unvisitedVertices: MutableSet<I> = graph.idVertices.toMutableSet()
@@ -34,6 +49,12 @@ class MSTAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 		return mst
 	}
 
+	/**
+	 * Computes the Minimum Spanning Tree (MST) of the input graph using Prim's algorithm.
+	 * More information: [Wiki](https://en.wikipedia.org/wiki/Prim%27s_algorithm).
+	 *
+	 * @return a set of edges that form the MST
+	 */
 	fun primAlgorithm(): Set<E> {
 		val mst = mutableSetOf<E>()
 		val unvisitedVertices: MutableSet<I> = graph.idVertices.toMutableSet()
@@ -56,6 +77,13 @@ class MSTAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 		return mst.toSet()
 	}
 
+	/**
+	 * Initializes the Kruskal algorithm by setting up the priority queue and disjoint sets.
+	 * Priority queue contains edges, which sorted by weight.
+	 * Disjoint sets contains [graph]'s vertices splitting.
+	 *
+	 * @return Pair containing priority queue of edge weights and disjoint sets.
+	 */
 	private fun initKruskal(): Pair<PriorityQueue<PriorityPair<Double, E>>, DisjointSets<I>> {
 		val priorityQueue = PriorityQueue<PriorityPair<Double, E>>()
 		for (idVertex in graph.idVertices) {
@@ -71,12 +99,22 @@ class MSTAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 		return Pair(priorityQueue, DisjointSets(graph.idVertices))
 	}
 
+	/**
+	 * Initializes the Prim algorithm by setting up the priority queue and disjoint sets.
+	 * Priority queue contains edges, which sorted by weight from one of [graph]'s vertex.
+	 * Disjoint sets contains [graph]'s vertices splitting.
+	 *
+	 * @return Pair containing priority queue of edge weights and disjoint sets.
+	 */
 	private fun initPrim(): Pair<PriorityQueue<PriorityPair<Double, E>>, DisjointSets<I>> {
 		val priorityQueue = PriorityQueue<PriorityPair<Double, E>>()
 		primAddVertex(graph.idVertices.first(), priorityQueue)
 		return Pair(priorityQueue, DisjointSets(graph.idVertices))
 	}
 
+	/**
+	 * Adds vertices to the prim priority queue based on the edges connected to the vertex.
+	 */
 	private fun primAddVertex(idVertex: I, priorityQueue: PriorityQueue<PriorityPair<Double, E>>) {
 		for (edge in graph.vertexEdges(idVertex)) {
 			priorityQueue.add(
