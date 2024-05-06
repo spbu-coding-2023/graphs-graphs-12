@@ -2,12 +2,35 @@ package graphs_lab.algs
 
 import graphs_lab.core.graphs.WeightedGraph
 
+/**
+ * The Bellman-Ford algorithm.
+ *
+ * Computes shortest paths from source vertex to target vertex in a weighted graph.
+ * The Bellman-Ford algorithm supports negative edge weights, but it does not support negative weight cycles.
+ * If a negative weight cycle is detected, the algorithm will report it. This implies that negative edge weights
+ * are not allowed in undirected graphs. In such cases the code will throw an exception.
+ * Note that the algorithm will not report or find negative weight cycles which are not reachable from
+ * the source vertex.
+ *
+ * <p>
+ * @references https://ru.wikipedia.org/wiki/Алгоритм_Беллмана_—_Форда
+ *
+ * @param I the type of the vertex identifiers
+ * @property graph the input graph
+ */
 class BellmanFordShortestPath<I : Any>(val graph: WeightedGraph<I>) {
     private var weightOfShortestPath: Double = Double.POSITIVE_INFINITY
     private var countOfVertices: Int = 0
     private var matrix: Array<DoubleArray> = Array(countOfVertices) { DoubleArray(countOfVertices + 2) }
     private var pathMatrix: Array<IntArray> = Array(countOfVertices) { IntArray(countOfVertices + 2) }
 
+    /**
+     * Get the weight of the shortest path from the source vertex to the target vertex.
+     *
+     * @param idSource the identifier of the source vertex
+     * @param idTarget the identifier of the target vertex
+     * @return shortest path weight
+     */
     fun getPathWeight(idSource: I, idTarget: I): Double {
         if (!graph.containsVertex(idSource) || !graph.containsVertex(idTarget)) {
             throw NoSuchElementException("The id of a vertex that does not exist in the graph is passed.")
@@ -17,6 +40,13 @@ class BellmanFordShortestPath<I : Any>(val graph: WeightedGraph<I>) {
         return weightOfShortestPath
     }
 
+    /**
+     * Get the shortest path from a source vertex to a target vertex.
+     *
+     * @param idSource the identifier of the source vertex
+     * @param idTarget the identifier of the target vertex
+     * @return map, in which key - order of the vertex in the path, value - id of the vertex
+     */
     fun getPath(idSource: I, idTarget: I): MutableMap<Int, I> {
         if (!graph.containsVertex(idSource) || !graph.containsVertex(idTarget)) {
             throw Exception("The id of a vertex that does not exist in the graph is passed.")
@@ -70,7 +100,13 @@ class BellmanFordShortestPath<I : Any>(val graph: WeightedGraph<I>) {
         }
         return (resultInId)
     }
-    
+
+    /**
+     * Compute all shortest paths starting from a single source vertex.
+     *
+     * @param idSource the identifier of the source vertex
+     * @param indexedVertices map in which each vertex ID is associated with an index
+     */
     private fun getPaths(idSource: I, indexedVertices: MutableMap<I, Int>) {
 
         // Construction of a matrix in which A_ij is the length of the shortest path from source to i,
@@ -106,6 +142,5 @@ class BellmanFordShortestPath<I : Any>(val graph: WeightedGraph<I>) {
                 throw Exception("Graph contains negative weight cycle.")
             }
         }
-
     }
 }
