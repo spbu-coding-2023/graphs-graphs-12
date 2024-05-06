@@ -35,6 +35,7 @@ class TarjanStrongConnectivityInspector<I : Any, E : Edge<I>>(val graph: Graph<I
     private val stackMember = mutableMapOf<I, Boolean>()
     private val stack = Stack<I>()
     private val result = mutableMapOf<Int, MutableSet<I>>()
+    private var indexOfScc = 0
 
     init {
         if (!graph.isDirected) {
@@ -96,14 +97,14 @@ class TarjanStrongConnectivityInspector<I : Any, E : Edge<I>>(val graph: Graph<I
         // in the corresponding strongly connected component.
         var vertex: I? = null
         if (lowLink[currentVertex]!! == discoveryTime[currentVertex]) {
-            val index = result.count()
             while (vertex != currentVertex) {
                 vertex = stack.pop()
-                val setVertex = result.getOrDefault(index, mutableSetOf())
+                val setVertex = result.getOrDefault(indexOfScc, mutableSetOf())
                 setVertex.add(vertex)
-                result[index] = setVertex
+                result[indexOfScc] = setVertex
                 stackMember[vertex] = false
             }
+            indexOfScc++
         }
     }
 }
