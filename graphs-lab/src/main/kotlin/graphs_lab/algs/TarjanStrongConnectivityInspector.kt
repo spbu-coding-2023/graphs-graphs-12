@@ -6,6 +6,28 @@ import java.lang.IllegalArgumentException
 import java.util.Stack
 import kotlin.math.min
 
+/**
+ * Tarjan's strongly connected components algorithm
+ *
+ * Tarjan's strongly connected components algorithm is an algorithm in graph theory
+ * for finding the strongly connected components (SCCs) of a directed graph.
+ *
+ * <p>
+ * discoveryTime[] --> Stores discovery times of visited vertices
+ * lowLink[] --> earliest visited vertex (the vertex with minimum discovery time) that can be reached
+ *               from subtree rooted with current vertex
+ * stack --> To store all the connected ancestors (could be part of SCC)
+ * stackMember[] --> boolean array for faster check whether a node is in stack
+ *
+ * <p>
+ * @references https://www.geeksforgeeks.org/tarjan-algorithm-find-strongly-connected-components/
+ *
+ * @param I the type of the vertex identifiers in the graph
+ * @param E the type of the edges in the graph
+ * @property graph the input graph for which the SCC will be found
+ *
+ * @throws IllegalArgumentException if the input graph is undirected, as SCC algorithm only work for directed graphs
+ */
 class TarjanStrongConnectivityInspector<I : Any, E : Edge<I>>(val graph: Graph<I, E>) {
     private var time = 0
     private val discoveryTime = mutableMapOf<I, Int>()
@@ -22,6 +44,12 @@ class TarjanStrongConnectivityInspector<I : Any, E : Edge<I>>(val graph: Graph<I
         }
     }
 
+    /**
+     * Finds strongly connected components in a directed graph using Tarjan's algorithm.
+     *
+     * @return a map where keys - the index of each strongly connected component,
+     * and values - sets of vertices belonging to each component
+     */
     fun stronglyConnectedComponents(): MutableMap<Int, MutableSet<I>> {
         // Mark all the vertices as not visited
         graph.idVertices.forEach { discoveryTime[it] = -1 }
@@ -35,6 +63,11 @@ class TarjanStrongConnectivityInspector<I : Any, E : Edge<I>>(val graph: Graph<I
         return result
     }
 
+    /**
+     * A recursive function that finds strongly connected components using DFS traversal.
+     *
+     * @param currentVertex the current vertex being visited
+     */
     private fun sccUtil(
         currentVertex: I
     ) {
