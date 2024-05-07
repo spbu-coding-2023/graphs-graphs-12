@@ -19,9 +19,7 @@ import java.util.PriorityQueue
 class MSTAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 
 	init {
-		if (graph.isDirected) throw IllegalArgumentException(
-			"Can't find MST of directed graph '${graph.label}'"
-		)
+		require(!graph.isDirected) { "Can't find MST of directed graph '${graph.label}'" }
 	}
 
 	/**
@@ -136,5 +134,4 @@ class MSTAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 			if (priorityQueue.isNotEmpty()) break
 		}
 	}
-
 }
