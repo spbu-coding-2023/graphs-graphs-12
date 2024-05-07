@@ -9,13 +9,13 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 class TestDirectedGraph {
-	private val GRAPH_LABEL = "directed-graph"
+	private val graphLabel = "directed-graph"
 	private lateinit var graph: UnweightedGraph<Int>
 
 	@BeforeEach
 	fun setUp() {
 		graph = UnweightedGraph(
-			GRAPH_LABEL,
+			graphLabel,
 			isDirected = true,
 			isAutoAddVertex = true
 		)
@@ -24,8 +24,8 @@ class TestDirectedGraph {
 	@Test
 	@DisplayName("default initializing graph")
 	fun testInitGraph() {
-		graph = UnweightedGraph(GRAPH_LABEL)
-		Assertions.assertEquals(GRAPH_LABEL, graph.label)
+		graph = UnweightedGraph(graphLabel)
+		Assertions.assertEquals(graphLabel, graph.label)
 		Assertions.assertFalse(graph.isAutoAddVertex)
 		Assertions.assertFalse(graph.isDirected)
 		Assertions.assertEquals(0, graph.idVertices.size)
@@ -35,8 +35,8 @@ class TestDirectedGraph {
 	@Test
 	@DisplayName("simple initializing directed graph")
 	fun testInitDirectedGraph() {
-		graph = UnweightedGraph(GRAPH_LABEL, isDirected = true, isAutoAddVertex = false)
-		Assertions.assertEquals(GRAPH_LABEL, graph.label)
+		graph = UnweightedGraph(graphLabel, isDirected = true, isAutoAddVertex = false)
+		Assertions.assertEquals(graphLabel, graph.label)
 		Assertions.assertFalse(graph.isAutoAddVertex)
 		Assertions.assertTrue(graph.isDirected)
 		Assertions.assertEquals(0, graph.idVertices.size)
@@ -46,14 +46,13 @@ class TestDirectedGraph {
 	@Test
 	@DisplayName("simple initializing directed graph and with auto add vertex mode")
 	fun testInitDirectedGraphWithAutoAddVertexMode() {
-		graph = UnweightedGraph(GRAPH_LABEL, isDirected = true, isAutoAddVertex = true)
-		Assertions.assertEquals(GRAPH_LABEL, graph.label)
+		graph = UnweightedGraph(graphLabel, isDirected = true, isAutoAddVertex = true)
+		Assertions.assertEquals(graphLabel, graph.label)
 		Assertions.assertTrue(graph.isAutoAddVertex)
 		Assertions.assertTrue(graph.isDirected)
 		Assertions.assertEquals(0, graph.idVertices.size)
 		Assertions.assertEquals(0, graph.size)
 	}
-
 
 	@Test
 	@DisplayName("add vertices to graph")
@@ -127,7 +126,8 @@ class TestDirectedGraph {
 	@DisplayName("remove exists vertex from graph")
 	fun testRemoveExistsVertex() {
 		fillGraphEdges(
-			graph, listOf(
+			graph,
+			listOf(
 				Pair(1, 2),
 				Pair(3, 2),
 				Pair(5, 1),
@@ -146,7 +146,8 @@ class TestDirectedGraph {
 	@DisplayName("remove not exists vertex from graph")
 	fun testRemoveNotExistsVertex() {
 		fillGraphEdges(
-			graph, listOf(
+			graph,
+			listOf(
 				Pair(1, 2),
 				Pair(3, 2),
 				Pair(5, 1),
@@ -161,7 +162,8 @@ class TestDirectedGraph {
 	@DisplayName("remove edge with exists source and target")
 	fun testRemoveEdgeWithExistsSourceAndTarget() {
 		fillGraphEdges(
-			graph, listOf(
+			graph,
+			listOf(
 				Pair(1, 2),
 				Pair(3, 2),
 				Pair(5, 1),
@@ -180,7 +182,8 @@ class TestDirectedGraph {
 	@DisplayName("remove edge with not exists source or targe")
 	fun testRemoveEdgeWithNotExistsSourceOrTarget() {
 		fillGraphEdges(
-			graph, listOf(
+			graph,
+			listOf(
 				Pair(1, 2),
 				Pair(3, 2),
 				Pair(5, 1),
@@ -210,5 +213,4 @@ class TestDirectedGraph {
 		Assertions.assertEquals(vertices.toSet(), graph.idVertices)
 		Assertions.assertEquals(vertices.toSet().size, graph.size)
 	}
-
 }

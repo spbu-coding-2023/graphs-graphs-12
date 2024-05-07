@@ -32,5 +32,4 @@ open class Edge<I>(
 		result = 31 * result + idTarget.hashCode()
 		return result
 	}
-
 }

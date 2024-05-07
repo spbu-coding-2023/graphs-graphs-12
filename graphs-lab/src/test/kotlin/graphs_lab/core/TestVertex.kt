@@ -53,12 +53,14 @@ class TestVertex {
 		// vertex == other
 		var other = Vertex(id)
 		Assertions.assertEquals(
-			vertex.equals(other), other.equals(vertex)
+			vertex.equals(other),
+			other.equals(vertex)
 		)
 		// vertex != other
 		other = Vertex(-id)
 		Assertions.assertEquals(
-			vertex.equals(other), other.equals(vertex)
+			vertex.equals(other),
+			other.equals(vertex)
 		)
 	}
 
@@ -79,7 +81,6 @@ class TestVertex {
 			vertex.equals(other1) && other1.equals(other2),
 			vertex.equals(other2)
 		)
-
 	}
 
 	@Test
@@ -90,5 +91,4 @@ class TestVertex {
 			vertex.hashCode()
 		)
 	}
-
 }

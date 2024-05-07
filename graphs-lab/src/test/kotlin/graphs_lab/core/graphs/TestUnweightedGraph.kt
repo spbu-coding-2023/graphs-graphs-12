@@ -9,19 +9,19 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 class TestUnweightedGraph {
-	private val GRAPH_LABEL = "unweighted-graph"
+	private val graphLabel = "unweighted-graph"
 	private lateinit var graph: UnweightedGraph<Int>
 
 	@BeforeEach
 	fun setUp() {
-		graph = UnweightedGraph(GRAPH_LABEL)
+		graph = UnweightedGraph(graphLabel)
 	}
 
 	@Test
 	@DisplayName("empty graph to string method")
 	fun testEmptyGraphToString() {
 		Assertions.assertEquals(
-			"${graph.javaClass.name}(label = $GRAPH_LABEL, vertices = [], edges = [])",
+			"${graph.javaClass.name}(label = $graphLabel, vertices = [], edges = [])",
 			graph.toString()
 		)
 	}
@@ -43,7 +43,8 @@ class TestUnweightedGraph {
 	fun testRemoveEdgeWithExistsSourceAndTarget() {
 		fillGraphVertices(graph, listOf(1, 2, 3, 5))
 		fillGraphEdges(
-			graph, listOf(
+			graph,
+			listOf(
 				Pair(1, 2),
 				Pair(3, 2),
 				Pair(5, 1),
@@ -71,9 +72,8 @@ class TestUnweightedGraph {
 		)
 		val edgesView = "[{1, 1}, {2, 3}, {3, 2}]"
 		Assertions.assertEquals(
-			"${graph.javaClass.name}(label = $GRAPH_LABEL, vertices = [1, 2, 3, 4, 5], edges = $edgesView)",
+			"${graph.javaClass.name}(label = $graphLabel, vertices = [1, 2, 3, 4, 5], edges = $edgesView)",
 			graph.toString()
 		)
 	}
-
 }

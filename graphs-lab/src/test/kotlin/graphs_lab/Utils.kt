@@ -60,7 +60,7 @@ fun <I, E : Edge<I>> assertEdgesCollection(
 	Assertions.assertEquals(expected.size, edges.size) {
 		"Invalid count of edges:\nexpected: $expected\nfind: $edges"
 	}
-	expected.forEach() { edgeView: Triple<I, I, Double> ->
+	expected.forEach { edgeView: Triple<I, I, Double> ->
 		var isFind = false
 		for (edge in edges) {
 			val firstDirection = edge.idSource == edgeView.first && edge.idTarget == edgeView.second
