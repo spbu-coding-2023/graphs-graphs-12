@@ -16,5 +16,4 @@ open class WeightedEdge<I>(
 	override fun toString(): String {
 		return "${javaClass.simpleName}(source = $idSource, target = $idTarget, weight = $weight)"
 	}
-
 }

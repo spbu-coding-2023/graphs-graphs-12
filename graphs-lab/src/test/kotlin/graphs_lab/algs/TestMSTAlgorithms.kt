@@ -17,7 +17,7 @@ class TestMSTAlgorithms {
 	@BeforeEach
 	fun setup() {
 		graph = WeightedGraph("mst-test-graph", isAutoAddVertex = true)
-		vertices.forEach() { vertex ->
+		vertices.forEach { vertex ->
 			graph.addVertex(vertex)
 		}
 	}
@@ -25,7 +25,7 @@ class TestMSTAlgorithms {
 	@Test
 	@DisplayName("initialize by undirected graph")
 	fun testInitByUndirectedGraph() {
-		Assertions.assertDoesNotThrow() {
+		Assertions.assertDoesNotThrow {
 			MSTAlgorithms(graph)
 		}
 		Assertions.assertEquals(graph, MSTAlgorithms(graph).graph)
@@ -236,5 +236,4 @@ class TestMSTAlgorithms {
 			isDirected = false
 		)
 	}
-
 }

@@ -39,5 +39,4 @@ class TestUtils {
 		val weight = getEdgeWeight(edge, 1.5)
 		Assertions.assertEquals(1.25, weight)
 	}
-
 }
