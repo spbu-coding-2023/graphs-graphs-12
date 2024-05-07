@@ -20,7 +20,6 @@ class TestPriorityPair {
 		Assertions.assertEquals("one", priorityPair.value)
 	}
 
-
 	@Test
 	@DisplayName("compare priority pair with itself")
 	fun testComparePriorityPairWithItself() {
@@ -148,5 +147,4 @@ class TestPriorityPair {
 			priorityPair.hashCode()
 		)
 	}
-
 }

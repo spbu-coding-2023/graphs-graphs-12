@@ -36,5 +36,4 @@ data class PriorityPair<P : Comparable<P>, I>(val priority: P, val value: I) : C
 		result = 31 * result + (value?.hashCode() ?: 0)
 		return result
 	}
-
 }
