@@ -29,82 +29,80 @@ import kotlin.math.min
  * @throws IllegalArgumentException if the input graph is undirected, as SCC algorithm only work for directed graphs
  */
 class TarjanStrongConnectivityInspector<I : Any, E : Edge<I>>(val graph: Graph<I, E>) {
-    private var time = 0
-    private val discoveryTime = mutableMapOf<I, Int>()
-    private val lowLink = mutableMapOf<I, Int>()
-    private val stackMember = mutableMapOf<I, Boolean>()
-    private val stack = Stack<I>()
-    private val result = mutableMapOf<Int, MutableSet<I>>()
-    private var indexOfScc = 0
+	private var time = 0
+	private val discoveryTime = mutableMapOf<I, Int>()
+	private val lowLink = mutableMapOf<I, Int>()
+	private val stackMember = mutableMapOf<I, Boolean>()
+	private val stack = Stack<I>()
+	private val result = mutableMapOf<Int, MutableSet<I>>()
+	private var indexOfScc = 0
 
-    init {
-        if (!graph.isDirected) {
-            throw IllegalArgumentException(
-                "Strongly connected components cannot be found in an undirected graph '${graph.label}'."
-            )
-        }
-    }
+	init {
+		require(graph.isDirected) {
+			"Strongly connected components cannot be found in an undirected graph '${graph.label}'."
+		}
+	}
 
-    /**
-     * Finds strongly connected components in a directed graph using Tarjan's algorithm.
-     *
-     * @return a map where keys - the index of each strongly connected component,
-     * and values - sets of vertices belonging to each component
-     */
-    fun stronglyConnectedComponents(): MutableMap<Int, MutableSet<I>> {
-        // Mark all the vertices as not visited
-        graph.idVertices.forEach { discoveryTime[it] = -1 }
-        graph.idVertices.forEach { lowLink[it] = -1 }
+	/**
+	 * Finds strongly connected components in a directed graph using Tarjan's algorithm.
+	 *
+	 * @return a map where keys - the index of each strongly connected component,
+	 * and values - sets of vertices belonging to each component
+	 */
+	fun stronglyConnectedComponents(): MutableMap<Int, MutableSet<I>> {
+		// Mark all the vertices as not visited
+		graph.idVertices.forEach { discoveryTime[it] = -1 }
+		graph.idVertices.forEach { lowLink[it] = -1 }
 
-        graph.idVertices.forEach {
-            if (discoveryTime[it] == -1) {
-                sccUtil(it)
-            }
-        }
-        return result
-    }
+		graph.idVertices.forEach {
+			if (discoveryTime[it] == -1) {
+				sccUtil(it)
+			}
+		}
+		return result
+	}
 
-    /**
-     * A recursive function that finds strongly connected components using DFS traversal.
-     *
-     * @param currentVertex the current vertex being visited
-     */
-    private fun sccUtil(
-        currentVertex: I
-    ) {
-        discoveryTime[currentVertex] = time
-        lowLink[currentVertex] = time
-        time++
-        stackMember[currentVertex] = true
-        stack.push(currentVertex)
+	/**
+	 * A recursive function that finds strongly connected components using DFS traversal.
+	 *
+	 * @param currentVertex the current vertex being visited
+	 */
+	private fun sccUtil(
+		currentVertex: I
+	) {
+		discoveryTime[currentVertex] = time
+		lowLink[currentVertex] = time
+		time++
+		stackMember[currentVertex] = true
+		stack.push(currentVertex)
 
-        var targetVertex: I
-        // Go through all vertices adjacent to this
-        graph.vertexEdges(currentVertex).forEach { edge ->
-            targetVertex = edge.idTarget
-            if (discoveryTime[targetVertex] == -1) {
-                sccUtil(targetVertex)
+		var targetVertex: I
+		// Go through all vertices adjacent to this
+		graph.vertexEdges(currentVertex).forEach { edge ->
+			targetVertex = edge.idTarget
+			if (discoveryTime[targetVertex] == -1) {
+				sccUtil(targetVertex)
 
-                // Check if the subtree rooted targetVertex has a connection to
-                // one of the ancestors of currentVertex
-                lowLink[currentVertex] = min(lowLink[currentVertex]!!, lowLink[targetVertex]!!)
-            } else if (stackMember[targetVertex] == true) {
-                lowLink[currentVertex] = min(lowLink[currentVertex]!!, discoveryTime[targetVertex]!!)
-            }
-        }
+				// Check if the subtree rooted targetVertex has a connection to
+				// one of the ancestors of currentVertex
+				lowLink[currentVertex] = min(lowLink[currentVertex]!!, lowLink[targetVertex]!!)
+			} else if (stackMember[targetVertex] == true) {
+				lowLink[currentVertex] = min(lowLink[currentVertex]!!, discoveryTime[targetVertex]!!)
+			}
+		}
 
-        // The head node is found, pop the stack and place the vertices
-        // in the corresponding strongly connected component.
-        var vertex: I? = null
-        if (lowLink[currentVertex]!! == discoveryTime[currentVertex]) {
-            while (vertex != currentVertex) {
-                vertex = stack.pop()
-                val setVertex = result.getOrDefault(indexOfScc, mutableSetOf())
-                setVertex.add(vertex)
-                result[indexOfScc] = setVertex
-                stackMember[vertex] = false
-            }
-            indexOfScc++
-        }
-    }
+		// The head node is found, pop the stack and place the vertices
+		// in the corresponding strongly connected component.
+		var vertex: I? = null
+		if (lowLink[currentVertex]!! == discoveryTime[currentVertex]) {
+			while (vertex != currentVertex) {
+				vertex = stack.pop()
+				val setVertex = result.getOrDefault(indexOfScc, mutableSetOf())
+				setVertex.add(vertex)
+				result[indexOfScc] = setVertex
+				stackMember[vertex] = false
+			}
+			indexOfScc++
+		}
+	}
 }
