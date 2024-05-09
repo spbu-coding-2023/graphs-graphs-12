@@ -55,6 +55,11 @@ class CyclesSearchAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 		path.removeLast()
 	}
 
+	/**
+	 * Defines smallest cycle length at graph.
+	 *
+	 * @return if graph is directed then 2 else 3
+	 */
 	private fun smallestCycleLength(): Int {
 		return 2 + if (!graph.isDirected) 0 else 1
 	}
