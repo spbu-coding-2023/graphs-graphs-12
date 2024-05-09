@@ -38,7 +38,7 @@ class CyclesSearchAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	 * @param path The current path through the graph
 	 */
 	private fun findCycles(startVertex: I, currentVertex: I, path: MutableList<I>) {
-		if (path.size > 2 && currentVertex == startVertex) cyclesPaths.add(path.toList())
+		if (path.size >= smallestCycleLength() && currentVertex == startVertex) cyclesPaths.add(path.toList())
 		if (currentVertex in visitedVertices) return
 
 		path.add(currentVertex)
@@ -53,5 +53,9 @@ class CyclesSearchAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 
 		visitedVertices.remove(currentVertex)
 		path.removeLast()
+	}
+
+	private fun smallestCycleLength(): Int {
+		return 2 + if (!graph.isDirected) 0 else 1
 	}
 }
