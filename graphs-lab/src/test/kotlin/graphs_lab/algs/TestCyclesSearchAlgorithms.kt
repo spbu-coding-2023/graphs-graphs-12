@@ -76,7 +76,59 @@ class TestCyclesSearchAlgorithms {
 		fun directedVertexCycles(): Iterable<Arguments> {
 			val argumentsList = mutableListOf<Arguments>()
 			addDirectedVertexCyclesCase1(argumentsList)
+			addDirectedVertexCyclesCase2(argumentsList)
+			addDirectedVertexCyclesCase3(argumentsList)
 			return argumentsList
+		}
+
+		private fun addDirectedVertexCyclesCase3(argumentsList: MutableList<Arguments>) {
+			argumentsList.add(
+				Arguments.of(
+					Named.of("smallest cycle case", directedSmallestCycle()),
+					mapOf(
+						Pair(
+							1,
+							setOf(
+								listOf(1, 2),
+							)
+						),
+						Pair(
+							2,
+							setOf(
+								listOf(2, 1)
+							)
+						),
+					)
+				)
+			)
+		}
+
+		private fun addDirectedVertexCyclesCase2(argumentsList: MutableList<Arguments>) {
+			argumentsList.add(
+				Arguments.of(
+					Named.of("cycle with loops case", cycleWithLoops()),
+					mapOf(
+						Pair(
+							1,
+							setOf(
+								listOf(1, 2, 3),
+							)
+						),
+						Pair(
+							2,
+							setOf(
+								listOf(2, 3, 1)
+							)
+						),
+						Pair(
+							3,
+							setOf(
+								listOf(3, 1, 2),
+							)
+						)
+					)
+				)
+			)
 		}
 
 		private fun addDirectedVertexCyclesCase1(argumentsList: MutableList<Arguments>) {
@@ -246,9 +298,9 @@ class TestCyclesSearchAlgorithms {
 			return listOf(
 				Edge(1, 1),
 				Edge(1, 2),
-				Edge(1, 3),
 				Edge(2, 2),
 				Edge(2, 3),
+				Edge(3, 1),
 				Edge(3, 3),
 			)
 		}
@@ -269,6 +321,13 @@ class TestCyclesSearchAlgorithms {
 			return listOf(
 				Edge(1, 2),
 				Edge(2, 3)
+			)
+		}
+
+		private fun directedSmallestCycle(): Iterable<Edge<Int>> {
+			return listOf(
+				Edge(1, 2),
+				Edge(2, 1)
 			)
 		}
 	}
