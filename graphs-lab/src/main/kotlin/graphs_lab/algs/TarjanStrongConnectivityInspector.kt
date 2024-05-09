@@ -13,13 +13,6 @@ import kotlin.math.min
  * for finding the strongly connected components (SCCs) of a directed graph.
  *
  * <p>
- * discoveryTime[] --> Stores discovery times of visited vertices
- * lowLink[] --> earliest visited vertex (the vertex with minimum discovery time) that can be reached
- *               from subtree rooted with current vertex
- * stack --> To store all the connected ancestors (could be part of SCC)
- * stackMember[] --> boolean array for faster check whether a node is in stack
- *
- * <p>
  * @references https://www.geeksforgeeks.org/tarjan-algorithm-find-strongly-connected-components/
  *
  * @param I the type of the vertex identifiers in the graph
@@ -28,12 +21,13 @@ import kotlin.math.min
  *
  * @throws IllegalArgumentException if the input graph is undirected, as SCC algorithm only work for directed graphs
  */
-class TarjanStrongConnectivityInspector<I : Any, E : Edge<I>>(val graph: Graph<I, E>) {
+class TarjanStrongConnectivityInspector<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	private var time = 0
-	private val discoveryTime = mutableMapOf<I, Int>()
-	private val lowLink = mutableMapOf<I, Int>()
-	private val stackMember = mutableMapOf<I, Boolean>()
-	private val stack = Stack<I>()
+	private val discoveryTime = mutableMapOf<I, Int>() // stores discovery times of visited vertices
+	private val lowLink = mutableMapOf<I, Int>() // contains the earliest visited vertex (the vertex with minimum discovery
+												// time) that can be reached from subtree rooted with current vertex
+	private val stack = Stack<I>() // needed to store all the connected ancestors (could be part of SCC)
+	private val stackMember = mutableMapOf<I, Boolean>() // map for faster check whether a node is in stack
 	private val result = mutableMapOf<Int, MutableSet<I>>()
 	private var indexOfScc = 0
 
@@ -67,9 +61,7 @@ class TarjanStrongConnectivityInspector<I : Any, E : Edge<I>>(val graph: Graph<I
 	 *
 	 * @param currentVertex the current vertex being visited
 	 */
-	private fun sccUtil(
-		currentVertex: I
-	) {
+	private fun sccUtil(currentVertex: I) {
 		discoveryTime[currentVertex] = time
 		lowLink[currentVertex] = time
 		time++
