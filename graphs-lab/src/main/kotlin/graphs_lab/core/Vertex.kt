@@ -25,5 +25,4 @@ class Vertex<I>(
 	override fun hashCode(): Int {
 		return 31 * javaClass.name.hashCode() + id.hashCode()
 	}
-
 }

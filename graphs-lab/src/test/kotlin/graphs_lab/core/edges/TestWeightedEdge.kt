@@ -43,5 +43,4 @@ class TestWeightedEdge {
 	fun testEdgeEqualsMethodCase1() {
 		Assertions.assertTrue(edge.equals(WeightedEdge(idSource, idTarget, -weight)))
 	}
-
 }

@@ -6,20 +6,20 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 class TestDisjointSets {
-	private val ELEMENTS = listOf<Int>(1, 2, 4, 8, -1, -2, 4, 8)
-	private val START_SETS_COUNT: Int = ELEMENTS.toSet().size
+	private val elements = listOf<Int>(1, 2, 4, 8, -1, -2, 4, 8)
+	private val startSetsCount: Int = elements.toSet().size
 	private lateinit var disjointSets: DisjointSets<Int>
 
 	@BeforeEach
 	fun setUp() {
-		disjointSets = DisjointSets(ELEMENTS)
+		disjointSets = DisjointSets(elements)
 	}
 
 	@Test
 	@DisplayName("initialize disjoint sets by not empty collection")
 	fun testInitDisjointSetsByNotEmptyCollection() {
-		val elements = ELEMENTS.toSet()
-		Assertions.assertEquals(START_SETS_COUNT, disjointSets.size)
+		val elements = elements.toSet()
+		Assertions.assertEquals(startSetsCount, disjointSets.size)
 		for (element in elements) {
 			Assertions.assertEquals(element, disjointSets.findRoot(element))
 		}
@@ -53,7 +53,7 @@ class TestDisjointSets {
 		disjointSets.unionSets(1, 2) // parent of union sets is first argument parent(1)
 		Assertions.assertEquals(1, disjointSets.findRoot(1))
 		Assertions.assertEquals(1, disjointSets.findRoot(2))
-		Assertions.assertEquals(START_SETS_COUNT - 1, disjointSets.size)
+		Assertions.assertEquals(startSetsCount - 1, disjointSets.size)
 	}
 
 	@Test
@@ -80,7 +80,7 @@ class TestDisjointSets {
 	fun testUnionElementWithItself() {
 		disjointSets.unionSets(1, 1) // parent of union sets is first argument parent(1)
 		Assertions.assertEquals(1, disjointSets.findRoot(1))
-		Assertions.assertEquals(START_SETS_COUNT, disjointSets.size)
+		Assertions.assertEquals(startSetsCount, disjointSets.size)
 	}
 
 	@Test

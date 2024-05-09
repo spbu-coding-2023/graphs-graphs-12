@@ -8,12 +8,12 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 class TestWeightedGraph {
-	private val GRAPH_LABEL = "weighted-graph"
+	private val graphLabel = "weighted-graph"
 	private lateinit var graph: WeightedGraph<Int>
 
 	@BeforeEach
 	fun setUp() {
-		graph = WeightedGraph(GRAPH_LABEL)
+		graph = WeightedGraph(graphLabel)
 	}
 
 	@Test
@@ -32,7 +32,7 @@ class TestWeightedGraph {
 	@DisplayName("empty graph to string method")
 	fun testEmptyGraphToString() {
 		Assertions.assertEquals(
-			"${graph.javaClass.name}(label = $GRAPH_LABEL, vertices = [], edges = [])",
+			"${graph.javaClass.name}(label = $graphLabel, vertices = [], edges = [])",
 			graph.toString()
 		)
 	}
@@ -50,9 +50,8 @@ class TestWeightedGraph {
 		)
 		val edgesView = "[{1, 1, -1.0}, {2, 3, 5.0}, {3, 2, 5.0}]"
 		Assertions.assertEquals(
-			"${graph.javaClass.name}(label = $GRAPH_LABEL, vertices = [1, 2, 3, 4, 5], edges = $edgesView)",
+			"${graph.javaClass.name}(label = $graphLabel, vertices = [1, 2, 3, 4, 5], edges = $edgesView)",
 			graph.toString()
 		)
 	}
-
 }

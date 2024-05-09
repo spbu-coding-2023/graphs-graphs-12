@@ -2,7 +2,6 @@ package graphs_lab.core.graphs
 
 import graphs_lab.core.edges.Edge
 
-
 /**
  * Represents an unweighted graph that extends the Graph class.
  *
@@ -34,5 +33,4 @@ class UnweightedGraph<I>(
 	protected override fun reverseEdge(edge: Edge<I>): Edge<I> {
 		return Edge(edge.idTarget, edge.idSource)
 	}
-
 }

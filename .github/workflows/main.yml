@@ -8,29 +8,35 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  build:
+  analize:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
 
       - name: Static analyze
         run: ./gradlew detekt
 
-      - name: Build source code
-        run: ./gradlew build -x test
+  run:
+    name: Build and test
+    runs-on: ubuntu-latest
 
-      - name: Run tests
-        run: ./gradlew test >./test-res-out.log 2>./test-res-err.log
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build source code
+        run: ./gradlew build -x test detekt
+
+      - name: Test source code
+        run: ./gradlew test
         continue-on-error: true
 
       - name: Display test results for library 'graphs-lab'
         run: python3 ./scripts/test-result-printer.py --dir ./graphs-lab/build/test-results/test --all-failures
 
       - name: Run jacoco coverage report
-        run: ./gradlew jacocoTestReport >./test-res-out.log 2>./test-res-err.log
+        run: ./gradlew jacocoTestReport
+        continue-on-error: true
 
       - name: Display info about coverage
         run: python3 ./scripts/csv-reports-printer.py --input ./graphs-lab/build/reports/jacoco/info.csv --lib graphs-lab
-
-      - name: Clear tmpfiles of running tests
-        run: rm ./test-res-out.log && rm ./test-res-err.log
