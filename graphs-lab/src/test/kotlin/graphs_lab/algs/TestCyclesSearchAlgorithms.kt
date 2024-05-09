@@ -20,11 +20,27 @@ class TestCyclesSearchAlgorithms {
 		Assertions.assertEquals(graph, cyclesSearchAlgorithms.graph)
 	}
 
-	@ParameterizedTest(name = "{displayName}: {0}")
+	@ParameterizedTest(name = "{displayName} [{index}] {0}")
 	@MethodSource("undirectedVertexCycles")
 	@DisplayName("search vertex cycles at undirected graph")
 	fun testUndirectedVertexCycles(edges: Iterable<Edge<Int>>, expectedCycles: Map<Int, Set<List<Int>>>) {
 		val graph = UnweightedGraph<Int>("test-cycles", isDirected = false, isAutoAddVertex = true)
+		assertGraphCycles(graph, edges, expectedCycles)
+	}
+
+	@ParameterizedTest(name = "{displayName} {0}")
+	@MethodSource("directedVertexCycles")
+	@DisplayName("search vertex cycles at directed graph")
+	fun testDirectedVertexCycles(edges: Iterable<Edge<Int>>, expectedCycles: Map<Int, Set<List<Int>>>) {
+		val graph = UnweightedGraph<Int>("test-cycles", isDirected = true, isAutoAddVertex = true)
+		assertGraphCycles(graph, edges, expectedCycles)
+	}
+
+	private fun assertGraphCycles(
+		graph: UnweightedGraph<Int>,
+		edges: Iterable<Edge<Int>>,
+		expectedCycles: Map<Int, Set<List<Int>>>
+	) {
 		val cyclesSearchAlgorithms = CyclesSearchAlgorithms(graph)
 
 		edges.forEach { edge ->
@@ -54,6 +70,27 @@ class TestCyclesSearchAlgorithms {
 			// See example view on test/resources/examples/undirectedCyclesCase4.png
 			addUndirectedVertexCyclesCase4(argumentsList)
 			return argumentsList
+		}
+
+		@JvmStatic
+		fun directedVertexCycles(): Iterable<Arguments> {
+			val argumentsList = mutableListOf<Arguments>()
+			addDirectedVertexCyclesCase1(argumentsList)
+			return argumentsList
+		}
+
+		private fun addDirectedVertexCyclesCase1(argumentsList: MutableList<Arguments>) {
+			argumentsList.add(
+				Arguments.of(
+					Named.of("one big cycle case", oneBigCycleEdges()),
+					mapOf(
+						Pair(1, setOf(listOf(1, 2, 3, 4))),
+						Pair(2, setOf(listOf(2, 3, 4, 1))),
+						Pair(3, setOf(listOf(3, 4, 1, 2))),
+						Pair(4, setOf(listOf(4, 1, 2, 3))),
+					)
+				)
+			)
 		}
 
 		private fun addUndirectedVertexCyclesCase4(argumentsList: MutableList<Arguments>) {
@@ -197,9 +234,9 @@ class TestCyclesSearchAlgorithms {
 			// See graph view on test/resources/examples/undirectedCyclesCase1.png
 			return listOf(
 				Edge(1, 2),
-				Edge(1, 4),
 				Edge(2, 3),
 				Edge(3, 4),
+				Edge(4, 1),
 			)
 		}
 
