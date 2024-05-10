@@ -6,9 +6,9 @@ import graphs_lab.core.graphs.Graph
 /**
  * Class for searching cycles in graph.
  *
- * @param I The type of the vertex ID
- * @param E The type of the edge
- * @property graph The graph to search for cycles in
+ * @param I the type of the vertex ID
+ * @param E the type of the edge
+ * @property graph the graph to search for cycles in
  */
 class CyclesSearchAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	private val cyclesPaths = mutableSetOf<List<I>>()
@@ -17,8 +17,8 @@ class CyclesSearchAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	/**
 	 * Searches for cycles containing the specified vertex in the graph.
 	 *
-	 * @param idVertex The ID of the vertex to search cycles for
-	 * @return A set of lists representing cycles containing the specified vertex
+	 * @param idVertex the ID of the vertex to search cycles for
+	 * @return set of lists representing cycles containing the specified vertex
 	 */
 	fun searchVertexCycles(idVertex: I): Set<List<I>> {
 		cyclesPaths.clear()
@@ -33,9 +33,9 @@ class CyclesSearchAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	/**
 	 * Recursively finds cycles containing the specified vertex.
 	 *
-	 * @param startVertex The starting vertex for the cycle search
-	 * @param currentVertex The current vertex during traversal
-	 * @param path The current path through the graph
+	 * @param startVertex the starting vertex for the cycle search
+	 * @param currentVertex the current vertex during traversal
+	 * @param path the current path through the graph
 	 */
 	private fun findCycles(startVertex: I, currentVertex: I, path: MutableList<I>) {
 		if (path.size >= smallestCycleLength() && currentVertex == startVertex) cyclesPaths.add(path.toList())
