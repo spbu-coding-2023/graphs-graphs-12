@@ -46,6 +46,7 @@ class TestBellmanFordShortestPath {
 	@DisplayName("negative weight cycle check")
 	fun containsNegativeWeightCycle() {
 		/**
+		 * Image of a graph.
 		 * A  →  B  →  D
 		 *       ↓     ↑  ↘
 		 *       C  →  E  ←  F
@@ -69,6 +70,7 @@ class TestBellmanFordShortestPath {
 	@DisplayName("path is not exist")
 	fun nonExistentPath() {
 		/**
+		 * Image of a graph.
 		 * A  →  B
 		 * ↓  ↗
 		 * C
@@ -88,6 +90,7 @@ class TestBellmanFordShortestPath {
 	@DisplayName("finding the shortest path")
 	fun findingTheShortestPath() {
 		/**
+		 * Image of a graph.
 		 * A  →  B
 		 * ↓  ↗
 		 * C
@@ -96,7 +99,7 @@ class TestBellmanFordShortestPath {
 		graph.addEdge('A', 'C', 2.0)
 		graph.addEdge('C', 'B', 3.0)
 		Assertions.assertEquals(
-			mapOf(0 to 'A', 1 to 'C', 2 to 'B'),
+			listOf('A', 'C', 'B'),
 			inspectorForGetPath.getPath('A', 'B')
 		)
 		Assertions.assertEquals(5.0, inspectorForGetPathWeight.getPathWeight('A', 'B'))
@@ -106,6 +109,7 @@ class TestBellmanFordShortestPath {
 	@DisplayName("recalculation of the path when the source vertex changes")
 	fun recalculationForAnotherStartingVertex() {
 		/**
+		 * Image of a graph.
 		 *       F
 		 *       ↑
 		 * A  →  B  →  C
@@ -122,7 +126,7 @@ class TestBellmanFordShortestPath {
 		graph.addEdge('G', 'A', 1.0)
 		inspectorForGetPath.getPath('G', 'F')
 		Assertions.assertEquals(
-			mapOf(0 to 'A', 1 to 'B', 2 to 'C', 3 to 'D', 4 to 'E'),
+			listOf('A', 'B', 'C', 'D', 'E'),
 			inspectorForGetPath.getPath('A', 'E')
 		)
 	}
@@ -131,6 +135,7 @@ class TestBellmanFordShortestPath {
 	@DisplayName("without recalculating the path")
 	fun withoutRecalculatingThePath() {
 		/**
+		 * Image of a graph.
 		 *       F
 		 *       ↑
 		 * A  →  B  →  C
@@ -147,7 +152,7 @@ class TestBellmanFordShortestPath {
 		graph.addEdge('G', 'A', 1.0)
 		inspectorForGetPath.getPath('G', 'F')
 		Assertions.assertEquals(
-			mapOf(0 to 'G', 1 to 'A', 2 to 'B', 3 to 'C', 4 to 'D', 5 to 'E'),
+			listOf('G', 'A', 'B', 'C', 'D', 'E'),
 			inspectorForGetPath.getPath('G', 'E')
 		)
 	}

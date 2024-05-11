@@ -3,7 +3,7 @@ package graphs_lab.algs
 import graphs_lab.core.graphs.WeightedGraph
 
 /**
- * The Bellman-Ford algorithm.
+ * The Bellman-Ford algorithm
  *
  * Computes shortest paths from source vertex to target vertex in a weighted graph.
  * The Bellman-Ford algorithm supports negative edge weights, but it does not support negative weight cycles.
@@ -12,7 +12,6 @@ import graphs_lab.core.graphs.WeightedGraph
  * Note that the algorithm will not report or find negative weight cycles which are not reachable from
  * the source vertex.
  *
- * <p>
  * @references https://ru.wikipedia.org/wiki/Алгоритм_Беллмана_—_Форда
  *
  * @param I the type of the vertex identifiers
@@ -21,6 +20,8 @@ import graphs_lab.core.graphs.WeightedGraph
 class BellmanFordShortestPath<I : Any>(val graph: WeightedGraph<I>) {
 	private var weightOfShortestPath: Double = Double.POSITIVE_INFINITY
 	private var countOfVertices: Int = 0
+	private val indexedVertices = mutableMapOf<I, Int>()
+	private val reverseIndexedVertices = mutableMapOf<Int, I>() // for quick conversion from index to id
 	private var matrix: Array<DoubleArray> = Array(countOfVertices) { DoubleArray(countOfVertices + 2) }
 	private var pathMatrix: Array<IntArray> = Array(countOfVertices) { IntArray(countOfVertices + 2) }
 
@@ -33,7 +34,7 @@ class BellmanFordShortestPath<I : Any>(val graph: WeightedGraph<I>) {
 	 */
 	fun getPathWeight(idSource: I, idTarget: I): Double {
 		if (!graph.containsVertex(idSource) || !graph.containsVertex(idTarget)) {
-			throw NoSuchElementException("The id of a vertex that does not exist in the graph is passed.")
+			throw NoSuchElementException("Graph must contain the source and the target vertices.")
 		}
 
 		getPath(idSource, idTarget)
@@ -45,28 +46,20 @@ class BellmanFordShortestPath<I : Any>(val graph: WeightedGraph<I>) {
 	 *
 	 * @param idSource the identifier of the source vertex
 	 * @param idTarget the identifier of the target vertex
-	 * @return map, in which key - order of the vertex in the path, value - id of the vertex
+	 * @return list of vertices in the shortest path order
 	 */
-	fun getPath(idSource: I, idTarget: I): MutableMap<Int, I> {
+	fun getPath(idSource: I, idTarget: I): List<I> {
 		if (!graph.containsVertex(idSource) || !graph.containsVertex(idTarget)) {
-			throw NoSuchElementException("The id of a vertex that does not exist in the graph is passed.")
-		}
-
-		// Mapping index to id.
-		var index = 0
-		val indexedVertices = mutableMapOf<I, Int>()
-		val reverseIndexedVertices = mutableMapOf<Int, I>()
-		graph.idVertices.forEach {
-			indexedVertices[it] = index
-			reverseIndexedVertices[index] = it
-			index++
+			throw NoSuchElementException("Graph must contain the source and the target vertices.")
 		}
 
 		countOfVertices = graph.size
-		// Checks whether all paths from the idSource should be built.
+		// Checks whether all paths from the idSource should be built
 		if (matrix.isEmpty()) {
+			vertexIndexing()
 			getPaths(idSource, indexedVertices)
 		} else if (matrix[indexedVertices[idSource]!!][0] == Double.POSITIVE_INFINITY) {
+			vertexIndexing()
 			getPaths(idSource, indexedVertices)
 		}
 
@@ -74,10 +67,10 @@ class BellmanFordShortestPath<I : Any>(val graph: WeightedGraph<I>) {
 		weightOfShortestPath = Double.POSITIVE_INFINITY
 		var numberOfEdgesInThePath = 0
 		var tempIdTarget = indexedVertices[idTarget]!!
-		for (q in 0 until countOfVertices) {
-			if (matrix[tempIdTarget][q].compareTo(weightOfShortestPath) < 0) {
-				weightOfShortestPath = matrix[tempIdTarget][q]
-				numberOfEdgesInThePath = q
+		for (i in 0 until countOfVertices) {
+			if (matrix[tempIdTarget][i] < weightOfShortestPath) {
+				weightOfShortestPath = matrix[tempIdTarget][i]
+				numberOfEdgesInThePath = i
 			}
 		}
 
@@ -85,7 +78,7 @@ class BellmanFordShortestPath<I : Any>(val graph: WeightedGraph<I>) {
 			"There is no path between vertex $idSource and vertex $idTarget."
 		}
 
-		// Constructing a path using given indexes
+		// Constructing a path in given indexes
 		val resultInIndexes = IntArray(numberOfEdgesInThePath) { 0 }
 		var tempNumberOfEdgesInThePath = numberOfEdgesInThePath
 		while (tempNumberOfEdgesInThePath > 0) {
@@ -94,20 +87,32 @@ class BellmanFordShortestPath<I : Any>(val graph: WeightedGraph<I>) {
 			tempNumberOfEdgesInThePath -= 1
 		}
 
-		// Constructing a path according to ID
-		val resultInId = mutableMapOf<Int, I>()
-		resultInId[0] = idSource
+		// Converting the path in the indexes to the path in the ids
+		val resultInIds = mutableListOf<I>()
+		resultInIds.add(idSource)
 		for (i in 0 until numberOfEdgesInThePath) {
-			resultInId[i + 1] = reverseIndexedVertices[resultInIndexes[i]] as I
+			resultInIds.add(reverseIndexedVertices[resultInIndexes[i]]!!)
 		}
-		return (resultInId)
+		return (resultInIds)
+	}
+
+	/**
+	 * Mapping an index to each vertex.
+	 */
+	private fun vertexIndexing() {
+		var index = 0
+		graph.idVertices.forEach { vertex ->
+			indexedVertices[vertex] = index
+			reverseIndexedVertices[index] = vertex
+			index++
+		}
 	}
 
 	/**
 	 * Compute all shortest paths starting from a single source vertex.
 	 *
 	 * @param idSource the identifier of the source vertex
-	 * @param indexedVertices map in which each vertex ID is associated with an index
+	 * @param indexedVertices map in which each vertex is associated with an index
 	 */
 	private fun getPaths(idSource: I, indexedVertices: MutableMap<I, Int>) {
 		// Construction of a matrix in which A_ij is the length of the shortest path from source to i,
@@ -134,9 +139,9 @@ class BellmanFordShortestPath<I : Any>(val graph: WeightedGraph<I>) {
 		}
 
 		// Check for negative cycles
-		for (i in 1 until countOfVertices) {
+		for (i in 0 until countOfVertices) {
 			var shortestDistance = Double.POSITIVE_INFINITY
-			for (j in 1 until countOfVertices) {
+			for (j in 1 until countOfVertices + 1) {
 				if (matrix[i][j] < shortestDistance) shortestDistance = matrix[i][j]
 			}
 			require(matrix[i][countOfVertices + 1] >= shortestDistance) {
