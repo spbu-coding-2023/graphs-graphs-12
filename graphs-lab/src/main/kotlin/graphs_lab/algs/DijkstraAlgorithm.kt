@@ -79,24 +79,22 @@ class DijkstraAlgorithm<I>(val graph: WeightedGraph<I>) {
 				edgeNext = null
 
 				statusVertices[edge.idTarget] = true
-				val weightPathIdTarget = checkAndGetSecond(table[edge.idTarget])
+				val weightPathIdCurrent = checkAndGetSecond(table[edge.idTarget])
 
 				graph.vertexEdges(edge.idTarget).forEach {
 					require(it.weight > 0) { "Negative number does not support." }
 
+					if (weightPathIdCurrent + it.weight < checkAndGetSecond(table[it.idTarget])) {
+						table[it.idTarget] = Pair(edge.idTarget, weightPathIdCurrent + it.weight)
+					}
+
 					if (statusVertices[it.idTarget] == false) {
-						if (checkAndGetSecond(table[it.idTarget]) > weightPathIdTarget + it.weight) {
-							table[it.idTarget] = Pair(edge.idTarget, weightPathIdTarget + it.weight)
-						}
+						heapEdges.add(it)
 
 						val edgeTemp = edgeNext
 						if (edgeTemp == null || it.weight < edgeTemp.weight) {
 							edgeNext = it
 						}
-
-						heapEdges.add(it)
-					} else if (weightPathIdTarget + it.weight < checkAndGetSecond(table[it.idTarget])) {
-						table[it.idTarget] = Pair(edge.idTarget, weightPathIdTarget + it.weight)
 					}
 				}
 
