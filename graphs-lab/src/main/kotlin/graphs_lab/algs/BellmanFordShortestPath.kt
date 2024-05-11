@@ -17,7 +17,7 @@ import graphs_lab.core.graphs.WeightedGraph
  * @param I the type of the vertex identifiers
  * @property graph the input graph
  */
-class BellmanFordShortestPath<I : Any>(val graph: WeightedGraph<I>) {
+class BellmanFordShortestPath<I>(val graph: WeightedGraph<I>) {
 	private var weightOfShortestPath: Double = Double.POSITIVE_INFINITY
 	private var countOfVertices: Int = 0
 	private val indexedVertices = mutableMapOf<I, Int>()
@@ -48,7 +48,7 @@ class BellmanFordShortestPath<I : Any>(val graph: WeightedGraph<I>) {
 	 * @param idTarget the identifier of the target vertex
 	 * @return list of vertices in the shortest path order
 	 */
-	fun getPath(idSource: I, idTarget: I): List<I> {
+	fun getPath(idSource: I, idTarget: I): List<I>? {
 		if (!graph.containsVertex(idSource) || !graph.containsVertex(idTarget)) {
 			throw NoSuchElementException("Graph must contain the source and the target vertices.")
 		}
@@ -74,8 +74,8 @@ class BellmanFordShortestPath<I : Any>(val graph: WeightedGraph<I>) {
 			}
 		}
 
-		require(weightOfShortestPath != Double.POSITIVE_INFINITY) {
-			"There is no path between vertex $idSource and vertex $idTarget."
+		if (weightOfShortestPath == Double.POSITIVE_INFINITY) {
+			return null
 		}
 
 		// Constructing a path in given indexes

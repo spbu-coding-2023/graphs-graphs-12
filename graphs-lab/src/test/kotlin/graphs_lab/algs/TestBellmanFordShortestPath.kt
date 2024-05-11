@@ -78,12 +78,8 @@ class TestBellmanFordShortestPath {
 		graph.addEdge('A', 'B', 10.0)
 		graph.addEdge('A', 'C', 2.0)
 		graph.addEdge('C', 'B', 3.0)
-		Assertions.assertThrows(
-			IllegalArgumentException::class.java
-		) { inspectorForGetPath.getPath('B', 'A') }
-		Assertions.assertThrows(
-			IllegalArgumentException::class.java
-		) { inspectorForGetPathWeight.getPathWeight('B', 'A') }
+		Assertions.assertEquals(null, inspectorForGetPath.getPath('B', 'A'))
+		Assertions.assertEquals(Double.POSITIVE_INFINITY, inspectorForGetPathWeight.getPathWeight('B', 'A'))
 	}
 
 	@Test
