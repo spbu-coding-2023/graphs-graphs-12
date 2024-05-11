@@ -6,7 +6,9 @@ import graphs_lab.algs.utils.removeAndReturn
 import graphs_lab.core.edges.Edge
 import graphs_lab.core.graphs.Graph
 
-class TarjanBridgeFinding<I>(val graph: Graph<I, Edge<I>>) {
+class TarjanBridgeFinding<I, E : Edge<I>>(
+	val graph: Graph<I, E>
+) {
 	private val table = mutableSetOf<Edge<I>>()
 	private val tableHeights = mutableMapOf<I, Pair<Int?, Int?>>()
 	private val listUnvisited = mutableListOf<I>()
