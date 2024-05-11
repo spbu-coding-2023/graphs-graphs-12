@@ -1,5 +1,7 @@
 package graphs_lab.algs
 
+import graphs_lab.algs.utils.checkAndGetFirst
+import graphs_lab.algs.utils.checkAndGetSecond
 import graphs_lab.algs.utils.removeAndReturn
 import graphs_lab.core.edges.Edge
 import graphs_lab.core.graphs.Graph
@@ -7,19 +9,21 @@ import graphs_lab.core.graphs.Graph
 class TarjanBridgeFinding<I>(val graph: Graph<I, Edge<I>>) {
 	private val table = mutableSetOf<Edge<I>>()
 	private val tableHeights = mutableMapOf<I, Pair<Int?, Int?>>()
-	private val heapUnvisited = mutableListOf<I>()
+	private val listUnvisited = mutableListOf<I>()
 
 	init {
 		require(!graph.isDirected) { "Do not support directed graph." }
 	}
 
-	fun getBridges(): MutableSet<Edge<I>> {
+	fun getBridges(): Set<Edge<I>> {
 		if (graph.idVertices.isEmpty()) return table
 
-		graph.idVertices.forEach { heapUnvisited.add(it) }
+		graph.idVertices.forEach {
+			listUnvisited.add(it)
+		}
 
-		while (heapUnvisited.isNotEmpty()) {
-			dfs(graph.vertexEdges(heapUnvisited.removeFirst()), 1)
+		while (listUnvisited.isNotEmpty()) {
+			dfs(graph.vertexEdges(listUnvisited.removeFirst()), 1)
 		}
 
 		return table
@@ -34,7 +38,7 @@ class TarjanBridgeFinding<I>(val graph: Graph<I, Edge<I>>) {
 			var temp: Int
 
 			if (tableHeights[it.idTarget] == null) {
-				dfs(graph.vertexEdges(heapUnvisited.removeAndReturn(it.idTarget)), height + 1)
+				dfs(graph.vertexEdges(listUnvisited.removeAndReturn(it.idTarget)), height + 1)
 				temp = checkAndGetFirst(tableHeights[it.idTarget])
 			} else {
 				temp = checkAndGetSecond(tableHeights[it.idTarget])
@@ -49,13 +53,5 @@ class TarjanBridgeFinding<I>(val graph: Graph<I, Edge<I>>) {
 				table.add(it)
 			}
 		}
-	}
-
-	private fun checkAndGetFirst(pair: Pair<Int?, Int?>?): Int {
-		return pair?.first ?: throw ExceptionInInitializerError("Undefined behaviour: unfounded vertex.")
-	}
-
-	private fun checkAndGetSecond(pair: Pair<Int?, Int?>?): Int {
-		return pair?.second ?: throw ExceptionInInitializerError("Undefined behaviour: unfounded vertex.")
 	}
 }
