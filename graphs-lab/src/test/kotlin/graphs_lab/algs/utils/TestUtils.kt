@@ -39,4 +39,27 @@ class TestUtils {
 		val weight = getEdgeWeight(edge, 1.5)
 		Assertions.assertEquals(1.25, weight)
 	}
+
+	@Test
+	@DisplayName("check and get the first element of the pair")
+	fun testCheckAndGetFirst() {
+		var pair: Pair<Char?, Int>? = null
+		Assertions.assertThrows(ExceptionInInitializerError::class.java) { checkAndGetFirst(pair) }
+
+		pair = Pair(null, 1)
+		Assertions.assertThrows(ExceptionInInitializerError::class.java) { checkAndGetFirst(pair) }
+
+		pair = Pair('A', 1)
+		Assertions.assertEquals(checkAndGetFirst(pair), 'A')
+	}
+
+	@Test
+	@DisplayName("check and get the second element of the pair")
+	fun testCheckAndGetSecond() {
+		var pair: Pair<Char?, Int>? = null
+		Assertions.assertThrows(ExceptionInInitializerError::class.java) { checkAndGetSecond(pair) }
+
+		pair = Pair('A', 1)
+		Assertions.assertEquals(checkAndGetSecond(pair), 1)
+	}
 }

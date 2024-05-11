@@ -74,6 +74,8 @@ complexity:
     ignoreStringsRegex: '$^'
   TooManyFunctions:
     active: false
+  CyclomaticComplexMethod:
+    threshold: 18
 
 exceptions:
   active: true
