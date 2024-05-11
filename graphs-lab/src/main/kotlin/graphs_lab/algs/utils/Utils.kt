@@ -17,3 +17,11 @@ fun <I, E : Edge<I>> getEdgeWeight(edge: E, defaultWeight: Double = 1.0): Double
 	}
 	return defaultWeight
 }
+
+fun <I, T> checkAndGetFirst(pair: Pair<I?, T>?): I {
+	return pair?.first ?: throw ExceptionInInitializerError("Undefined behaviour: an unfounded vertex.")
+}
+
+fun <I, T> checkAndGetSecond(pair: Pair<I?, T>?): T {
+	return pair?.second ?: throw ExceptionInInitializerError("Undefined behaviour: an unfounded vertex.")
+}

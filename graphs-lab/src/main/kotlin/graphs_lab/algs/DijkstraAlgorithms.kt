@@ -1,21 +1,27 @@
 package graphs_lab.algs
 
+import graphs_lab.algs.utils.checkAndGetFirst
+import graphs_lab.algs.utils.checkAndGetSecond
 import graphs_lab.core.edges.WeightedEdge
 import graphs_lab.core.graphs.WeightedGraph
 
 class DijkstraAlgorithm<I>(val graph: WeightedGraph<I>) {
 	private val table = mutableMapOf<I, Pair<I?, Double>>()
+	private var statusTable: Pair<I, Boolean>? = null
 
 	fun getPath(idSource: I, idTarget: I): MutableList<I> {
 		val path = mutableListOf<I>()
 
-		if (table[idSource] == null) getAllPaths(idSource)
-		if (table[idTarget] == null) return path
+		if (statusTable == null || checkAndGetFirst(statusTable) != idSource) {
+			getAllPaths(idSource)
+		}
+		check(checkAndGetSecond(statusTable)) { "All paths do not build." }
+		if (table[idTarget]?.first == null) return path
 
 		var idCurrent = idTarget
 		path.add(idCurrent)
 		while (idCurrent != idSource) {
-			idCurrent = table[idCurrent]?.first ?: throw ExceptionInInitializerError("Undefined behaviour: unfounded vertex.")
+			idCurrent = checkAndGetFirst(table[idCurrent])
 			path.add(idCurrent)
 		}
 
@@ -23,22 +29,18 @@ class DijkstraAlgorithm<I>(val graph: WeightedGraph<I>) {
 	}
 
 	fun getWeightPath(idSource: I, idTarget: I): Double {
-		if (table[idSource] == null) getAllPaths(idSource)
-		if (table[idTarget] == null) return Double.POSITIVE_INFINITY
-
-		var weight = 0.0
-
-		var idCurrent = idTarget
-		while (idCurrent != idSource) {
-			weight += table[idCurrent]?.second ?: throw ExceptionInInitializerError("Undefined behaviour: unfounded vertex.")
-			idCurrent = table[idCurrent]?.first ?: throw ExceptionInInitializerError("Undefined behaviour: unfounded vertex.")
+		if (statusTable == null || checkAndGetFirst(statusTable) != idSource) {
+			getAllPaths(idSource)
 		}
+		check(checkAndGetSecond(statusTable)) { "All paths do not build." }
+		if (table[idTarget]?.first == null) return Double.POSITIVE_INFINITY
 
-		return weight
+		return checkAndGetSecond(table[idTarget])
 	}
 
 	fun getAllPaths(idSource: I): MutableMap<I, Pair<I?, Double>> {
-		if (graph.idVertices.isEmpty()) return table
+		require(idSource in graph.idVertices) { "The source vertex is not contained." }
+		statusTable = Pair(idSource, false)
 
 		val statusVertices = mutableMapOf<I, Boolean>()
 
@@ -50,20 +52,24 @@ class DijkstraAlgorithm<I>(val graph: WeightedGraph<I>) {
 		statusVertices[idSource] = true
 		var countVisited = 1
 
-		if (graph.vertexEdges(idSource).isEmpty()) return table
+		if (graph.vertexEdges(idSource).isEmpty()) {
+			statusTable = Pair(idSource, true)
+			return table
+		}
 
 		val heapEdges = mutableListOf<WeightedEdge<I>>()
 		var edgeNext: WeightedEdge<I>? = null
 
 		graph.vertexEdges(idSource).forEach {
-			if (it.weight < 0) throw IllegalArgumentException("Negative number does not support.")
+			require(it.weight > 0) { "Negative number does not support." }
 
 			table[it.idTarget] = Pair(idSource, it.weight)
 			heapEdges.add(it)
 
 			val edgeTemp = edgeNext
-			if (edgeTemp == null || it.weight < edgeTemp.weight)
+			if (edgeTemp == null || it.weight < edgeTemp.weight) {
 				edgeNext = it
+			}
 		}
 
 		while (countVisited != graph.size) {
@@ -72,18 +78,15 @@ class DijkstraAlgorithm<I>(val graph: WeightedGraph<I>) {
 				heapEdges.remove(edge)
 				edgeNext = null
 
-				val valueIdTarget = table[edge.idTarget]
-					?: throw ExceptionInInitializerError("Undefined behaviour: unfounded vertex.")
 				statusVertices[edge.idTarget] = true
+				val weightPathIdTarget = checkAndGetSecond(table[edge.idTarget])
 
 				graph.vertexEdges(edge.idTarget).forEach {
-					if (it.weight < 0) throw IllegalArgumentException("Negative number does not support.")
-					val valueIdTargetTemp = table[it.idTarget]
-						?: throw ExceptionInInitializerError("Undefined behaviour: unfounded vertex.")
+					require(it.weight > 0) { "Negative number does not support." }
 
 					if (statusVertices[it.idTarget] == false) {
-						if (valueIdTargetTemp.second > valueIdTarget.second + it.weight) {
-							table[it.idTarget] = Pair(edge.idTarget, valueIdTarget.second + it.weight)
+						if (checkAndGetSecond(table[it.idTarget]) > weightPathIdTarget + it.weight) {
+							table[it.idTarget] = Pair(edge.idTarget, weightPathIdTarget + it.weight)
 						}
 
 						val edgeTemp = edgeNext
@@ -92,8 +95,8 @@ class DijkstraAlgorithm<I>(val graph: WeightedGraph<I>) {
 						}
 
 						heapEdges.add(it)
-					} else if (valueIdTarget.second + it.weight < valueIdTargetTemp.second) {
-						table[it.idTarget] = Pair(edge.idTarget, valueIdTarget.second + it.weight)
+					} else if (weightPathIdTarget + it.weight < checkAndGetSecond(table[it.idTarget])) {
+						table[it.idTarget] = Pair(edge.idTarget, weightPathIdTarget + it.weight)
 					}
 				}
 
@@ -104,6 +107,7 @@ class DijkstraAlgorithm<I>(val graph: WeightedGraph<I>) {
 			edgeNext = heapEdges.removeFirst()
 		}
 
+		statusTable = Pair(idSource, true)
 		return table
 	}
 }
