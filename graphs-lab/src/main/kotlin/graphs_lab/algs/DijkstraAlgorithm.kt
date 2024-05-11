@@ -39,20 +39,22 @@ class DijkstraAlgorithm<I>(val graph: WeightedGraph<I>) {
 	 *
 	 * @param idSource the identifier of the source vertex
 	 * @param idTarget the identifier of the target vertex
-	 * @return the path equals a list of the identifier of a vertex in the order of movement
+	 * @return `path` equals a list of the identifier of a vertex in the order of movement or
+	 * null if `path` is an empty list
 	 * @throws IllegalArgumentException if a weight is negative number or [idSource] or [idTarget]
 	 * is not contained in the graph
 	 * @throws IllegalStateException if there is an appeal to a non-existent identifier
 	 */
-	fun getPath(idSource: I, idTarget: I): MutableList<I> {
+	fun getPath(idSource: I, idTarget: I): List<I>? {
 		val path = mutableListOf<I>()
 
 		if (statusTable == null || checkAndGetFirst(statusTable) != idSource) {
-			getAllPaths(idSource)
+			getTable(idSource)
 		}
 		check(checkAndGetSecond(statusTable)) { "All paths do not build." }
-		require(table[idTarget] != null) { "The target vertex is not contained." }
-		if (table[idTarget]?.first == null) return path
+
+		val pairTemp = table[idTarget] ?: throw IllegalArgumentException("The target vertex is not contained.")
+		if (pairTemp.first == null) return null
 
 		// Assembles the path in the reversed order of movement
 		var idCurrent = idTarget
@@ -77,11 +79,12 @@ class DijkstraAlgorithm<I>(val graph: WeightedGraph<I>) {
 	 */
 	fun getWeightPath(idSource: I, idTarget: I): Double {
 		if (statusTable == null || checkAndGetFirst(statusTable) != idSource) {
-			getAllPaths(idSource)
+			getTable(idSource)
 		}
 		check(checkAndGetSecond(statusTable)) { "All paths do not build." }
-		require(table[idTarget] != null) { "The target vertex is not contained." }
-		if (table[idTarget]?.first == null) return Double.POSITIVE_INFINITY
+
+		val pairTemp = table[idTarget] ?: throw IllegalArgumentException("The target vertex is not contained.")
+		if (pairTemp.first == null) return Double.POSITIVE_INFINITY
 
 		return checkAndGetSecond(table[idTarget])
 	}
@@ -92,35 +95,33 @@ class DijkstraAlgorithm<I>(val graph: WeightedGraph<I>) {
 	 * @throws IllegalArgumentException if a weight is negative number or [idSource] is not contained in the graph
 	 * @throws IllegalStateException if there is an appeal to a non-existent identifier
 	 */
-	fun getAllPaths(idSource: I): MutableMap<I, Pair<I?, Double>> {
-		require(idSource in graph.idVertices) { "The source vertex is not contained." }
+	fun getTable(idSource: I): Map<I, Pair<I?, Double>> {
+		require(graph.idVertices.contains(idSource)) { "The source vertex is not contained." }
 		statusTable = Pair(idSource, false)
 
-		val statusVertices = mutableMapOf<I, Boolean>()
+		val setVerticesVisited = mutableSetOf<I>() // a vertex is considered visited if all its edges have been explored
 
 		// Initializes `table` and `statusVertices` on the first step
 		graph.idVertices.forEach {
 			table[it] = Pair(null, Double.POSITIVE_INFINITY)
-			statusVertices[it] = false
 		}
 		table[idSource] = Pair(null, 0.0)
-		statusVertices[idSource] = true
-		var countVisited = 1
+		setVerticesVisited.add(idSource)
 
 		if (graph.vertexEdges(idSource).isEmpty()) {
 			statusTable = Pair(idSource, true)
 			return table
 		}
 
-		val heapEdges = mutableListOf<WeightedEdge<I>>()
+		val listEdges = mutableListOf<WeightedEdge<I>>()
 		var edgeNext: WeightedEdge<I>? = null
 
 		// Searches the edge with the minimal weight from the source vertex
 		graph.vertexEdges(idSource).forEach {
-			require(it.weight > 0) { "Negative number does not support." }
+			require(it.weight >= 0) { "Negative number does not support." }
 
 			table[it.idTarget] = Pair(idSource, it.weight)
-			heapEdges.add(it)
+			listEdges.add(it)
 
 			val edgeTemp = edgeNext
 			if (edgeTemp == null || it.weight < edgeTemp.weight) {
@@ -129,26 +130,26 @@ class DijkstraAlgorithm<I>(val graph: WeightedGraph<I>) {
 		}
 
 		// Finds the shortest paths to all vertices from the source vertex
-		while (countVisited != graph.size) {
+		while (setVerticesVisited.size != graph.size) {
 			// Finds the shortest paths to the target vertex from the source vertex
 			while (true) {
 				val edge = edgeNext ?: break
-				heapEdges.remove(edge)
+				listEdges.remove(edge)
 				edgeNext = null
 
-				statusVertices[edge.idTarget] = true
+				setVerticesVisited.add(edge.idTarget)
 				val weightPathIdCurrent = checkAndGetSecond(table[edge.idTarget])
 
 				// Searches the edge with the minimal weight from the current vertex
 				graph.vertexEdges(edge.idTarget).forEach {
-					require(it.weight > 0) { "Negative number does not support." }
+					require(it.weight >= 0) { "Negative number does not support." }
 
 					if (weightPathIdCurrent + it.weight < checkAndGetSecond(table[it.idTarget])) {
 						table[it.idTarget] = Pair(edge.idTarget, weightPathIdCurrent + it.weight)
 					}
 
-					if (statusVertices[it.idTarget] == false) {
-						heapEdges.add(it)
+					if (!setVerticesVisited.contains(it.idTarget)) {
+						listEdges.add(it)
 
 						val edgeTemp = edgeNext
 						if (edgeTemp == null || it.weight < edgeTemp.weight) {
@@ -156,12 +157,10 @@ class DijkstraAlgorithm<I>(val graph: WeightedGraph<I>) {
 						}
 					}
 				}
-
-				countVisited++
 			}
 
-			if (heapEdges.isEmpty()) break
-			edgeNext = heapEdges.removeFirst()
+			if (listEdges.isEmpty()) break
+			edgeNext = listEdges.removeFirst()
 		}
 
 		statusTable = Pair(idSource, true)
