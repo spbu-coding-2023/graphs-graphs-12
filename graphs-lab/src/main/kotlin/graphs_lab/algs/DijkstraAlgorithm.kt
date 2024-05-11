@@ -40,7 +40,8 @@ class DijkstraAlgorithm<I>(val graph: WeightedGraph<I>) {
 	 * @param idSource the identifier of the source vertex
 	 * @param idTarget the identifier of the target vertex
 	 * @return the path equals a list of the identifier of a vertex in the order of movement
-	 * @throws IllegalArgumentException if a weight is negative number or [idSource] is not contained in the graph
+	 * @throws IllegalArgumentException if a weight is negative number or [idSource] or [idTarget]
+	 * is not contained in the graph
 	 * @throws IllegalStateException if there is an appeal to a non-existent identifier
 	 */
 	fun getPath(idSource: I, idTarget: I): MutableList<I> {
@@ -50,6 +51,7 @@ class DijkstraAlgorithm<I>(val graph: WeightedGraph<I>) {
 			getAllPaths(idSource)
 		}
 		check(checkAndGetSecond(statusTable)) { "All paths do not build." }
+		require(table[idTarget] != null) { "The target vertex is not contained." }
 		if (table[idTarget]?.first == null) return path
 
 		// Assembles the path in the reversed order of movement
@@ -69,7 +71,8 @@ class DijkstraAlgorithm<I>(val graph: WeightedGraph<I>) {
 	 * @param idSource the identifier of the source vertex
 	 * @param idTarget the identifier of the target vertex
 	 * @return a weight equals the sum of the all weights of edges on the path from the given identifier
-	 * @throws IllegalArgumentException if a weight is negative number or [idSource] is not contained in the graph
+	 * @throws IllegalArgumentException if a weight is negative number or [idSource] or [idTarget]
+	 * is not contained in the graph
 	 * @throws IllegalStateException if there is an appeal to a non-existent identifier
 	 */
 	fun getWeightPath(idSource: I, idTarget: I): Double {
@@ -77,6 +80,7 @@ class DijkstraAlgorithm<I>(val graph: WeightedGraph<I>) {
 			getAllPaths(idSource)
 		}
 		check(checkAndGetSecond(statusTable)) { "All paths do not build." }
+		require(table[idTarget] != null) { "The target vertex is not contained." }
 		if (table[idTarget]?.first == null) return Double.POSITIVE_INFINITY
 
 		return checkAndGetSecond(table[idTarget])

@@ -27,11 +27,11 @@ class TestDijkstraAlgorithm {
 		graph.addEdge('1', '2', 3.0)
 
 		val graphDijkstra = DijkstraAlgorithm(graph)
-		Assertions.assertEquals(graphDijkstra.getPath('1', '3'), mutableListOf<Char>())
+		Assertions.assertThrows(IllegalArgumentException::class.java) { graphDijkstra.getPath('1', '3') }
 
 		Assertions.assertEquals(graphDijkstra.getAllPaths('1'), mutableMapOf('1' to Pair(null, 0.0), '2' to Pair('1', 3.0)))
-		Assertions.assertEquals(graphDijkstra.getPath('1', '3'), mutableListOf<Char>())
-		Assertions.assertEquals(graphDijkstra.getWeightPath('1', '3'), Double.POSITIVE_INFINITY)
+		Assertions.assertThrows(IllegalArgumentException::class.java) { graphDijkstra.getPath('1', '3') }
+		Assertions.assertThrows(IllegalArgumentException::class.java) { graphDijkstra.getWeightPath('1', '3') }
 	}
 
 	@Test
