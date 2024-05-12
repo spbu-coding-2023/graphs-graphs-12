@@ -42,6 +42,13 @@ fun <I, T> checkAndGetSecond(pair: Pair<I?, T?>?): T {
 	return pair?.second ?: throw ExceptionInInitializerError("Undefined behaviour: an unfounded vertex.")
 }
 
+/**
+ * Removes the given item from the list if the item is contained in it.
+ *
+ * @param item the item to be deleted
+ *
+ * @return [item] in any case
+ */
 fun <I> MutableList<I>.removeAndReturn(item: I): I {
 	remove(item)
 	return item

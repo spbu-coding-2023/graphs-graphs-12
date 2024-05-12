@@ -10,7 +10,7 @@ import graphs_lab.core.graphs.Graph
  * The Tarjan's bridge-finding algorithm.
  *
  * Finding the bridges in an undirected graph.
- * A bridge is an edge, when it is removed, the number of connectivity components increases.
+ * A bridge is an edge of a graph whose deletion increases the graph's number of connected components.
  *
  * @references https://en.wikipedia.org/wiki/Bridge_(graph_theory)
  *
