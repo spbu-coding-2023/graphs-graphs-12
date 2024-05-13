@@ -1,6 +1,5 @@
 package graphs_lab.algs
 
-import graphs_lab.core.Vertex
 import graphs_lab.core.edges.Edge
 import graphs_lab.core.graphs.UnweightedGraph
 import graphs_lab.core.graphs.WeightedGraph

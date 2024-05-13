@@ -18,9 +18,11 @@ import graphs_lab.core.graphs.Graph
  * @param E the type of the edges in the graph
  * @property graph the input graph
  */
-class TarjanBridgeFinding<I, E : Edge<I>>(
-	val graph: Graph<I, E>
-) {
+class TarjanBridgeFinding<I, E : Edge<I>>(val graph: Graph<I, E>) {
+	/**
+	 * [setBridges] the set of bridges.
+	 * A bridge is an edge of a graph whose deletion increases the graph's number of connected components.
+	 */
 	private val setBridges = mutableSetOf<Edge<I>>()
 
 	/**
@@ -37,6 +39,8 @@ class TarjanBridgeFinding<I, E : Edge<I>>(
 	}
 
 	/**
+	 * Finds the bridges (not all but maximum count) and returns it.
+	 *
 	 * @return [setBridges]
 	 * @throws IllegalStateException if there is an appeal to a non-existent identifier
 	 */
