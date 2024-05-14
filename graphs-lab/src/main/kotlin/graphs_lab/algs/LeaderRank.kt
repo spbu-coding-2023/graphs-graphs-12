@@ -5,11 +5,30 @@ import graphs_lab.core.graphs.Graph
 import graphs_lab.algs.utils.getEdgeWeight
 import kotlin.math.abs
 
+/**
+ * LeaderRank algorithm
+ *
+ * LeaderRank is an algorithm for identifying key vertices in a graph. The essence of the algorithm: given a graph
+ * consisting of N vertices and M directed edges, a ground vertex connected with every vertex by a bidirectional edge is
+ * added. Then, the graph becomes strongly connected and consists of N+1 vertices and M+2N edges (a bidirectional edges
+ * is counted as two edges with inverse directions). LeaderRank directly applies the standard random walk process to
+ * determine the score of every vertex.
+ *
+ * @references https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0021202
+ *
+ * @param I the type of the vertex identifiers
+ * @property graph the input graph
+ */
 class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	private var countOfVertices = 0
 	private val indexedVertices = mutableMapOf<I, Int>()
 	private var graphMatrix: Array<DoubleArray> = Array(countOfVertices + 1) { DoubleArray(countOfVertices + 1) }
 
+	/**
+	 * Get the score of each vertex in the graph.
+	 *
+	 * @return a map where keys - the id of vertex, values - the score of this vertex.
+	 */
 	fun getVerticesScores(): Map<I, Double> {
 		countOfVertices = graph.size
 		graphMatrix = Array(countOfVertices + 1) { DoubleArray(countOfVertices + 1) { 0.0 } }
@@ -56,6 +75,9 @@ class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 		return result
 	}
 
+	/**
+	 * Mapping an index to each vertex.
+	 */
 	private fun vertexIndexing() {
 		var index = 0
 		graph.idVertices.forEach { vertex ->
@@ -64,6 +86,9 @@ class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 		}
 	}
 
+	/**
+	 * Creates an adjacency matrix for a graph based on its vertices and edges.
+	 */
 	private fun createGraphMatrix() {
 		graph.idVertices.forEach { vertex ->
 			graph.vertexEdges(vertex).forEach { edge ->
@@ -78,6 +103,14 @@ class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 		}
 	}
 
+	/**
+	 * Multiplies the two matrices in their given order.
+	 *
+	 * @param matrix1 first matrix
+	 * @param matrix2 second matrix
+	 * @param numberOfColumns number columns in result matrix
+	 * @return a matrix that is the result of matrix multiplication.
+	 */
 	private fun matrixMultiplication(
 		matrix1: Array<DoubleArray>,
 		matrix2: Array<DoubleArray>,
@@ -98,6 +131,9 @@ class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 		return resultMatrix
 	}
 
+	/**
+	 * Transposes a graphMatrix.
+	 */
 	private fun transposeGraphMatrix() {
 		val transposedMatrix = Array(countOfVertices + 1) { DoubleArray(countOfVertices + 1) { 0.0 } }
 
@@ -110,6 +146,13 @@ class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 		graphMatrix = transposedMatrix
 	}
 
+	/**
+	 * Performs matrix subtraction with modulus.
+	 *
+	 * @param matrix1 first matrix
+	 * @param matrix2 second matrix
+	 * @return a matrix that is the result of modulo subtraction
+	 */
 	private fun matrixSubtractionWithModulus(
 		matrix1: Array<DoubleArray>,
 		matrix2: Array<DoubleArray>
@@ -123,6 +166,13 @@ class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 		return resultMatrix
 	}
 
+	/**
+	 * Performs division of one matrix by another.
+	 *
+	 * @param matrix1 Divisible matrix
+	 * @param matrix2 Divider
+	 * @return a matrix that is the result of division
+	 */
 	private fun matrixDivision(matrix1: Array<DoubleArray>, matrix2: Array<DoubleArray>): Array<DoubleArray> {
 		val resultMatrix = Array(countOfVertices + 1) { DoubleArray(1) { 0.0 } }
 
@@ -135,6 +185,12 @@ class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 		return resultMatrix
 	}
 
+	/**
+	 * Calculates the sum of matrix elements.
+	 *
+	 * @param matrix on which actions will be performed
+	 * @return sum of all matrix elements
+	 */
 	private fun summationOfMatrixElements(matrix: Array<DoubleArray>): Double {
 		var resultOfSum = 0.0
 
