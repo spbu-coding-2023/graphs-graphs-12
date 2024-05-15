@@ -43,7 +43,7 @@ class TestUtils {
 	@Test
 	@DisplayName("check and get the first element of the pair")
 	fun testCheckAndGetFirst() {
-		var pair: Pair<Char?, Int>? = null
+		var pair: Pair<Char?, Int?>? = null
 		Assertions.assertThrows(ExceptionInInitializerError::class.java) { checkAndGetFirst(pair) }
 
 		pair = Pair(null, 1)
@@ -56,7 +56,10 @@ class TestUtils {
 	@Test
 	@DisplayName("check and get the second element of the pair")
 	fun testCheckAndGetSecond() {
-		var pair: Pair<Char?, Int>? = null
+		var pair: Pair<Char?, Int?>? = null
+		Assertions.assertThrows(ExceptionInInitializerError::class.java) { checkAndGetSecond(pair) }
+
+		pair = Pair('A', null)
 		Assertions.assertThrows(ExceptionInInitializerError::class.java) { checkAndGetSecond(pair) }
 
 		pair = Pair('A', 1)

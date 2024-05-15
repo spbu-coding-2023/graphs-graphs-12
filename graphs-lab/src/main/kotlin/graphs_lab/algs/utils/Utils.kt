@@ -26,7 +26,7 @@ fun <I, E : Edge<I>> getEdgeWeight(edge: E, defaultWeight: Double = 1.0): Double
  * @return the second element of the given pair
  * @throws ExceptionInInitializerError if the pair or the first element of it is null
  */
-fun <I, T> checkAndGetFirst(pair: Pair<I?, T>?): I {
+fun <I, T> checkAndGetFirst(pair: Pair<I?, T?>?): I {
 	return pair?.first ?: throw ExceptionInInitializerError("Undefined behaviour: an unfounded vertex.")
 }
 
@@ -38,6 +38,18 @@ fun <I, T> checkAndGetFirst(pair: Pair<I?, T>?): I {
  * @return the second element of the given pair
  * @throws ExceptionInInitializerError if the pair or the second element of it is null
  */
-fun <I, T> checkAndGetSecond(pair: Pair<I?, T>?): T {
+fun <I, T> checkAndGetSecond(pair: Pair<I?, T?>?): T {
 	return pair?.second ?: throw ExceptionInInitializerError("Undefined behaviour: an unfounded vertex.")
+}
+
+/**
+ * Removes the given item from the list if the item is contained in it.
+ *
+ * @param item the item to be deleted
+ *
+ * @return [item] in any case
+ */
+fun <I> MutableList<I>.removeAndReturn(item: I): I {
+	remove(item)
+	return item
 }
