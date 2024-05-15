@@ -10,6 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import application.core.roundedCustom
+import application.core.whiteCustom
 
 @Composable
 fun showAlgorithms() {
@@ -17,7 +19,7 @@ fun showAlgorithms() {
 		modifier = Modifier
 			.fillMaxSize()
 			.padding(40.dp)
-			.background(Color(254, 249, 231), RoundedCornerShape(14.dp))
+			.background(whiteCustom, roundedCustom)
 	) {
 		Text("Algorithms", modifier = Modifier.padding(10.dp))
 	}

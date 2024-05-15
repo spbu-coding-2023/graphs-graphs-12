@@ -13,27 +13,28 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerMoveFilter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import application.core.blueCustom
+import application.core.roundedCustom
 import application.core.widget
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun showLayout() {
+fun showLayout(isOpenedAlgorithms: MutableState<Boolean>, isOpenedAlgorithmsW: MutableState<Boolean>) {
 	var isOpenedContext by remember { mutableStateOf(false) }
 
 	Surface(
 //		modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars).fillMaxSize().graphicsLayer()
 		modifier = Modifier
 			.padding(4.dp)
-			.clip(RoundedCornerShape(14.dp))
+			.clip(roundedCustom)
 	) {
 		Box(
 			modifier = Modifier
 				.fillMaxSize()
-				.background(Color(175, 218, 252))
+				.background(blueCustom)
 		) {
 			Button(
 				onClick = { isOpenedContext = !isOpenedContext },
@@ -63,6 +64,6 @@ fun showLayout() {
 			}
 		}
 
-		widget(isOpenedContext)
+		widget(isOpenedContext, isOpenedAlgorithms, isOpenedAlgorithmsW)
 	}
 }
