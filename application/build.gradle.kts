@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
 	implementation(compose.desktop.currentOs)
+	implementation(compose.materialIconsExtended)
 }
 
 compose.desktop {
@@ -22,4 +23,3 @@ compose.desktop {
 kotlin {
 	jvmToolchain(17)
 }
-
