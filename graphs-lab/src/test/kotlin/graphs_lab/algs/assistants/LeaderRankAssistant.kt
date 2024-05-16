@@ -15,8 +15,8 @@ class LeaderRankAssistant<I, E : Edge<I>>(graph: Graph<I, E>) : LeaderRank<I, E>
 	}
 
 	fun assertCreateGraphMatrix(result: Array<DoubleArray>) {
-		countOfVertices = graph.size
-		graphMatrix = Array(countOfVertices + 1) { DoubleArray(countOfVertices + 1) { 0.0 } }
+		countOfVertices = graph.size + 1
+		graphMatrix = Array(countOfVertices) { DoubleArray(countOfVertices) { 0.0 } }
 
 		vertexIndexing()
 		createGraphMatrix()
@@ -31,7 +31,7 @@ class LeaderRankAssistant<I, E : Edge<I>>(graph: Graph<I, E>) : LeaderRank<I, E>
 		matrix2: Array<DoubleArray>,
 		result: Array<DoubleArray>
 	) {
-		countOfVertices = 3
+		countOfVertices = 4
 
 		if (!result.contentDeepEquals(matrixMultiplication(matrix1, matrix2, 2))) {
 			throw AssertionError()
@@ -39,8 +39,8 @@ class LeaderRankAssistant<I, E : Edge<I>>(graph: Graph<I, E>) : LeaderRank<I, E>
 	}
 
 	fun assertTransposeGraphMatrix(result: Array<DoubleArray>) {
-		countOfVertices = graph.size
-		graphMatrix = Array(countOfVertices + 1) { DoubleArray(countOfVertices + 1) { 0.0 } }
+		countOfVertices = graph.size + 1
+		graphMatrix = Array(countOfVertices) { DoubleArray(countOfVertices) { 0.0 } }
 
 		vertexIndexing()
 		createGraphMatrix()
@@ -56,7 +56,7 @@ class LeaderRankAssistant<I, E : Edge<I>>(graph: Graph<I, E>) : LeaderRank<I, E>
 		matrix2: Array<DoubleArray>,
 		result: Array<DoubleArray>
 	) {
-		countOfVertices = 3
+		countOfVertices = 4
 
 		if (!result.contentDeepEquals(matrixSubtractionWithModulus(matrix1, matrix2))) {
 			throw AssertionError()
@@ -64,7 +64,7 @@ class LeaderRankAssistant<I, E : Edge<I>>(graph: Graph<I, E>) : LeaderRank<I, E>
 	}
 
 	fun assertMatrixDivision(matrix1: Array<DoubleArray>, matrix2: Array<DoubleArray>, result: Array<DoubleArray>) {
-		countOfVertices = 3
+		countOfVertices = 4
 
 		if (!result.contentDeepEquals(matrixDivision(matrix1, matrix2))) {
 			throw AssertionError()
@@ -72,7 +72,7 @@ class LeaderRankAssistant<I, E : Edge<I>>(graph: Graph<I, E>) : LeaderRank<I, E>
 	}
 
 	fun assertSummationOfMatrixElements(matrix: Array<DoubleArray>, result: Double) {
-		countOfVertices = 5
+		countOfVertices = 6
 
 		if (result != summationOfMatrixElements(matrix)) {
 			throw AssertionError()
