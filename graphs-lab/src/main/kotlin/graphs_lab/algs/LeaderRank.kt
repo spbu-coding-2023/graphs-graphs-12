@@ -19,10 +19,10 @@ import kotlin.math.abs
  * @param I the type of the vertex identifiers
  * @property graph the input graph
  */
-class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
-	private var countOfVertices = 0
-	private val indexedVertices = mutableMapOf<I, Int>()
-	private var graphMatrix: Array<DoubleArray> = Array(countOfVertices + 1) { DoubleArray(countOfVertices + 1) }
+open class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
+	protected var countOfVertices = 0
+	protected val indexedVertices = mutableMapOf<I, Int>()
+	protected var graphMatrix: Array<DoubleArray> = Array(countOfVertices + 1) { DoubleArray(countOfVertices + 1) }
 
 	/**
 	 * Get the score of each vertex in the graph.
@@ -78,7 +78,7 @@ class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	/**
 	 * Mapping an index to each vertex.
 	 */
-	private fun vertexIndexing() {
+	protected fun vertexIndexing() {
 		var index = 0
 		graph.idVertices.forEach { vertex ->
 			indexedVertices[vertex] = index
@@ -89,7 +89,7 @@ class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	/**
 	 * Creates an adjacency matrix for a graph based on its vertices and edges.
 	 */
-	private fun createGraphMatrix() {
+	protected fun createGraphMatrix() {
 		graph.idVertices.forEach { vertex ->
 			graph.vertexEdges(vertex).forEach { edge ->
 				graphMatrix[indexedVertices[edge.idSource]!!][indexedVertices[edge.idTarget]!!] =
@@ -111,7 +111,7 @@ class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	 * @param numberOfColumns number columns in result matrix
 	 * @return a matrix that is the result of matrix multiplication.
 	 */
-	private fun matrixMultiplication(
+	protected fun matrixMultiplication(
 		matrix1: Array<DoubleArray>,
 		matrix2: Array<DoubleArray>,
 		numberOfColumns: Int
@@ -134,7 +134,7 @@ class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	/**
 	 * Transposes a graphMatrix.
 	 */
-	private fun transposeGraphMatrix() {
+	protected fun transposeGraphMatrix() {
 		val transposedMatrix = Array(countOfVertices + 1) { DoubleArray(countOfVertices + 1) { 0.0 } }
 
 		for (i in 0..countOfVertices) {
@@ -153,7 +153,7 @@ class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	 * @param matrix2 second matrix
 	 * @return a matrix that is the result of modulo subtraction
 	 */
-	private fun matrixSubtractionWithModulus(
+	protected fun matrixSubtractionWithModulus(
 		matrix1: Array<DoubleArray>,
 		matrix2: Array<DoubleArray>
 	): Array<DoubleArray> {
@@ -173,7 +173,7 @@ class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	 * @param matrix2 Divider
 	 * @return a matrix that is the result of division
 	 */
-	private fun matrixDivision(matrix1: Array<DoubleArray>, matrix2: Array<DoubleArray>): Array<DoubleArray> {
+	protected fun matrixDivision(matrix1: Array<DoubleArray>, matrix2: Array<DoubleArray>): Array<DoubleArray> {
 		val resultMatrix = Array(countOfVertices + 1) { DoubleArray(1) { 0.0 } }
 
 		for (i in 0..countOfVertices) {
@@ -191,7 +191,7 @@ class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	 * @param matrix on which actions will be performed
 	 * @return sum of all matrix elements
 	 */
-	private fun summationOfMatrixElements(matrix: Array<DoubleArray>): Double {
+	protected fun summationOfMatrixElements(matrix: Array<DoubleArray>): Double {
 		var resultOfSum = 0.0
 
 		for (i in 0..countOfVertices) {
