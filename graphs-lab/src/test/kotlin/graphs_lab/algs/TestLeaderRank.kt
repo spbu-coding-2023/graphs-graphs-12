@@ -77,7 +77,7 @@ class TestLeaderRank {
 	}
 
 	@Test
-	@DisplayName("test matrix multiplication")
+	@DisplayName("matrix multiplication")
 	fun testMatrixMultiplication() {
 		val graph = UnweightedGraph<Char>("plug", isDirected = true, isAutoAddVertex = true)
 
@@ -106,7 +106,7 @@ class TestLeaderRank {
 	}
 
 	@Test
-	@DisplayName("test transpose graph matrix of unweighted graph")
+	@DisplayName("transpose graph matrix of unweighted graph")
 	fun testTransposeGraphMatrixOfUnweightedGraph() {
 		val graph = UnweightedGraph<Char>("1", isDirected = true, isAutoAddVertex = true)
 		/**
@@ -133,7 +133,7 @@ class TestLeaderRank {
 	}
 
 	@Test
-	@DisplayName("test transpose graph matrix of weighted graph")
+	@DisplayName("transpose graph matrix of weighted graph")
 	fun testTransposeGraphMatrixOfWeightedGraph() {
 		val graph = WeightedGraph<Char>("1", isDirected = true, isAutoAddVertex = true)
 		/**
@@ -160,7 +160,7 @@ class TestLeaderRank {
 	}
 
 	@Test
-	@DisplayName("test matrix subtraction with modulus")
+	@DisplayName("matrix subtraction with modulus")
 	fun testMatrixSubtractionWithModulus() {
 		val graph = UnweightedGraph<Char>("plug", isDirected = true, isAutoAddVertex = true)
 
@@ -185,7 +185,7 @@ class TestLeaderRank {
 	}
 
 	@Test
-	@DisplayName("test matrix division")
+	@DisplayName("matrix division")
 	fun testMatrixDivision() {
 		val graph = UnweightedGraph<Char>("plug", isDirected = true, isAutoAddVertex = true)
 
@@ -208,7 +208,7 @@ class TestLeaderRank {
 	}
 
 	@Test
-	@DisplayName("test summation of matrix elements")
+	@DisplayName("summation of matrix elements")
 	fun testSummationOfMatrixElements() {
 		val graph = UnweightedGraph<Char>("plug", isDirected = true, isAutoAddVertex = true)
 

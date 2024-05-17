@@ -17,6 +17,7 @@ import kotlin.math.abs
  * @references https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0021202
  *
  * @param I the type of the vertex identifiers
+ * @param E the type of the edge
  * @property graph the input graph
  */
 open class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
@@ -27,7 +28,7 @@ open class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	/**
 	 * Get the score of each vertex in the graph.
 	 *
-	 * @return a map where keys - the id of vertex, values - the score of this vertex.
+	 * @return a map where keys - the id of vertex, values - the score of this vertex
 	 */
 	fun getVerticesScores(): Map<I, Double> {
 		countOfVertices = graph.size + 1 // add ground vertex
@@ -109,7 +110,7 @@ open class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	 * @param matrix1 first matrix
 	 * @param matrix2 second matrix
 	 * @param numberOfColumns number columns in result matrix
-	 * @return a matrix that is the result of matrix multiplication.
+	 * @return a matrix that is the result of matrix multiplication
 	 */
 	protected fun matrixMultiplication(
 		matrix1: Array<DoubleArray>,
