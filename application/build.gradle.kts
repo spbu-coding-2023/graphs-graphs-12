@@ -12,6 +12,9 @@ repositories {
 dependencies {
 	implementation(compose.desktop.currentOs)
 	implementation(compose.materialIconsExtended)
+	implementation(compose.material3)
+	implementation(compose.foundation)
+	implementation(project(":graphs-lab"))
 }
 
 compose.desktop {

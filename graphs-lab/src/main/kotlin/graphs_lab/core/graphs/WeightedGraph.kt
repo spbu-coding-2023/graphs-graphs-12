@@ -11,7 +11,7 @@ import graphs_lab.core.edges.WeightedEdge
  * @property isDirected indicates whether the graph is directed or not
  * @property isAutoAddVertex specifies whether new vertices should be automatically added when adding edges
  */
-class WeightedGraph<I>(
+open class WeightedGraph<I>(
 	id: String,
 	isDirected: Boolean = false,
 	isAutoAddVertex: Boolean = false
@@ -24,7 +24,7 @@ class WeightedGraph<I>(
 	 * @param idTarget the identifier of the target vertex
 	 * @param weight the weight of the edge
 	 */
-	fun addEdge(idSource: I, idTarget: I, weight: Double) = addEdge(
+	open fun addEdge(idSource: I, idTarget: I, weight: Double) = addEdge(
 		WeightedEdge(idSource, idTarget, weight)
 	)
 
