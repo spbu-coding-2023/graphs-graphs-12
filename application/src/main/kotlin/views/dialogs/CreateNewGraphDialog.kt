@@ -15,7 +15,7 @@ import androidx.compose.ui.window.rememberDialogState
 import kotlinx.coroutines.launch
 import utils.ComboBox
 import utils.CustomRadioButton
-import utils.SaveType
+import utils.GraphSavingType
 import utils.VertexIDType
 import viewmodels.dialogs.CreateNewGraphDialogViewModel
 
@@ -99,9 +99,9 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 					textAlign = TextAlign.Center
 				)
 				ComboBox(
-					items = SaveType.entries.toTypedArray(),
+					items = GraphSavingType.entries.toTypedArray(),
 					modifier = Modifier.weight(1f),
-					onItemClick = { item: SaveType -> viewModel.selectedSaveType.value = item },
+					onItemClick = { item: GraphSavingType -> viewModel.selectedSaveType.value = item },
 					textAlign = TextAlign.Center
 				)
 			}

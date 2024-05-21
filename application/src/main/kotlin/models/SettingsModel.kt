@@ -1,12 +1,12 @@
 package models
 
 import graphs_lab.core.graphs.WeightedGraph
-import utils.SaveType
+import utils.GraphSavingType
 import utils.VertexIDType
 
 class SettingsModel {
 	// TODO(Implements save graph)
-	fun saveGraph(graph: WeightedGraph<VertexID>, vertexIDType: VertexIDType, value: SaveType) {
+	fun saveGraph(graph: WeightedGraph<VertexID>, vertexIDType: VertexIDType, value: GraphSavingType) {
 		println(graph)
 	}
 

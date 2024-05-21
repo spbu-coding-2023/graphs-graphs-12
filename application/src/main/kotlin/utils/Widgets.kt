@@ -21,6 +21,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import models.utils.ListWidgetItem
 
+/**
+ * [Composable] Widget of List with elements, which implements [ListWidgetItem].
+ *
+ * @param modifier to change [ListWidget] implementation
+ * @param listItems elements to List representation
+ * @param fontSize size of main text font
+ * @param dropDownMenuContext [Composable] dropdown menu context for list element, if its `null` menu will not visible
+ * @param headlineContext [Composable] elements of header of [ListWidget]
+ */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ListWidget(
@@ -96,6 +105,16 @@ fun ListWidget(
 	}
 }
 
+/**
+ * [Composable] Widget of [ComboBox] with element.
+ *
+ * @param T type of items in [ComboBox]
+ * @param items collection of elements
+ * @param onItemClick lambda method to run it if item choose, if its `null` method not calling
+ * @param modifier to change [ComboBox] implementation
+ * @param textAlign alignment of text on widgets
+ * @param textFontSize size of text font
+ */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun <T> ComboBox(
@@ -150,6 +169,18 @@ fun <T> ComboBox(
 	}
 }
 
+/**
+ * [Composable] custom Widget of [RadioButton].
+ *
+ * @param selected start value of state this [RadioButton]
+ * @param text message of
+ * @param onClick lambda method to run it if item choose
+ * @param modifier to change [CustomRadioButton] implementation
+ * @param textAlign alignment of text on widgets
+ * @param textFontSize size of text font
+ * @param verticalAlignment alignment of widgets replacement
+ * @param reversed set representation mode: `(x) <text>` or `<text> (x)`, based `(x) <text>`
+ */
 @Composable
 fun CustomRadioButton(
 	selected: Boolean,
