@@ -1,5 +1,6 @@
 package views.dialogs
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -13,6 +14,7 @@ import androidx.compose.ui.window.DialogWindow
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberDialogState
 import kotlinx.coroutines.launch
+import themes.JetTheme
 import utils.ComboBox
 import utils.CustomRadioButton
 import utils.GraphSavingType
@@ -34,7 +36,9 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 		resizable = true
 	) {
 		Column(
-			modifier = Modifier.fillMaxSize()
+			modifier = Modifier
+				.fillMaxSize()
+				.background(JetTheme.colors.primaryBackground)
 		) {
 			Row(
 				verticalAlignment = Alignment.CenterVertically,

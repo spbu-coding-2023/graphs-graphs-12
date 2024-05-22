@@ -1,22 +1,30 @@
 package views
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import models.utils.TabItem
+import themes.JetTheme
 import viewmodels.SideMenuViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SideMenuTabColumn(tabsColumn: List<TabItem>, statePager: PagerState, indexSelectedPage: MutableState<Int>, viewModel: SideMenuViewModel) {
+	val modifierColumns = Modifier
+		.padding(4.dp)
+		.clip(JetTheme.shapes.cornerStyle)
+		.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle)
+
 	val coroutineScope = rememberCoroutineScope()
 	Column(
-		viewModel.modifierColumns,
+		modifierColumns,
 		Arrangement.spacedBy(10.dp)
 	) {
 		tabsColumn.forEach { item ->
@@ -40,7 +48,8 @@ fun SideMenuTabColumn(tabsColumn: List<TabItem>, statePager: PagerState, indexSe
 					icon = {
 						Icon(
 							imageVector = if (statePager.currentPage == itemPageIndex) item.iconSelected else item.iconUnselected,
-							contentDescription = item.title
+							contentDescription = item.title,
+							tint = JetTheme.colors.tintColor
 						)
 					}
 				)
@@ -75,12 +84,17 @@ fun SideMenu(statePager: PagerState, indexSelectedPage: MutableState<Int>, viewM
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun newVersion(statePager: PagerState, indexSelectedPage: MutableState<Int>, viewModel: SideMenuViewModel) {
+	val modifierColumns = Modifier
+		.padding(4.dp)
+		.clip(JetTheme.shapes.cornerStyle)
+		.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle)
+
 	val coroutineScope = rememberCoroutineScope()
 	NavigationRail(header = null) {
 		viewModel.tabsItems.forEach { tabs ->
 			if (tabs == null) Spacer(Modifier.weight(1f))
 			else Column(
-				viewModel.modifierColumns,
+				modifierColumns,
 				Arrangement.spacedBy(10.dp)
 			) {
 				tabs.forEach loop@ { tab ->
@@ -93,6 +107,7 @@ fun newVersion(statePager: PagerState, indexSelectedPage: MutableState<Int>, vie
 							Icon(
 								imageVector = if (statePager.currentPage == itemPageIndex) tab.iconSelected else tab.iconUnselected,
 								contentDescription = tab.title,
+								tint = JetTheme.colors.tintColor
 							)
 						},
 						selected = statePager.currentPage == itemPageIndex,

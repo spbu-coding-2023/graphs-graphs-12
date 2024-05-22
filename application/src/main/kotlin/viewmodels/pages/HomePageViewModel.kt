@@ -1,17 +1,11 @@
 package viewmodels.pages
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
 import graphs_lab.core.graphs.WeightedGraph
 import models.SettingsModel
 import models.utils.GraphInfo
@@ -22,8 +16,6 @@ import utils.VertexIDType
 import viewmodels.SideMenuViewModel
 import viewmodels.dialogs.CreateNewGraphDialogViewModel
 import viewmodels.graphs.GraphViewModel
-import views.greenCustom
-import views.roundedCustom
 
 class HomePageViewModel(
 	val indexSelectedPage: MutableState<Int>,
@@ -35,11 +27,6 @@ class HomePageViewModel(
 	val tasks: List<ListWidgetItem>
 		get() = _tasks.toList()
 
-	val modifierColumn = Modifier
-		.fillMaxHeight()
-		.padding(4.dp)
-		.clip(roundedCustom)
-		.background(greenCustom, roundedCustom)
 	private val _previouslyLoadedGraph = sortedSetOf<GraphInfo>()
 	val previouslyLoadedGraph: List<GraphInfo>
 		get() = _previouslyLoadedGraph.sorted()

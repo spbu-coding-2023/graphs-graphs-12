@@ -1,8 +1,6 @@
 package viewmodels
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
@@ -10,8 +8,6 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
 import models.SideMenuModel
 import models.utils.TabItem
 import utils.PageType
@@ -19,8 +15,6 @@ import utils.representation.AllCenterPlacementStrategy
 import utils.representation.CircularPlacementStrategy
 import utils.representation.RandomPlacementStrategy
 import viewmodels.pages.GraphPageViewModel
-import views.greenCustom
-import views.roundedCustom
 
 class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 	private val pagesOfTabsItems = mutableMapOf<String, Int>()
@@ -29,10 +23,6 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 	private val sideMenuModel = SideMenuModel()
 	val tabsItems: List<List<TabItem>?>
 		get() = sideMenuModel.tabsItems
-	val modifierColumns = Modifier
-		.padding(4.dp)
-		.clip(roundedCustom)
-		.background(greenCustom, roundedCustom)
 
 	init {
 		sideMenuModel.addTabs(
