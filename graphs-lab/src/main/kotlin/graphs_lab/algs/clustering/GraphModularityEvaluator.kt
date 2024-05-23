@@ -19,7 +19,7 @@ class GraphModularityEvaluator<I, E : Edge<I>>(graph: Graph<I, E>) {
 	private val module: Double = adjacencyMatrix.totalWeight / 2
 
 	/**
-	 * Evaluate modularity for graph partition
+	 * Evaluate modularity for graph partition.
 	 *
 	 * @param communities partition of graph vertices
 	 * @return value of modularity
@@ -41,9 +41,9 @@ class GraphModularityEvaluator<I, E : Edge<I>>(graph: Graph<I, E>) {
 				val sourceDegree: Double = adjacencyMatrix.getVertexWeightedDegree(idSource)
 				for (idTarget in community) {
 					if (idSource == idTarget) continue
-					val A: Double = adjacencyMatrix.getEdgeWeight(idSource, idTarget)
+					val edgeWeight: Double = adjacencyMatrix.getEdgeWeight(idSource, idTarget)
 					val targetDegree: Double = adjacencyMatrix.getVertexWeightedDegree(idTarget)
-					modularity += (A - sourceDegree * targetDegree / adjacencyMatrix.totalWeight)
+					modularity += (edgeWeight - sourceDegree * targetDegree / adjacencyMatrix.totalWeight)
 				}
 			}
 		}

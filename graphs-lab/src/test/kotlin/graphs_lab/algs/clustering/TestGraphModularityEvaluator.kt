@@ -55,7 +55,6 @@ class TestGraphModularityEvaluator {
 		)
 	}
 
-
 	@Test
 	@DisplayName("check modularity change if element not contain in source set")
 	fun testModularityChangeCase2() {

@@ -45,7 +45,11 @@ fun <I, E : Edge<I>> louvainClusteringMethod(graph: Graph<I, E>, partition: SetP
 				if (partition.isConnected(idVertex, edge.idTarget)) continue
 				val targetCommunity: Set<I> = partition.getElementSet(edge.idTarget)
 				if (targetCommunity in visitedCommunities) continue
-				val modularityChange: Double = modularityEvaluator.evaluateModularityChange(idVertex, vertexCommunity, targetCommunity)
+				val modularityChange: Double = modularityEvaluator.evaluateModularityChange(
+					idVertex,
+					vertexCommunity,
+					targetCommunity
+				)
 				if (modularityChange > maxModularityChange) {
 					maxTarget = edge.idTarget
 					maxModularityChange = modularityChange

@@ -4,6 +4,8 @@ import graphs_lab.core.edges.Edge
 import graphs_lab.core.edges.WeightedEdge
 import kotlin.math.abs
 
+private const val DEFAULT_COMPARISON_MODULE = 1e-9
+
 /**
  * Retrieves the weight of the specified edge.
  *
@@ -65,7 +67,7 @@ fun <I> MutableList<I>.removeAndReturn(item: I): I {
  * @return `true` if numbers is equals else `false`
  */
 fun doubleEquality(first: Double, second: Double): Boolean {
-	return doubleEquality(first, second, 1e-9)
+	return doubleEquality(first, second, DEFAULT_COMPARISON_MODULE)
 }
 
 /**
