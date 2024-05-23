@@ -65,4 +65,16 @@ class TestUtils {
 		pair = Pair('A', 1)
 		Assertions.assertEquals(checkAndGetSecond(pair), 1)
 	}
+
+	@Test
+	@DisplayName("check is double equals if its equals")
+	fun testDoubleEqualsCase1() {
+		Assertions.assertTrue(doubleEquality(0.0000001, 0.0000001))
+	}
+
+	@Test
+	@DisplayName("check is double not equals if its not equals")
+	fun testDoubleEqualsCase2() {
+		Assertions.assertFalse(doubleEquality(0.00000001, 0.0000001))
+	}
 }
