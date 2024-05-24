@@ -10,8 +10,8 @@ class GraphPageViewModel {
 	private val _graph = mutableStateOf<GraphViewModel?>(null)
 	var representationStrategy: RepresentationStrategy
 		get() = _representationStrategy.value
-		set(newStartegy) {
-			_representationStrategy.value = newStartegy
+		set(newStrategy) {
+			_representationStrategy.value = newStrategy
 			updateGraphRepresentation()
 		}
 	var graphViewModel: GraphViewModel?
@@ -24,7 +24,7 @@ class GraphPageViewModel {
 
 	private fun updateGraphRepresentation() {
 		// TODO(run it by coroutine scope)
-		// TODO(chage values of `width` and `height`)
+		// TODO(change values of `width` and `height`)
 		val model = _graph.value ?: return
 		representationStrategy.place(1000.0, 700.0, model.vertices)
 	}

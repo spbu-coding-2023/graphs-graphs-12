@@ -7,9 +7,15 @@ class EdgeViewModel(
 	val edge: WeightedEdge<VertexID>,
 	val source: VertexViewModel,
 	val target: VertexViewModel,
-	isUnweigted: Boolean
+	isUnweighted: Boolean
 ) {
-	val label: String = if (isUnweigted) "" else edge.weight.toString()
+	val label: String = if (isUnweighted) {
+		""
+	} else if (edge.weight.rem(1) == 0.0) {
+		edge.weight.toInt().toString()
+	} else {
+		edge.weight.toString()
+	}
 
 	override fun toString(): String {
 		return "EdgeViewModel(source=$source, target=$target)"

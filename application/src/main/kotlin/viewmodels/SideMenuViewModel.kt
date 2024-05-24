@@ -72,6 +72,13 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 					) {
 						Text("Circular")
 					}
+					// todo(add layout)
+//					TextButton(
+//						onClick = { graphPageViewModel.representationStrategy = ForceDirectedPlacementStrategy(graphPageViewModel.graphViewModel!!) },
+//						modifier = Modifier.fillMaxWidth()
+//					) {
+//						Text("Force-directed")
+//					}
 				}
 			),
 		)

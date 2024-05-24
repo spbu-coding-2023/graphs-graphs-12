@@ -3,7 +3,7 @@ package themes
 import androidx.compose.ui.graphics.Color
 
 val baseLightPalette = JetColors(
-	primaryBackground = Color(218, 228, 205), //greenCustom
+	primaryBackground = Color(218, 228, 205), // greenCustom
 	secondaryBackground = Color(175, 218, 252), // blueCustom
 	tertiaryBackground = Color(188, 198, 175), // darkGreenCustom
 	primaryText = Color(217, 217, 217), // lightGrayCustom

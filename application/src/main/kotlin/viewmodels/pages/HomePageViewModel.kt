@@ -67,13 +67,6 @@ class HomePageViewModel(
 		} else {
 			WeightedUnweightedGraph<VertexID>(graphName, isGraphDirected, isAutoAddVertex = true)
 		}
-		// TODO(Remove code of add edges to graph)
-		for (i in 0..20) {
-			for (j in 0..20) {
-				if (i == j) continue
-				graph.addEdge(VertexID(i, VertexIDType.INT_TYPE), VertexID(j, VertexIDType.INT_TYPE), 1.0)
-			}
-		}
 		graphPage.graphViewModel = GraphViewModel(graph, vertexIDType, isUnweighted = false)
 		indexSelectedPage.value = sideMenu.pageOfTab("GraphView")
 		return graph

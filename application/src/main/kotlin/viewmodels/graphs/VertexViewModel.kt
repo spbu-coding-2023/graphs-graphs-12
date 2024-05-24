@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import models.VertexID
+import views.radiusStart
 
 
 class VertexViewModel(
@@ -13,7 +14,8 @@ class VertexViewModel(
 	x: Dp = 0.dp,
 	y: Dp = 0.dp,
 	color: Color = Color.Gray,
-	radius: Dp = 15.dp
+	radius: Dp = radiusStart.dp,
+	var degree: Int = 0
 ) {
 	private val _xPos = mutableStateOf(x)
 	var xPos: Dp

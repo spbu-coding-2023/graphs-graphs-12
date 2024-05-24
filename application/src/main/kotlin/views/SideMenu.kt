@@ -71,7 +71,7 @@ fun SideMenuTabColumn(tabsColumn: List<TabItem>, statePager: PagerState, indexSe
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SideMenu(statePager: PagerState, indexSelectedPage: MutableState<Int>, viewModel: SideMenuViewModel) {
-	Column(Modifier.width(weightBottom).fillMaxHeight()) {
+	Column(Modifier.width(sizeBottom).fillMaxHeight()) {
 		viewModel.tabsItems.forEach { tabsColumn ->
 			if (tabsColumn == null) Spacer(Modifier.weight(1f))
 			else SideMenuTabColumn(tabsColumn, statePager, indexSelectedPage, viewModel)
