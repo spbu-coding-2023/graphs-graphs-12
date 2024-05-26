@@ -3,13 +3,14 @@ package utils.representation
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import viewmodels.graphs.VertexViewModel
+import views.radiusStart
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
 import kotlin.random.Random
 
 class CircularPlacementStrategy : RepresentationStrategy {
-    override fun place(width: Double, height: Double, vertices: Collection<VertexViewModel>, vertex: VertexViewModel?) {
+    override fun place(width: Double, height: Double, vertices: Collection<VertexViewModel>) {
         if (vertices.isEmpty()) {
             println("CircularPlacementStrategy.place: there is nothing to place 👐🏻")
             return
@@ -20,7 +21,7 @@ class CircularPlacementStrategy : RepresentationStrategy {
 
         val sorted = vertices.sortedBy { it.label }
         val first = sorted.first()
-        var point = Pair(center.first, center.second - min(width, height) / 2)
+        var point = Pair(center.first, center.second - min(width, height) / 2 - radiusStart.value)
         first.xPos = point.first.dp
         first.yPos = point.second.dp
         first.color = Color.Gray

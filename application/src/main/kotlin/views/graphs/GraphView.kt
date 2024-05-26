@@ -1,37 +1,26 @@
 package views.graphs
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Paint
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import themes.JetTheme
 import utils.representation.ForceDirectedPlacementStrategy
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
-import views.displayMax
 import views.pages.listZoom
+import windowSizeStart
 import kotlin.math.*
 
 @Composable
@@ -132,10 +121,16 @@ fun GraphView(
 						detectDragGestures { change, dragAmount ->
 							change.consume()
 							vertexViewModel.onDrag(dragAmount)
-							ForceDirectedPlacementStrategy(graphViewModel).placeVertex(displayMax.toDouble(), displayMax.toDouble(), vertexViewModel)
+							ForceDirectedPlacementStrategy(graphViewModel).placeWithoutVertex(
+								windowSizeStart.second.toDouble(),
+								windowSizeStart.second.toDouble(),
+								vertexViewModel
+							)
 						}
+					}
+					.pointerInput(vertexViewModel) {
 						detectTapGestures(
-							onTap = {
+							onLongPress = {
 								if (idVerticesInfo.value != vertexViewModel) {
 									idVerticesInfo.value = vertexViewModel
 								} else {

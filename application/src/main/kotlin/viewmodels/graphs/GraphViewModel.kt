@@ -8,8 +8,8 @@ import graphs_lab.core.edges.WeightedEdge
 import graphs_lab.core.graphs.WeightedGraph
 import models.VertexID
 import utils.VertexIDType
-import views.displayMax
 import views.radiusStart
+import windowSizeStart
 import kotlin.random.Random
 
 class GraphViewModel(
@@ -52,8 +52,8 @@ class GraphViewModel(
 	fun addVertex(id: VertexID) {
 		graph.addVertex(id)
 		_vertices.putIfAbsent(id, VertexViewModel(id,
-			Random.nextInt(radiusStart.value.toInt(), displayMax - radiusStart.value.toInt()).dp,
-			Random.nextInt(radiusStart.value.toInt(), displayMax - radiusStart.value.toInt()).dp))
+			Random.nextInt(radiusStart.value.toInt(), windowSizeStart.second.toInt() - radiusStart.value.toInt()).dp,
+			Random.nextInt(radiusStart.value.toInt(), windowSizeStart.second.toInt() - radiusStart.value.toInt()).dp))
 	}
 
 	fun removeVertex(id: VertexID) {
@@ -76,16 +76,16 @@ class GraphViewModel(
 		val sourceViewModel = _vertices.getOrPut(idSource) {
 			VertexViewModel(
 				idSource,
-				Random.nextInt(0 + radiusStart.value.toInt(), displayMax - radiusStart.value.toInt()).dp,  // todo(change 1000 to height)
-				Random.nextInt(0 + radiusStart.value.toInt(), displayMax - radiusStart.value.toInt()).dp,
+				Random.nextInt(radiusStart.value.toInt(), windowSizeStart.second.toInt() - radiusStart.value.toInt()).dp,  // todo(change 1000 to height)
+				Random.nextInt(radiusStart.value.toInt(), windowSizeStart.second.toInt() - radiusStart.value.toInt()).dp,
 				degree = 1
 			)
 		}
 		val targetViewModel = _vertices.getOrPut(idTarget) {
 			VertexViewModel(
 				idTarget,
-				Random.nextInt(0 + radiusStart.value.toInt(), displayMax - radiusStart.value.toInt()).dp,
-				Random.nextInt(0 + radiusStart.value.toInt(), displayMax - radiusStart.value.toInt()).dp,
+				Random.nextInt(radiusStart.value.toInt(), windowSizeStart.second.toInt() - radiusStart.value.toInt()).dp,
+				Random.nextInt(radiusStart.value.toInt(), windowSizeStart.second.toInt() - radiusStart.value.toInt()).dp,
 				degree = 1
 			)
 		}
@@ -127,7 +127,7 @@ class GraphViewModel(
 		path.forEach { id ->
 			_vertices[id]!!.color = Color.Magenta // todo(!!)
 			if (idLast != id) {
-				_edges[WeightedEdge(idLast, id, 1.0)]!!.color = Color.Magenta
+				_edges[WeightedEdge(idLast, id, 1.0)]!!.color = Color.Magenta // todo(!!)
 				_edges[WeightedEdge(idLast, id, 1.0)]!!.size = 8f
 			}
 			idLast = id
