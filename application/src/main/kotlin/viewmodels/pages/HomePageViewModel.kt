@@ -14,7 +14,6 @@ import models.VertexID
 import models.WeightedUnweightedGraph
 import utils.VertexIDType
 import viewmodels.SideMenuViewModel
-import viewmodels.dialogs.CreateNewGraphDialogViewModel
 import viewmodels.graphs.GraphViewModel
 
 class HomePageViewModel(
@@ -67,6 +66,33 @@ class HomePageViewModel(
 		} else {
 			WeightedUnweightedGraph<VertexID>(graphName, isGraphDirected, isAutoAddVertex = true)
 		}
+		graph.addEdge(VertexID(1, VertexIDType.INT_TYPE), VertexID(2, VertexIDType.INT_TYPE), 1.0)
+		graph.addEdge(VertexID(1, VertexIDType.INT_TYPE), VertexID(3, VertexIDType.INT_TYPE), 10.0)
+		graph.addEdge(VertexID(1, VertexIDType.INT_TYPE), VertexID(4, VertexIDType.INT_TYPE), 100.0)
+		graph.addEdge(VertexID(1, VertexIDType.INT_TYPE), VertexID(5, VertexIDType.INT_TYPE), 50.0)
+		graph.addEdge(VertexID(2, VertexIDType.INT_TYPE), VertexID(6, VertexIDType.INT_TYPE), -11.0)
+		graph.addEdge(VertexID(2, VertexIDType.INT_TYPE), VertexID(7, VertexIDType.INT_TYPE), 1.0)
+		graph.addEdge(VertexID(2, VertexIDType.INT_TYPE), VertexID(8, VertexIDType.INT_TYPE), 1.0)
+		graph.addEdge(VertexID(2, VertexIDType.INT_TYPE), VertexID(9, VertexIDType.INT_TYPE), 1.0)
+		graph.addEdge(VertexID(3, VertexIDType.INT_TYPE), VertexID(8, VertexIDType.INT_TYPE), 1.0)
+		graph.addEdge(VertexID(3, VertexIDType.INT_TYPE), VertexID(10, VertexIDType.INT_TYPE), 1.0)
+		graph.addEdge(VertexID(3, VertexIDType.INT_TYPE), VertexID(11, VertexIDType.INT_TYPE), 1.0)
+		graph.addEdge(VertexID(6, VertexIDType.INT_TYPE), VertexID(10, VertexIDType.INT_TYPE), 1.0)
+		graph.addEdge(VertexID(6, VertexIDType.INT_TYPE), VertexID(11, VertexIDType.INT_TYPE), 1.0)
+		graph.addEdge(VertexID(6, VertexIDType.INT_TYPE), VertexID(12, VertexIDType.INT_TYPE), 1.0)
+		graph.addEdge(VertexID(13, VertexIDType.INT_TYPE), VertexID(14, VertexIDType.INT_TYPE), 1.0)
+		graph.addEdge(VertexID(13, VertexIDType.INT_TYPE), VertexID(15, VertexIDType.INT_TYPE), 1.0)
+		graph.addEdge(VertexID(13, VertexIDType.INT_TYPE), VertexID(16, VertexIDType.INT_TYPE), 1.0)
+		graph.addEdge(VertexID(14, VertexIDType.INT_TYPE), VertexID(17, VertexIDType.INT_TYPE), 1.0)
+		graph.addEdge(VertexID(14, VertexIDType.INT_TYPE), VertexID(18, VertexIDType.INT_TYPE), 1.0)
+		graph.addEdge(VertexID(17, VertexIDType.INT_TYPE), VertexID(19, VertexIDType.INT_TYPE), 1.0)
+		graph.addEdge(VertexID(19, VertexIDType.INT_TYPE), VertexID(20, VertexIDType.INT_TYPE), 1.0)
+//		for (i in 0..10) {
+//			for (j in 0..10) {
+//				if (i == j) continue
+//				graph.addEdge(VertexID(i, VertexIDType.INT_TYPE), VertexID(j, VertexIDType.INT_TYPE), 1.0)
+//			}
+//		}
 		graphPage.graphViewModel = GraphViewModel(graph, vertexIDType, isUnweighted = false)
 		indexSelectedPage.value = sideMenu.pageOfTab("GraphView")
 		return graph

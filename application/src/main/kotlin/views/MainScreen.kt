@@ -17,9 +17,10 @@ import views.pages.SettingsPage
 import viewmodels.MainScreenViewModel
 
 // todo(add to jetpack)
+val displayMax = 800
 val whiteCustom = Color(254, 249, 231)
 val sizeBottom = 50.dp
-val radiusStart = 15
+val radiusStart = 15.dp
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

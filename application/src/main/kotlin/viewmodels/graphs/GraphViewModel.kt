@@ -1,12 +1,14 @@
 package viewmodels.graphs
 
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import graphs_lab.core.edges.Edge
+import graphs_lab.algs.DijkstraAlgorithm
 import graphs_lab.core.edges.WeightedEdge
 import graphs_lab.core.graphs.WeightedGraph
 import models.VertexID
 import utils.VertexIDType
+import views.displayMax
 import views.radiusStart
 import kotlin.random.Random
 
@@ -21,7 +23,7 @@ class GraphViewModel(
 	private val _edges = mutableStateMapOf<WeightedEdge<VertexID>, EdgeViewModel>()
 	val edges: Collection<EdgeViewModel>
 		get() = _edges.values
-	val sizeEdges: Int
+	val countEdges: Int
 		get() = if (graph.isDirected) _edges.size else _edges.size / 2
 
 	init {
@@ -49,7 +51,9 @@ class GraphViewModel(
 
 	fun addVertex(id: VertexID) {
 		graph.addVertex(id)
-		_vertices.putIfAbsent(id, VertexViewModel(id, Random.nextInt(0, 1000).dp, Random.nextInt(0, 1000).dp))
+		_vertices.putIfAbsent(id, VertexViewModel(id,
+			Random.nextInt(radiusStart.value.toInt(), displayMax - radiusStart.value.toInt()).dp,
+			Random.nextInt(radiusStart.value.toInt(), displayMax - radiusStart.value.toInt()).dp))
 	}
 
 	fun removeVertex(id: VertexID) {
@@ -57,6 +61,11 @@ class GraphViewModel(
 		_edges.forEach {
 			if (it.key.idSource == id || it.key.idTarget == id) {
 				_edges.remove(it.key)
+				if (it.key.idSource == id) {
+					it.value.target.degree--
+				} else {
+					it.value.source.degree--
+				}
 			}
 		}
 		graph.removeVertex(id)
@@ -67,15 +76,17 @@ class GraphViewModel(
 		val sourceViewModel = _vertices.getOrPut(idSource) {
 			VertexViewModel(
 				idSource,
-				Random.nextInt(0 + radiusStart, 1000 - radiusStart).dp,  // todo(change 1000 to height)
-				Random.nextInt(0 + radiusStart, 1000 - radiusStart).dp
+				Random.nextInt(0 + radiusStart.value.toInt(), displayMax - radiusStart.value.toInt()).dp,  // todo(change 1000 to height)
+				Random.nextInt(0 + radiusStart.value.toInt(), displayMax - radiusStart.value.toInt()).dp,
+				degree = 1
 			)
 		}
 		val targetViewModel = _vertices.getOrPut(idTarget) {
 			VertexViewModel(
 				idTarget,
-				Random.nextInt(0 + radiusStart, 1000 - radiusStart).dp,
-				Random.nextInt(0 + radiusStart, 1000 - radiusStart).dp
+				Random.nextInt(0 + radiusStart.value.toInt(), displayMax - radiusStart.value.toInt()).dp,
+				Random.nextInt(0 + radiusStart.value.toInt(), displayMax - radiusStart.value.toInt()).dp,
+				degree = 1
 			)
 		}
 		val edge = graph.vertexEdges(idSource).filter { it.idTarget == idTarget }.first()
@@ -101,8 +112,25 @@ class GraphViewModel(
 	}
 
 	fun removeEdge(idSource: VertexID, idTarget: VertexID) {
+		_vertices[idSource]!!.degree-- // todo(!!)
+		_vertices[idTarget]!!.degree-- // todo(!!)
+		_edges.remove(WeightedEdge(idSource, idTarget, 1.0))
+		if (!graph.isDirected) _edges.remove(WeightedEdge(idTarget, idSource, 1.0))
 		graph.removeEdge(idSource, idTarget)
-		_edges.remove(Edge(idSource, idTarget))
-		if (!graph.isDirected) _edges.remove(Edge(idTarget, idSource))
+	}
+
+	fun parseDijkstraAlgorithm(idSource: VertexID, idTarget: VertexID) {
+		val resultAlgo = DijkstraAlgorithm(graph)
+		val path = resultAlgo.getPath(idSource, idTarget) ?: return
+
+		var idLast = idSource
+		path.forEach { id ->
+			_vertices[id]!!.color = Color.Magenta // todo(!!)
+			if (idLast != id) {
+				_edges[WeightedEdge(idLast, id, 1.0)]!!.color = Color.Magenta
+				_edges[WeightedEdge(idLast, id, 1.0)]!!.size = 8f
+			}
+			idLast = id
+		}
 	}
 }

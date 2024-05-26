@@ -25,10 +25,10 @@ class SideMenuModel {
 
 	fun changeTabVisibility(tabTitle: String, isHiddenState: Boolean) {
 		val tabItem = tabsIdentifier[tabTitle] ?: return
-		tabItem.isHide.value = isHiddenState
+		tabItem.isHidden.value = isHiddenState
 	}
 
 	override fun toString(): String {
-		return "SideMenuModel(tabsCount=$tabsCount)"
+		return "SideMenuModel(tabsCount = $tabsCount)"
 	}
 }

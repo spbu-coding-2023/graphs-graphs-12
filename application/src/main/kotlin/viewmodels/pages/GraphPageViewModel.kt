@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import utils.representation.RandomPlacementStrategy
 import utils.representation.RepresentationStrategy
 import viewmodels.graphs.GraphViewModel
+import views.displayMax
 
 class GraphPageViewModel {
 	private val _representationStrategy = mutableStateOf<RepresentationStrategy>(RandomPlacementStrategy())
@@ -26,6 +27,6 @@ class GraphPageViewModel {
 		// TODO(run it by coroutine scope)
 		// TODO(change values of `width` and `height`)
 		val model = _graph.value ?: return
-		representationStrategy.place(1000.0, 700.0, model.vertices)
+		representationStrategy.place(displayMax.toDouble(), displayMax.toDouble(), model.vertices, null)
 	}
 }

@@ -1,5 +1,6 @@
 package viewmodels.graphs
 
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -14,8 +15,8 @@ class VertexViewModel(
 	x: Dp = 0.dp,
 	y: Dp = 0.dp,
 	color: Color = Color.Gray,
-	radius: Dp = radiusStart.dp,
-	var degree: Int = 0
+	radius: Dp = radiusStart,
+	degree: Int = 0
 ) {
 	private val _xPos = mutableStateOf(x)
 	var xPos: Dp
@@ -41,6 +42,12 @@ class VertexViewModel(
 		set(value) {
 			_radius.value = value
 		}
+	private val _degree = mutableIntStateOf(degree)
+	var degree: Int
+		get() = _degree.intValue
+		set(value) {
+			_degree.intValue = value
+		}
 	val label: String = id.valueToString()
 
 	fun onDrag(offset: Offset) {
@@ -49,6 +56,6 @@ class VertexViewModel(
 	}
 
 	override fun toString(): String {
-		return "VertexViewModel(id=$id)"
+		return "VertexViewModel(id = $id)"
 	}
 }

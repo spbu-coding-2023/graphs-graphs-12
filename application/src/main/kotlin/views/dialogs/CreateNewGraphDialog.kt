@@ -29,21 +29,21 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 //	val isGraphWeighted = remember { mutableStateOf(false) }
 //	val isGraphDirected = remember { mutableStateOf(false) }
 //	val selectedSaveType = remember { mutableStateOf(SaveType.LOCAL_FILE) }
-	DialogWindow(
+
+	DialogWindow( // todo(add min size)
 		onCloseRequest = { viewModel.homePageViewModel.isOpenDialogOfCreatingNewGraph = false },
 		state = rememberDialogState(position = WindowPosition(Alignment.Center), size = DpSize(500.dp, 350.dp)),
 		title = "Create new graph",
-		resizable = true
+		resizable = false
 	) {
-		Column(
-			modifier = Modifier
-				.fillMaxSize()
-				.background(JetTheme.colors.primaryBackground)
+		Column(Modifier
+			.fillMaxSize()
+			.background(JetTheme.colors.primaryBackground)
 		) {
-			Row(
-				verticalAlignment = Alignment.CenterVertically,
-				modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 5.dp)
-			) {
+			val modifierRow = Modifier.padding(0.dp, 5.dp, 0.dp, 5.dp)
+			val verticalRow = Alignment.CenterVertically
+
+			Row(modifierRow, verticalAlignment = verticalRow) {
 				Text(
 					"Graph name:",
 					modifier = Modifier.weight(0.5f),
@@ -57,10 +57,7 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 					textStyle = TextStyle(textAlign = TextAlign.Center)
 				)
 			}
-			Row(
-				verticalAlignment = Alignment.CenterVertically,
-				modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 5.dp)
-			) {
+			Row(modifierRow, verticalAlignment = verticalRow) {
 				Text(
 					"Vertices ID type:",
 					modifier = Modifier.weight(0.5f),
@@ -73,10 +70,7 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 					textAlign = TextAlign.Center
 				)
 			}
-			Row(
-				verticalAlignment = Alignment.CenterVertically,
-				modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 5.dp)
-			) {
+			Row(modifierRow, verticalAlignment = verticalRow) {
 				CustomRadioButton(
 					selected = viewModel.isGraphWeighted.value,
 					onClick = { viewModel.isGraphWeighted.value = !viewModel.isGraphWeighted.value },
@@ -93,10 +87,7 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 					modifier = Modifier.weight(1f),
 				)
 			}
-			Row(
-				verticalAlignment = Alignment.CenterVertically,
-				modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 5.dp)
-			) {
+			Row(modifierRow, verticalAlignment = verticalRow) {
 				Text(
 					"Vertices ID type:",
 					modifier = Modifier.weight(0.5f),
@@ -109,10 +100,7 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 					textAlign = TextAlign.Center
 				)
 			}
-			Row(
-				verticalAlignment = Alignment.CenterVertically,
-				modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 5.dp)
-			) {
+			Row(modifierRow, verticalAlignment = verticalRow) {
 				Spacer(modifier = Modifier.weight(1f))
 				Button(
 					onClick = { viewModel.homePageViewModel.isOpenDialogOfCreatingNewGraph = false }

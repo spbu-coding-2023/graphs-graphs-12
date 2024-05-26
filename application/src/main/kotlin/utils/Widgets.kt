@@ -92,7 +92,7 @@ fun ListWidget(
 
 								Box {
 									IconButton(onClick = { expanded = true }) {
-										Icon(Icons.Default.MoreVert, contentDescription = "Показать меню")
+										Icon(Icons.Default.MoreVert, contentDescription = "Show menu")
 									}
 									DropdownMenu(
 										expanded = expanded,

@@ -5,10 +5,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -19,19 +19,21 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import graphs_lab.core.edges.WeightedEdge
 import models.VertexID
 import themes.JetTheme
-import utils.VertexIDType
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
 import viewmodels.pages.GraphPageViewModel
 import views.*
 import views.graphs.GraphView
+import views.graphs.GraphViewTest
 
 val listZoom = listOf(
 	0.1f,
@@ -73,10 +75,12 @@ fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
 			.background(JetTheme.colors.secondaryBackground, JetTheme.shapes.cornerStyle)
 		) {
 			GraphView(graphViewModel = graphViewModel, abilityZoom.value, indexListZoom.intValue, idVerticesInfo)
+//			GraphViewTest(graphViewModel = graphViewModel, abilityZoom.value, indexListZoom.intValue, idVerticesInfo)
 			Box(Modifier.fillMaxSize()) {
 				if (abilityZoom.value) ColumnZoomButtons(indexListZoom, Modifier.align(Alignment.TopEnd), modifierButtons)
 				ColumnChangeAbility(abilityZoom, Modifier.align(Alignment.CenterEnd), modifierButtons)
-				ColumnInfoGraph(graphViewModel, Modifier.align(Alignment.BottomEnd), modifierButtons, isOpenedContextGraph, isOpenedContextEdge, idVerticesInfo)
+				ColumnInfoGraph(graphViewModel, Modifier.align(Alignment.BottomEnd), modifierButtons,
+					isOpenedContextGraph, isOpenedContextEdge, idVerticesInfo)
 			}
 		}
 	}
@@ -140,7 +144,6 @@ fun ColumnChangeAbility(abilityZoom: MutableState<Boolean>, modifierBox: Modifie
 	}
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ColumnInfoGraph(
 	graphViewModel: GraphViewModel,
@@ -184,44 +187,23 @@ fun ColumnInfoGraph(
 	}
 }
 
-@Composable
-fun BoxComponentGraph(text: String, count: Int, action: () -> Unit) {
-	Box(modifier = Modifier
-		.fillMaxWidth()
-		.padding(2.dp)
-		.clip(JetTheme.shapes.cornerStyle)
-		.background(Color.White, JetTheme.shapes.cornerStyle)
-	) {
-		Text(text, fontSize = 16.sp, modifier = Modifier.padding(15.dp).align(Alignment.CenterStart))
-		Text("$count", fontSize = 16.sp, modifier = Modifier.padding(15.dp).align(Alignment.Center))
-		Button(
-			onClick = action,
-			enabled = true,
-			modifier = Modifier
-				.width(50.dp)
-				.padding(4.dp)
-				.align(Alignment.TopEnd),
-			colors = ButtonDefaults.buttonColors(Color.White)
-		) {
-			Text("+")
-		}
-	}
-}
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun showAddItem(graphViewModel: GraphViewModel) {
 	val idFastAdd = remember { mutableIntStateOf(graphViewModel.vertices.size + 1) }
 
-	val statePager = rememberPagerState { 2 } // todo(remember need?)
+	val statePager = rememberPagerState { 2 }
+
+	var isShownWeigh by remember { mutableStateOf(false) }
+	var isShownId by remember { mutableStateOf(true) }
 
 	val addingVertex = {
-		graphViewModel.addVertex(VertexID(checkAndGet(graphViewModel, idFastAdd), VertexIDType.INT_TYPE))
+		graphViewModel.addVertex(VertexID(checkAndGet(graphViewModel, idFastAdd), graphViewModel.vertexType))
 	}
 	val addingEdge = {
-		val vertexSource = VertexID(checkAndGet(graphViewModel, idFastAdd), VertexIDType.INT_TYPE)
+		val vertexSource = VertexID(checkAndGet(graphViewModel, idFastAdd), graphViewModel.vertexType)
 		graphViewModel.addVertex(vertexSource)
-		val vertexTarget = VertexID(checkAndGet(graphViewModel, idFastAdd), VertexIDType.INT_TYPE)
+		val vertexTarget = VertexID(checkAndGet(graphViewModel, idFastAdd), graphViewModel.vertexType)
 		graphViewModel.addVertex(vertexTarget)
 		graphViewModel.addEdge(vertexSource, vertexTarget, 1.0)
 	}
@@ -234,22 +216,49 @@ fun showAddItem(graphViewModel: GraphViewModel) {
 		horizontalArrangement = Arrangement.spacedBy(1.dp),
 	) {
 		Column(Modifier.weight(1f)) {
-			Text(text = graphViewModel.graph.label, modifier = androidx.compose.ui.Modifier.padding(4.dp))
-			BoxComponentGraph("Vertices:", graphViewModel.vertices.size, addingVertex)
-			BoxComponentGraph("Edges:", graphViewModel.sizeEdges, addingEdge)
+			Text("Graph name: ${graphViewModel.graph.label}", fontSize = 20.sp, modifier = Modifier.padding(4.dp))
+			Row {
+				Column(Modifier.weight(1f)) {
+					if (graphViewModel.graph.isDirected) Text("Directed", fontSize = 14.sp, modifier = Modifier.padding(4.dp))
+					if (!graphViewModel.isUnweighted) {
+						Text("Weighted", fontSize = 14.sp, modifier = Modifier.padding(4.dp))
+						Row {
+							Text("Show weight", fontSize = 14.sp, modifier = Modifier.padding(4.dp))
+							Checkbox(
+								checked = isShownWeigh,
+								onCheckedChange = { isShownWeigh = !isShownWeigh },
+								modifier = Modifier.size(10.dp)
+							)
+						}
+					}
+					Row {
+						Text("Show id", fontSize = 14.sp, modifier = Modifier.padding(4.dp))
+						Checkbox(
+							checked = isShownId,
+							onCheckedChange = { isShownId = !isShownId },
+							modifier = Modifier.size(10.dp)
+						)
+					}
+				}
+				Column(Modifier.weight(2f)) {
+					BoxAddItem("Vertices:", graphViewModel.vertices.size, addingVertex)
+					BoxAddItem("Edges:", graphViewModel.countEdges, addingEdge)
+				}
+
+			}
 		}
-		Column(Modifier.weight(1f).height(147.dp)) { // todo(change size in dark theme or big size)
-			HorizontalPager(
+		Column(Modifier.weight(1f).height(152.dp)) { // todo(change size in dark theme or big size)
+			HorizontalPager( // todo(how to fix double show pagers?)
 				modifier = Modifier
 					.fillMaxSize()
 					.padding(2.dp)
 					.clip(JetTheme.shapes.cornerStyle)
 					.background(whiteCustom, JetTheme.shapes.cornerStyle),
 				state = statePager,
-				userScrollEnabled = true,
+				userScrollEnabled = true
 			) { index ->
 				when (index) {
-					0 -> showMenuVertex(graphViewModel, Modifier)
+					0 -> showMenuVertex(graphViewModel)
 					1 -> showMenuEdge(graphViewModel)
 				}
 			}
@@ -257,8 +266,37 @@ fun showAddItem(graphViewModel: GraphViewModel) {
 	}
 }
 
+@Composable
+fun BoxAddItem(text: String, count: Int, action: () -> Unit) {
+	Box(modifier = Modifier
+		.fillMaxWidth()
+		.padding(2.dp)
+		.clip(JetTheme.shapes.cornerStyle)
+		.background(Color.White, JetTheme.shapes.cornerStyle)
+	) {
+		Text(text, fontSize = 16.sp, modifier = Modifier.padding(15.dp).align(Alignment.CenterStart))
+		Row(Modifier
+			.padding(4.dp)
+			.align(Alignment.TopEnd)
+		) {
+			Text("$count", fontSize = 16.sp, modifier = Modifier.padding(15.dp))
+			IconButton(
+				onClick = action,
+				enabled = true,
+				modifier = Modifier.width(50.dp),
+				content = {
+					Icon(
+						imageVector = Icons.Default.Add,
+						contentDescription = "Add item",
+					)
+				}
+			)
+		}
+	}
+}
+
 fun checkAndGet(graphViewModel: GraphViewModel, idFastAdd: MutableIntState): Int {
-	while (graphViewModel.graph.idVertices.contains(VertexID(idFastAdd.intValue, VertexIDType.INT_TYPE))) {
+	while (graphViewModel.graph.idVertices.contains(VertexID(idFastAdd.intValue, graphViewModel.vertexType))) {
 		idFastAdd.intValue++
 	}
 	return idFastAdd.intValue
@@ -268,140 +306,185 @@ fun checkAndGet(graphViewModel: GraphViewModel, idFastAdd: MutableIntState): Int
 fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<VertexViewModel?>) {
 	val setEdges by remember { mutableStateOf(graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id)) }
 
+	val removingVertexSource: () -> Unit = {
+		graphViewModel.removeVertex(idVerticesInfo.value!!.id) // todo(!!)
+		idVerticesInfo.value = null
+	}
+	val removingVertexTarget: (WeightedEdge<VertexID>) -> Unit = {
+		graphViewModel.removeVertex(it.idTarget)
+	}
+	val removingEdge: (WeightedEdge<VertexID>) -> Unit = {
+		graphViewModel.removeEdge(it.idSource, it.idTarget)
+	}
+
+	val stringVertex: (WeightedEdge<VertexID>) -> String = {
+		"Vertex: ${it.idTarget.valueToString()}"
+	}
+	val stringEdge: (WeightedEdge<VertexID>) -> String = {
+		"Edge: ${it.idSource.valueToString()} -> ${it.idTarget.valueToString()}"
+	}
+
 	Row(
 		modifier = Modifier
 			.fillMaxWidth()
 			.padding(4.dp),
 		horizontalArrangement = Arrangement.spacedBy(4.dp)
 	) {
-		Column(Modifier
-			.weight(1f)
-			.verticalScroll(rememberScrollState())
-		) {
-			if (setEdges.isEmpty()) {
-				Text("Doesn't have adjacent vertices", Modifier.padding(4.dp))
-			}
-			setEdges.forEach {
-				Box(Modifier.fillMaxWidth()) {
-					Text(it.idTarget.toString(), Modifier.padding(4.dp).align(Alignment.CenterStart))
-					Button(
-						onClick = { graphViewModel.removeVertex(it.idTarget) },
-						modifier = Modifier
-							.size(sizeBottom)
-							.align(Alignment.CenterEnd),
-						colors = ButtonDefaults.buttonColors(Color(whiteCustom.value))
-					) {
-						Icon(
-							imageVector = Icons.Default.Delete,
-							contentDescription = "Remove vertex"
-						)
-					}
-				}
+		Column(Modifier.weight(1f)) {
+			if (idVerticesInfo.value != null) {
+				Text("Vertex: ${idVerticesInfo.value!!.id.valueToString()}") // todo(!!)
+				Text("Count edges: ${graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id).size}")
+				ButtonCustom(removingVertexSource, "Delete", Modifier)
 			}
 		}
-		Column(Modifier
-			.weight(1f)
-			.verticalScroll(rememberScrollState())
-		) {
-			if (setEdges.isEmpty()) {
-				Text("Doesn't have edges", Modifier.padding(4.dp))
-			}
-			setEdges.forEach {
-				Box(Modifier.fillMaxWidth()) {
-					Text(it.toString(), Modifier.padding(4.dp).align(Alignment.CenterStart))
-					Button(
-						onClick = { graphViewModel.removeEdge(it.idSource, it.idTarget) },
-						modifier = Modifier
-							.size(sizeBottom)
-							.align(Alignment.CenterEnd),
-						colors = ButtonDefaults.buttonColors(Color(whiteCustom.value))
-					) {
-						Icon(
-							imageVector = Icons.Default.Delete,
-							contentDescription = "Remove edge"
-						)
-					}
-				}
-			}
+		ColumnBoxEditItem(
+			setEdges,
+			idVerticesInfo,
+			Modifier.weight(2f),
+			removingVertexTarget,
+			"Doesn't have adjacent vertices",
+			stringVertex
+		)
+		ColumnBoxEditItem(
+			setEdges,
+			idVerticesInfo,
+			Modifier.weight(2f),
+			removingEdge,
+			"Doesn't have edges",
+			stringEdge
+		)
+	}
+}
+
+@Composable
+fun ColumnBoxEditItem(
+	setEdges: Set<WeightedEdge<VertexID>>,
+	idVerticesInfo: MutableState<VertexViewModel?>,
+	modifierRow: Modifier,
+	action: (WeightedEdge<VertexID>) -> Unit,
+	message: String,
+	string: (WeightedEdge<VertexID>) -> String
+) {
+	Column(modifierRow
+		.heightIn(0.dp, 180.dp)
+		.clip(JetTheme.shapes.cornerStyle)
+		.background(whiteCustom, JetTheme.shapes.cornerStyle)
+		.verticalScroll(rememberScrollState())
+	) {
+		if (setEdges.isEmpty()) {
+			Text(message, Modifier.padding(4.dp))
+		}
+		setEdges.forEach {
+			BoxEditItem(it, idVerticesInfo, action, string)
 		}
 	}
 }
 
-//
-//@Composable
-//fun BoxEditItem(graphViewModel: GraphViewModel, item: , action: () -> Unit) {
-//	Box(
-//
-//	) {
-//
-//	}
-//}
-
+@Composable
+fun BoxEditItem(
+	edge: WeightedEdge<VertexID>,
+	idVerticesInfo: MutableState<VertexViewModel?>,
+	action: (WeightedEdge<VertexID>) -> Unit,
+	string: (WeightedEdge<VertexID>) -> String
+) {
+	Box(Modifier.fillMaxWidth()) {
+		Text(string(edge), Modifier.padding(4.dp).align(Alignment.CenterStart))
+		IconButton(
+			onClick = {
+				action(edge)
+				idVerticesInfo.value = null // todo(maybe can to better)
+					  },
+			enabled = true,
+			modifier = Modifier
+				.width(sizeBottom)
+				.padding(4.dp)
+				.align(Alignment.TopEnd),
+			content = {
+				Icon(
+					imageVector = Icons.Default.Delete,
+					contentDescription = "Remove item"
+				)
+			}
+		)
+	}
+}
 
 @Composable
-fun showMenuVertex(graphViewModel: GraphViewModel, modifier: Modifier) {
-	var idVertex by remember { mutableStateOf("") }
+fun showMenuVertex(graphViewModel: GraphViewModel) {
+	val idVertex = remember { mutableStateOf("") }
 
-	Column(modifier) {
-		OutlinedTextField(
-			value = idVertex,
-			onValueChange = { idVertex = it },
-			label = { Text("The vertex id") },
-			modifier = Modifier.padding(4.dp)
-		)
-
-		Button(
-			onClick = {
-				if (idVertex != "") {
-					graphViewModel.addVertex(VertexID(idVertex, VertexIDType.INT_TYPE))
-				}
-			},
-			modifier = Modifier.padding(4.dp)
-		) {
-			Text("Create")
+	val creationVertex = {
+		if (idVertex.value != "") {
+			graphViewModel.addVertex(VertexID(idVertex.value, graphViewModel.vertexType))
 		}
+	}
+
+	Column {
+		Row(
+			modifier = Modifier.padding(4.dp),
+			horizontalArrangement = Arrangement.spacedBy(4.dp)
+		) {
+			TextFieldItem(idVertex, "Vertex", Modifier.weight(1f))
+			Spacer(Modifier.weight(1f))
+		}
+		ButtonCustom(creationVertex, "Create", Modifier.padding(4.dp))
 	}
 }
 
 @Composable
 fun showMenuEdge(graphViewModel: GraphViewModel) {
-	var idVertexSource by remember { mutableStateOf("") }
-	var idVertexTarget by remember { mutableStateOf("") }
+	val idVertexSource = remember { mutableStateOf("") }
+	val idVertexTarget = remember { mutableStateOf("") }
+	val weight = remember { mutableStateOf("") }
 
-	Column(
-		modifier = Modifier
-	) {
+	val creationEdge = {
+		if (idVertexSource.value != "" && idVertexTarget.value != "" && idVertexSource.value != idVertexTarget.value
+			&& weight.value.toDoubleOrNull() != null) {
+			graphViewModel.addEdge(
+				VertexID(idVertexSource.value, graphViewModel.vertexType),
+				VertexID(idVertexTarget.value, graphViewModel.vertexType),
+				weight.value.toDouble()
+			)
+		}
+	}
+
+	Column {
 		Row(
 			modifier = Modifier.padding(4.dp),
 			horizontalArrangement = Arrangement.spacedBy(4.dp)
 		) {
-			OutlinedTextField(
-				value = idVertexSource,
-				onValueChange = { idVertexSource = it },
-				label = { Text("The vertex id") },
-				modifier = Modifier.weight(1f)
-			)
-			OutlinedTextField(
-				value = idVertexTarget,
-				onValueChange = { idVertexTarget = it },
-				label = { Text("The vertex id") },
-				modifier = Modifier.weight(1f)
-			)
+			TextFieldItem(idVertexSource, "Source vertex", Modifier.weight(1f))
+			TextFieldItem(idVertexTarget, "Target vertex", Modifier.weight(1f))
 		}
 
-		Button(
-			onClick = {
-				if (idVertexSource != "" && idVertexTarget != "" && idVertexSource != idVertexTarget) {
-					graphViewModel.addEdge(
-						VertexID(idVertexSource, VertexIDType.INT_TYPE),
-						VertexID(idVertexTarget, VertexIDType.INT_TYPE),
-						1.0
-					)
-				}
-			},
-			modifier = Modifier.padding(4.dp)
-		) {
-			Text("Create")
+		Row(Modifier.padding(4.dp)) {
+			Box(Modifier.weight(1f)) {
+				Spacer(Modifier.fillMaxWidth())
+				ButtonCustom(creationEdge, "Create", Modifier.align(Alignment.CenterStart))
+			}
+			TextFieldItem(weight, "Weight", Modifier.weight(1f))
 		}
 	}
 }
+
+@Composable
+fun ButtonCustom(action: () -> Unit, message: String, modifier: Modifier) {
+	Button(
+		onClick = action,
+		modifier = modifier,
+		colors = ButtonDefaults.buttonColors(Color.White)
+	) {
+		Text(message)
+	}
+}
+
+@Composable
+fun TextFieldItem(string: MutableState<String>, label: String, modifier: Modifier) {
+	OutlinedTextField(
+		value = string.value,
+		onValueChange = { string.value = it },
+		label = { Text(label) },
+		modifier = modifier
+	)
+}
+

@@ -26,7 +26,7 @@ class VertexID(private val value: Any, val type: VertexIDType) {
 	}
 
 	override fun toString(): String {
-		return "VertexID(value=$value, type=$type)"
+		return "VertexID(value = $value, type = $type)"
 	}
 
 

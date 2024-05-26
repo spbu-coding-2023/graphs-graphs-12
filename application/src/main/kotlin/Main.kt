@@ -11,6 +11,7 @@ import java.awt.Dimension
  */
 fun main() {
 	val windowSizeStart = Pair(1000f, 700f)
+
 	application {
 		val settings: SettingsModel = SettingsModel.loadSettings()
 		Window(
@@ -19,7 +20,6 @@ fun main() {
 			state = rememberWindowState(position = WindowPosition(Alignment.Center)),
 		) {
 			window.minimumSize = Dimension(windowSizeStart.first.toInt(), windowSizeStart.second.toInt())
-
 
 			MaterialTheme { MainScreen(MainScreenViewModel(settings)) }
 		}

@@ -9,8 +9,8 @@ data class TabItem(
 	val title: String,
 	val iconSelected: ImageVector,
 	val iconUnselected: ImageVector,
-	val isHide: MutableState<Boolean> = mutableStateOf(false),
-	val isPageSelectable: Boolean = false,
+	val isHidden: MutableState<Boolean> = mutableStateOf(false),
+	val isSelectablePage: Boolean = false,
 	val dropDownMenuContext: @Composable ((TabItem) -> (Unit))? = null,
 	private val onItemClick: ((TabItem) -> (Unit))? = null,
 ) {
@@ -28,7 +28,7 @@ data class TabItem(
 	}
 
 	override fun toString(): String {
-		return "TabItem(title='$title', isHide=${isHide.value})"
+		return "TabItem(title = '$title', isHidden = ${isHidden.value})"
 	}
 
 	fun onClick(): (() -> (Unit))? {

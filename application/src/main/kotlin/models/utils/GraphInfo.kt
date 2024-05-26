@@ -28,6 +28,6 @@ class GraphInfo(
 	}
 
 	override fun toString(): String {
-		return "GraphInfo(pathTo=$pathTo, previouslyOpenDateTime=$previouslyOpenDateTime)"
+		return "GraphInfo(pathTo = $pathTo, previouslyOpenDateTime = $previouslyOpenDateTime)"
 	}
 }

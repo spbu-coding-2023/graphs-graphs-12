@@ -9,7 +9,7 @@ import kotlin.math.sin
 import kotlin.random.Random
 
 class CircularPlacementStrategy : RepresentationStrategy {
-    override fun place(width: Double, height: Double, vertices: Collection<VertexViewModel>) {
+    override fun place(width: Double, height: Double, vertices: Collection<VertexViewModel>, vertex: VertexViewModel?) {
         if (vertices.isEmpty()) {
             println("CircularPlacementStrategy.place: there is nothing to place 👐🏻")
             return
