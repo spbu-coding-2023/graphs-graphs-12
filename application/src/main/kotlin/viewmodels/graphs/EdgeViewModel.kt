@@ -13,7 +13,8 @@ class EdgeViewModel(
 	val target: VertexViewModel,
 	isUnweighted: Boolean,
 	color: Color = Color.Black, // Color(56, 90, 83)
-	size: Float = 1f // todo(Float?)
+	size: Float = 1f, // todo(Float?)
+	visibility: Boolean = false
 ) {
 	private val _color = mutableStateOf(color)
 	var color: Color
@@ -26,6 +27,12 @@ class EdgeViewModel(
 		get() = _size.floatValue
 		set(value) {
 			_size.floatValue = value
+		}
+	private val _visibility = mutableStateOf(visibility)
+	var visibility: Boolean
+		get() = _visibility.value
+		set(value) {
+			_visibility.value = value
 		}
 	val label: String = if (isUnweighted) {
 		""
