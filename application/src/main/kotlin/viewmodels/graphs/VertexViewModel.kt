@@ -8,15 +8,18 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import models.VertexID
 import views.radiusStart
+import javax.swing.text.StyledEditorKit.BoldAction
 
+val colorVertexStart = Color.Gray
 
 class VertexViewModel(
 	val id: VertexID,
 	x: Dp = 0.dp,
 	y: Dp = 0.dp,
-	color: Color = Color.Gray,
+	color: Color = colorVertexStart,
 	radius: Dp = radiusStart,
-	degree: Int = 0
+	degree: Int = 0,
+	visibility: Boolean = true
 ) {
 	private val _xPos = mutableStateOf(x)
 	var xPos: Dp
@@ -47,6 +50,12 @@ class VertexViewModel(
 		get() = _degree.intValue
 		set(value) {
 			_degree.intValue = value
+		}
+	private val _visibility = mutableStateOf(visibility)
+	var visibility: Boolean
+		get() = _visibility.value
+		set(value) {
+			_visibility.value = value
 		}
 	val label: String = id.valueToString()
 
