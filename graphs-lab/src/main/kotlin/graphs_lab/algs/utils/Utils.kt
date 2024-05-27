@@ -79,5 +79,5 @@ fun doubleEquality(first: Double, second: Double): Boolean {
  * @return `true` if numbers is equals else `false`
  */
 fun doubleEquality(first: Double, second: Double, comparisonModule: Double): Boolean {
-	return abs(first - second) < abs(comparisonModule)
+	return abs(abs(first) - abs(second)) < abs(comparisonModule)
 }

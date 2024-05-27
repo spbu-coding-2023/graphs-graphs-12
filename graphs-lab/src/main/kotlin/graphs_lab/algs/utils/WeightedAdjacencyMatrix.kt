@@ -16,6 +16,8 @@ import graphs_lab.core.graphs.Graph
 class WeightedAdjacencyMatrix<I, E : Edge<I>>(graph: Graph<I, E>) {
 	private val matrix = mutableMapOf<I, MutableMap<I, Double>>()
 	private val degrees = mutableMapOf<I, Double>()
+	val size: Int
+		get() = matrix.size
 	var totalWeight = 0.0
 		private set
 

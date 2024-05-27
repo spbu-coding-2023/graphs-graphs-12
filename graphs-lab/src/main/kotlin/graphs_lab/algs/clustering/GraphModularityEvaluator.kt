@@ -16,6 +16,7 @@ import graphs_lab.core.graphs.Graph
  */
 class GraphModularityEvaluator<I, E : Edge<I>>(graph: Graph<I, E>) {
 	private val adjacencyMatrix = WeightedAdjacencyMatrix(graph)
+	private val verticesNesting = mutableMapOf<I, Double>()
 	private val module: Double = adjacencyMatrix.totalWeight / 2
 
 	/**
@@ -38,13 +39,19 @@ class GraphModularityEvaluator<I, E : Edge<I>>(graph: Graph<I, E>) {
 		var modularity = 0.0
 		for (community in communities) {
 			for (idSource in community) {
+				var vertexNesting: Double = verticesNesting.getOrDefault(idSource, 0.0)
 				val sourceDegree: Double = adjacencyMatrix.getVertexWeightedDegree(idSource)
 				for (idTarget in community) {
 					if (idSource == idTarget) continue
 					val edgeWeight: Double = adjacencyMatrix.getEdgeWeight(idSource, idTarget)
+					val reversedEdgeWeight: Double = adjacencyMatrix.getEdgeWeight(idTarget, idSource)
 					val targetDegree: Double = adjacencyMatrix.getVertexWeightedDegree(idTarget)
-					modularity += (edgeWeight - sourceDegree * targetDegree / adjacencyMatrix.totalWeight)
+					val edgeNesting = edgeWeight - sourceDegree * targetDegree / adjacencyMatrix.totalWeight
+					modularity += edgeNesting
+					vertexNesting += (edgeNesting + reversedEdgeWeight)
+
 				}
+				verticesNesting[idSource] = vertexNesting
 			}
 		}
 		return modularity / adjacencyMatrix.totalWeight
@@ -58,11 +65,20 @@ class GraphModularityEvaluator<I, E : Edge<I>>(graph: Graph<I, E>) {
 	 * @param communityTo community to which need add [idVertex]
 	 * @return value of modularity change or [Double.MIN_VALUE] if [idVertex] not in [communityFrom]
 	 */
-	fun evaluateModularityChange(idVertex: I, communityFrom: Set<I>, communityTo: Set<I>): Double {
-		if (idVertex !in communityFrom) return Double.MIN_VALUE
+	fun evaluateModularityChange(idVertex: I, communityFrom: Set<I>, communityTo: Set<I>): Pair<Double, Double> {
 		val nestingFrom: Double = vertexNestingInCommunity(idVertex, communityFrom)
 		val nestingTo: Double = vertexNestingInCommunity(idVertex, communityTo)
-		return nestingTo - nestingFrom
+		return (nestingTo - nestingFrom) to nestingTo
+	}
+
+	/**
+	 * Update vertex nesting.
+	 *
+	 * @param idVertex of vertex to update its nesting of modularit
+	 * @param nesting new value
+	 */
+	fun updateNesting(idVertex: I, nesting: Double) {
+		verticesNesting[idVertex] = nesting
 	}
 
 	/**
@@ -73,6 +89,7 @@ class GraphModularityEvaluator<I, E : Edge<I>>(graph: Graph<I, E>) {
 	 * @return value of vertex nesting of community modularity
 	 */
 	private fun vertexNestingInCommunity(idVertex: I, community: Set<I>): Double {
+		if (idVertex in community) return verticesNesting.getOrDefault(idVertex, 0.0)
 		val vertexDegree: Double = adjacencyMatrix.getVertexWeightedDegree(idVertex)
 		var summaryCommunityDegree = 0.0
 		var summaryEdges = 0.0

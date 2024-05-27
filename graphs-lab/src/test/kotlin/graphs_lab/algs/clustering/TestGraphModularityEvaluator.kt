@@ -44,7 +44,7 @@ class TestGraphModularityEvaluator {
 	fun testModularityChangeCase1() {
 		val partition = SetPartition(graph.idVertices)
 		val modularity = modularityEvaluator.evaluateModularity(partition)
-		val modularityChange = modularityEvaluator.evaluateModularityChange(
+		val (modularityChange, _) = modularityEvaluator.evaluateModularityChange(
 			1,
 			partition.getElementSet(1),
 			partition.getElementSet(2)
@@ -59,7 +59,7 @@ class TestGraphModularityEvaluator {
 	@DisplayName("check modularity change if element not contain in source set")
 	fun testModularityChangeCase2() {
 		val partition = SetPartition(graph.idVertices)
-		val modularityChange = modularityEvaluator.evaluateModularityChange(
+		val (modularityChange, _) = modularityEvaluator.evaluateModularityChange(
 			1,
 			partition.getElementSet(2),
 			partition.getElementSet(1)
