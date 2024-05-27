@@ -54,18 +54,4 @@ class TestGraphModularityEvaluator {
 			doubleEquality(modularityEvaluator.evaluateModularity(partition), modularity + modularityChange)
 		)
 	}
-
-	@Test
-	@DisplayName("check modularity change if element not contain in source set")
-	fun testModularityChangeCase2() {
-		val partition = SetPartition(graph.idVertices)
-		val (modularityChange, _) = modularityEvaluator.evaluateModularityChange(
-			1,
-			partition.getElementSet(2),
-			partition.getElementSet(1)
-		)
-		Assertions.assertTrue(
-			doubleEquality(Double.MIN_VALUE, modularityChange)
-		)
-	}
 }

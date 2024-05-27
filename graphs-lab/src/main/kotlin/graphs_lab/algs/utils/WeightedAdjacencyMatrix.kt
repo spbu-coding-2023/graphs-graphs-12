@@ -12,6 +12,7 @@ import graphs_lab.core.graphs.Graph
  * @param E the type of the edge
  * @param graph to implements its adjacency matrix
  * @property totalWeight summary of all weights of `graph`'s edges
+ * @property size count of `graph` vertices
  */
 class WeightedAdjacencyMatrix<I, E : Edge<I>>(graph: Graph<I, E>) {
 	private val matrix = mutableMapOf<I, MutableMap<I, Double>>()

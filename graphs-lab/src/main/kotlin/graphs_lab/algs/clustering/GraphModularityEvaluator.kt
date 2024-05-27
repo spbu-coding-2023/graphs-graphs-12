@@ -49,7 +49,6 @@ class GraphModularityEvaluator<I, E : Edge<I>>(graph: Graph<I, E>) {
 					val edgeNesting = edgeWeight - sourceDegree * targetDegree / adjacencyMatrix.totalWeight
 					modularity += edgeNesting
 					vertexNesting += (edgeNesting + reversedEdgeWeight)
-
 				}
 				verticesNesting[idSource] = vertexNesting
 			}
