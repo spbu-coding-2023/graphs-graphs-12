@@ -10,7 +10,7 @@ import utils.representation.CircularPlacementStrategy
 import utils.representation.RandomPlacementStrategy
 import utils.representation.RepresentationStrategy
 import viewmodels.graphs.GraphViewModel
-import views.displayMax
+import windowSizeStart
 
 class GraphPageViewModel {
 	private val _representationStrategy = mutableStateOf<RepresentationStrategy>(RandomPlacementStrategy())
@@ -57,11 +57,10 @@ class GraphPageViewModel {
 		"Circular" to { graphPageViewModel -> graphPageViewModel.representationStrategy = CircularPlacementStrategy() },
 	)
 
-
 	private fun updateGraphRepresentation() {
 		// TODO(run it by coroutine scope)
 		// TODO(change values of `width` and `height`)
 		val model = _graph.value ?: return
-		representationStrategy.place(displayMax.toDouble(), displayMax.toDouble(), model.vertices, null)
+		representationStrategy.place(windowSizeStart.first.toDouble(), windowSizeStart.second.toDouble(), model.vertices)
 	}
 }

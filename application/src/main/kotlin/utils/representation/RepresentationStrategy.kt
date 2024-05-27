@@ -16,5 +16,5 @@ interface RepresentationStrategy {
      * @param height height of plane
      * @param vertices collection of graph vertices
      */
-    fun place(width: Double, height: Double, vertices: Collection<VertexViewModel>, vertex: VertexViewModel?)
+    fun place(width: Double, height: Double, vertices: Collection<VertexViewModel>)
 }

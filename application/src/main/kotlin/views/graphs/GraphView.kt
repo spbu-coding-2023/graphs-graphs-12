@@ -19,7 +19,10 @@ import androidx.compose.ui.zIndex
 import themes.JetTheme
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
+import viewmodels.graphs.colorVertexStart
 import views.pages.listZoom
+import views.whiteCustom
+import windowSizeStart
 import kotlin.math.*
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -98,7 +101,9 @@ fun GraphView(
 						println("on click")
 						if (idVerticesInfo.value != vertexViewModel) {
 							idVerticesInfo.value = vertexViewModel
+              idVerticesInfo.value!!.color = whiteCustom
 						} else {
+              idVerticesInfo.value!!.color = colorVertexStart
 							idVerticesInfo.value = null
 						}
 					}
@@ -116,7 +121,27 @@ fun GraphView(
 						detectDragGestures { change, dragAmount ->
 							change.consume()
 							vertexViewModel.onDrag(dragAmount)
-//							ForceDirectedPlacementStrategy(graphViewModel).placeVertex(displayMax.toDouble(), displayMax.toDouble(), vertexViewModel)
+							ForceDirectedPlacementStrategy(graphViewModel).placeWithoutVertex(
+								windowSizeStart.second.toDouble(),
+								windowSizeStart.second.toDouble(),
+								vertexViewModel
+							)
+						}
+					}
+			)
+			{
+				if (vertexViewModel.visibility) {
+					Text(
+						modifier = Modifier,
+						text = vertexViewModel.label,
+					)
+				} else {
+					Text("")
+				}
+			}
+		}
+	}
+}
 						}
 					}.onPreviewKeyEvent {
 						isCtrlPressed = it.isCtrlPressed

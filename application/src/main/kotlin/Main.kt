@@ -6,12 +6,12 @@ import views.MainScreen
 import viewmodels.MainScreenViewModel
 import java.awt.Dimension
 
+val windowSizeStart = Pair(1000f, 700f)
+
 /**
  * Application entry point.
  */
 fun main() {
-	val windowSizeStart = Pair(1000f, 700f)
-
 	application {
 		val settings: SettingsModel = SettingsModel.loadSettings()
 		Window(

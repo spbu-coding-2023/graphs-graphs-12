@@ -74,7 +74,6 @@ fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
 			.background(JetTheme.colors.secondaryBackground, JetTheme.shapes.cornerStyle)
 		) {
 			GraphView(graphViewModel = graphViewModel, abilityZoom.value, indexListZoom.intValue, idVerticesInfo)
-//			GraphViewTest(graphViewModel = graphViewModel, abilityZoom.value, indexListZoom.intValue, idVerticesInfo)
 			Box(Modifier.fillMaxSize()) {
 				if (abilityZoom.value) ColumnZoomButtons(indexListZoom, Modifier.align(Alignment.TopEnd), modifierButtons)
 				ColumnChangeAbility(abilityZoom, Modifier.align(Alignment.CenterEnd), modifierButtons)
@@ -194,7 +193,17 @@ fun showAddItem(graphViewModel: GraphViewModel) {
 	val statePager = rememberPagerState { 2 }
 
 	var isShownWeigh by remember { mutableStateOf(false) }
+	LaunchedEffect(isShownWeigh) {
+		graphViewModel.edges.forEach {
+			it.visibility = isShownWeigh
+		}
+	}
 	var isShownId by remember { mutableStateOf(true) }
+	LaunchedEffect(isShownId) {
+		graphViewModel.vertices.forEach {
+			it.visibility = isShownId
+		}
+	}
 
 	val addingVertex = {
 		graphViewModel.addVertex(VertexID(checkAndGet(graphViewModel, idFastAdd), graphViewModel.vertexType))
@@ -215,7 +224,7 @@ fun showAddItem(graphViewModel: GraphViewModel) {
 		horizontalArrangement = Arrangement.spacedBy(1.dp),
 	) {
 		Column(Modifier.weight(1f)) {
-			Text("Graph name: ${graphViewModel.graph.label}", fontSize = 20.sp, modifier = Modifier.padding(4.dp))
+			Text("Graph name: ${graphViewModel.graph.label}", fontSize = 20.sp, modifier = Modifier.padding(4.dp)) // todo(test)
 			Row {
 				Column(Modifier.weight(1f)) {
 					if (graphViewModel.graph.isDirected) Text("Directed", fontSize = 14.sp, modifier = Modifier.padding(4.dp))
@@ -330,7 +339,7 @@ fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<Ve
 		horizontalArrangement = Arrangement.spacedBy(4.dp)
 	) {
 		Column(Modifier.weight(1f)) {
-			if (idVerticesInfo.value != null) {
+			if (idVerticesInfo.value != null) { // todo(test)
 				Text("Vertex: ${idVerticesInfo.value!!.id.valueToString()}") // todo(!!)
 				Text("Count edges: ${graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id).size}")
 				ButtonCustom(removingVertexSource, "Delete", Modifier)
@@ -486,4 +495,3 @@ fun TextFieldItem(string: MutableState<String>, label: String, modifier: Modifie
 		modifier = modifier
 	)
 }
-
