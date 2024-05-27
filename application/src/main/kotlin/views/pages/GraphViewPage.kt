@@ -33,7 +33,6 @@ import viewmodels.graphs.VertexViewModel
 import viewmodels.pages.GraphPageViewModel
 import views.*
 import views.graphs.GraphView
-import views.graphs.GraphViewTest
 
 val listZoom = listOf(
 	0.1f,
