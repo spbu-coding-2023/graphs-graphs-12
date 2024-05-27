@@ -17,6 +17,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.zIndex
 import themes.JetTheme
+import utils.representation.ForceDirectedPlacementStrategy
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
 import viewmodels.graphs.colorVertexStart
@@ -67,12 +68,12 @@ fun GraphView(
 			}
 		}
 	} else {
-		Canvas(Modifier
-			.fillMaxSize()
-			.background(JetTheme.colors.secondaryBackground)
-			.zIndex(-1f)
-		) {
-			graphViewModel.edges.forEach { edgeViewModel ->
+		graphViewModel.edges.forEach { edgeViewModel ->
+			Canvas(Modifier
+				.fillMaxSize()
+//				.background(JetTheme.colors.secondaryBackground)
+				.zIndex(-1f)
+			) {
 				Line(
 					this,
 					edgeViewModel.source,
@@ -81,6 +82,16 @@ fun GraphView(
 					color = edgeViewModel.color,
 					strokeWidth = edgeViewModel.size,
 					isArrow = graphViewModel.graph.isDirected
+				)
+			}
+			if (edgeViewModel.visibility) {
+				Text(
+					modifier = Modifier
+						.offset(
+							edgeViewModel.source.xPos + (edgeViewModel.target.xPos - edgeViewModel.source.xPos) / 2,
+							edgeViewModel.source.yPos + (edgeViewModel.target.yPos - edgeViewModel.source.yPos) / 2
+						),
+					text = edgeViewModel.label,
 				)
 			}
 		}
@@ -101,9 +112,9 @@ fun GraphView(
 						println("on click")
 						if (idVerticesInfo.value != vertexViewModel) {
 							idVerticesInfo.value = vertexViewModel
-              idVerticesInfo.value!!.color = whiteCustom
+							idVerticesInfo.value!!.color = whiteCustom
 						} else {
-              idVerticesInfo.value!!.color = colorVertexStart
+							idVerticesInfo.value!!.color = colorVertexStart
 							idVerticesInfo.value = null
 						}
 					}
@@ -128,8 +139,12 @@ fun GraphView(
 							)
 						}
 					}
-			)
-			{
+				.onPreviewKeyEvent {
+						isCtrlPressed = it.isCtrlPressed
+						isAltPressed.value = it.isAltPressed
+						false
+					}
+			) {
 				if (vertexViewModel.visibility) {
 					Text(
 						modifier = Modifier,
@@ -139,22 +154,6 @@ fun GraphView(
 					Text("")
 				}
 			}
-		}
-	}
-}
-						}
-					}.onPreviewKeyEvent {
-						isCtrlPressed = it.isCtrlPressed
-						isAltPressed.value = it.isAltPressed
-						false
-					}
-			) {
-				Text(
-					modifier = Modifier,
-					text = vertexViewModel.label,
-				)
-			}
-
 		}
 	}
 }
