@@ -1,69 +1,25 @@
 package viewmodels
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.DropdownMenu
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.launch
 import models.SideMenuModel
 import models.VertexID
+import models.utils.AlgorithmButton
 import models.utils.TabItem
 import utils.PageType
-import utils.representation.AllCenterPlacementStrategy
-import utils.representation.CircularPlacementStrategy
-import utils.representation.ForceDirectedPlacementStrategy
-import utils.representation.RandomPlacementStrategy
 import viewmodels.graphs.GraphViewModel
 import viewmodels.pages.GraphPageViewModel
-import views.pages.TextFieldItem
-
-val mapAlgorithms: Map<String, (GraphViewModel) -> Unit> = mapOf(
-	"Community detection" to { graphViewModel -> },
-	"Identifying key vertices" to { graphViewModel -> },
-	"Finding SCC" to { graphViewModel -> },
-	"Finding cycles" to { graphViewModel -> },
-	"Finding MST" to { graphViewModel -> },
-	"Bridge-finding" to { graphViewModel -> },
-	"Finding SP (Dijkstra)" to { graphViewModel ->
-							   graphViewModel.parseDijkstraAlgorithm(
-								   graphViewModel.graph.idVertices.first(),
-								   graphViewModel.graph.idVertices.last()
-							   )
-//		var expanded by remember { mutableStateOf(false) }
-//		val idVertexSource = remember { mutableStateOf("") }
-//		val idVertexTarget = remember { mutableStateOf("") }
-//
-//		DropdownMenu(
-//			expanded = expanded,
-//			onDismissRequest = { expanded = false }
-//		) {
-//			TextFieldItem(idVertexSource, "Source vertex", Modifier)
-//			TextFieldItem(idVertexTarget, "Target vertex", Modifier)
-//		}
-//
-//		graphViewModel.parseDijkstraAlgorithm(
-//			VertexID(idVertexSource, graphViewModel.vertexType),
-//			VertexID(idVertexTarget, graphViewModel.vertexType))
-							   },
-	"Finding SP (Ford)" to { graphViewModel -> }
-)
-
-val mapRepresentationModes: Map<String, (GraphPageViewModel) -> Unit> = mapOf(
-	"Central" to { graphPageViewModel -> graphPageViewModel.representationStrategy = AllCenterPlacementStrategy() },
-	"Random" to { graphPageViewModel -> graphPageViewModel.representationStrategy = RandomPlacementStrategy() },
-	"Circular" to { graphPageViewModel -> graphPageViewModel.representationStrategy = CircularPlacementStrategy() },
-	// todo(add layout)
-	"Force-directed" to {
-		graphPageViewModel -> graphPageViewModel.representationStrategy = ForceDirectedPlacementStrategy(
-		graphPageViewModel.graphViewModel
-			?: throw ExceptionInInitializerError("An attempt to layout an uncreated graph."))
-	}
-)
 
 class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 	private val pagesOfTabsItems = mutableMapOf<String, Int>()
@@ -93,7 +49,7 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 				isSelectablePage = false,
 				dropDownMenuContext = { tabItem ->
 					Text("Algorithms") // todo(hide out of layout and add modifier)
-					mapAlgorithms.forEach {
+					graphPageViewModel.algorithms.forEach {
 						TextButtonAlgorithm(graphPageViewModel.graphViewModel, it, Modifier.fillMaxWidth())
 					}
 				}
@@ -106,7 +62,7 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 				isSelectablePage = false,
 				dropDownMenuContext = { tabItem ->
 					Text("Representation") // todo(hide out of layout and add modifier)
-					mapRepresentationModes.forEach {
+					graphPageViewModel.mapRepresentationModes.forEach {
 						TextButtonRepresentation(graphPageViewModel, it, Modifier.fillMaxWidth())
 					}
 				}
@@ -134,17 +90,58 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 }
 
 @Composable
-fun TextButtonAlgorithm(graphViewModel: GraphViewModel?, entry: Map.Entry<String, (GraphViewModel) -> Unit>, modifier: Modifier) {
+fun TextButtonAlgorithm(
+	graphViewModel: GraphViewModel?,
+	algButton: AlgorithmButton,
+	modifier: Modifier = Modifier
+) {
+	val coroutineScope = rememberCoroutineScope()
+	val expanded = mutableStateOf(false)
+	val dropContext = algButton.dropDownMenuContext
 	TextButton(
-		onClick = { if (graphViewModel != null) entry.value(graphViewModel) },
-		modifier = modifier
+		modifier = modifier,
+		onClick = {
+			if (dropContext != null) expanded.value = true
+			else algButton.isRun.value = true
+		},
 	) {
-		Text(entry.key)
+		Text(algButton.label)
+		if (dropContext != null) {
+			Box {
+				DropdownMenu(
+					expanded = expanded.value,
+					onDismissRequest = { expanded.value = false },
+					content = {
+						Column(
+							horizontalAlignment = Alignment.CenterHorizontally
+						) {
+							dropContext(algButton)
+						}
+					}
+				)
+			}
+		}
+	}
+	if (graphViewModel != null && algButton.isRun.value) {
+		expanded.value = false
+		coroutineScope.launch {
+			algButton.onRun(
+				graphViewModel,
+				algButton.inputs.value.stream().map {
+					VertexID.vertexIDFromString(it, graphViewModel.vertexType)
+				}.toList()
+			)
+			algButton.isRun.value = false
+		}
 	}
 }
 
 @Composable
-fun TextButtonRepresentation(graphPageViewModel: GraphPageViewModel, entry: Map.Entry<String, (GraphPageViewModel) -> Unit>, modifier: Modifier) {
+fun TextButtonRepresentation(
+	graphPageViewModel: GraphPageViewModel,
+	entry: Map.Entry<String, (GraphPageViewModel) -> Unit>,
+	modifier: Modifier
+) {
 	TextButton(
 		onClick = { entry.value(graphPageViewModel) },
 		modifier = modifier
