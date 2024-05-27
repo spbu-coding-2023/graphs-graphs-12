@@ -1,45 +1,35 @@
 package views.graphs
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Paint
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import themes.JetTheme
-import utils.representation.ForceDirectedPlacementStrategy
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
-import views.displayMax
 import views.pages.listZoom
 import kotlin.math.*
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GraphView(
 	graphViewModel: GraphViewModel,
 	abilityZoom: Boolean,
 	indexListZoom: Int,
-	idVerticesInfo: MutableState<VertexViewModel?>
+	idVerticesInfo: MutableState<VertexViewModel?>,
+	isAltPressed: MutableState<Boolean> = mutableStateOf(false)
 ) {
 	// todo(maybe add edgeview and vertexview)
 	if (abilityZoom) {
@@ -103,24 +93,28 @@ fun GraphView(
 //				)
 			}
 		}
+		var isCtrlPressed by remember { mutableStateOf(false) }
 		graphViewModel.vertices.forEach { vertexViewModel ->
-			Text(
-				text = vertexViewModel.label,
-//				onClick = {
-//					if (idVerticesInfo.value == null) {
-//						idVerticesInfo.value = vertexViewModel
-//					} else {
-//						if (idVerticesInfo.value != vertexViewModel) {
-//							graphViewModel.addEdge(
-//								idVerticesInfo.value!!.id, // todo(!!)
-//								vertexViewModel.id
-//							)
-//						}
-//						idVerticesInfo.value = null
-//					}
-
-
-//				},
+			IconButton(
+				onClick = {
+					if (isCtrlPressed) {
+						println("on ctrl double tap")
+						if (idVerticesInfo.value != null) {
+							graphViewModel.addEdge(
+								idVerticesInfo.value!!.id, // todo(!!)
+								vertexViewModel.id
+							)
+						}
+						isCtrlPressed = !isCtrlPressed
+					} else {
+						println("on click")
+						if (idVerticesInfo.value != vertexViewModel) {
+							idVerticesInfo.value = vertexViewModel
+						} else {
+							idVerticesInfo.value = null
+						}
+					}
+				},
 				modifier = Modifier
 					.size(vertexViewModel.radius * 2, vertexViewModel.radius * 2)
 					.offset(vertexViewModel.xPos - vertexViewModel.radius, vertexViewModel.yPos - vertexViewModel.radius)
@@ -132,33 +126,20 @@ fun GraphView(
 						detectDragGestures { change, dragAmount ->
 							change.consume()
 							vertexViewModel.onDrag(dragAmount)
-							ForceDirectedPlacementStrategy(graphViewModel).placeVertex(displayMax.toDouble(), displayMax.toDouble(), vertexViewModel)
+//							ForceDirectedPlacementStrategy(graphViewModel).placeVertex(displayMax.toDouble(), displayMax.toDouble(), vertexViewModel)
 						}
-						detectTapGestures(
-							onTap = {
-								if (idVerticesInfo.value != vertexViewModel) {
-									idVerticesInfo.value = vertexViewModel
-								} else {
-									idVerticesInfo.value = null
-								}
-							},
-							onDoubleTap = {
-								if (idVerticesInfo.value != null) {
-									graphViewModel.addEdge(
-										idVerticesInfo.value!!.id, // todo(!!)
-										vertexViewModel.id
-									)
-								}
-							}
-						)
+					}.onPreviewKeyEvent {
+						isCtrlPressed = it.isCtrlPressed
+						isAltPressed.value = it.isAltPressed
+						false
 					}
-			)
-//			{
-//				Text(
-//					modifier = Modifier,
-//					text = vertexViewModel.label,
-//				)
-//			}
+			) {
+				Text(
+					modifier = Modifier,
+					text = vertexViewModel.label,
+				)
+			}
+
 		}
 	}
 }
