@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
@@ -15,6 +16,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import themes.JetTheme
 import utils.representation.ForceDirectedPlacementStrategy
@@ -22,6 +24,7 @@ import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
 import viewmodels.graphs.colorVertexStart
 import views.pages.listZoom
+import views.sizeBottom
 import views.whiteCustom
 import windowSizeStart
 import kotlin.math.*
@@ -68,12 +71,12 @@ fun GraphView(
 			}
 		}
 	} else {
-		graphViewModel.edges.forEach { edgeViewModel ->
-			Canvas(Modifier
-				.fillMaxSize()
-//				.background(JetTheme.colors.secondaryBackground)
-				.zIndex(-1f)
-			) {
+		Canvas(Modifier
+			.fillMaxSize()
+			.background(JetTheme.colors.secondaryBackground)
+			.zIndex(-1f)
+		) {
+			graphViewModel.edges.forEach { edgeViewModel ->
 				Line(
 					this,
 					edgeViewModel.source,
@@ -84,17 +87,25 @@ fun GraphView(
 					isArrow = graphViewModel.graph.isDirected
 				)
 			}
+		}
+
+		graphViewModel.edges.forEach { edgeViewModel ->
 			if (edgeViewModel.visibility) {
-				Text(
+				Box(
 					modifier = Modifier
+						.size(edgeViewModel.source.radius * 2)
 						.offset(
-							edgeViewModel.source.xPos + (edgeViewModel.target.xPos - edgeViewModel.source.xPos) / 2,
-							edgeViewModel.source.yPos + (edgeViewModel.target.yPos - edgeViewModel.source.yPos) / 2
-						),
-					text = edgeViewModel.label,
-				)
+							edgeViewModel.source.xPos + (edgeViewModel.target.xPos - edgeViewModel.source.xPos) / 2 - edgeViewModel.source.radius,
+							edgeViewModel.source.yPos + (edgeViewModel.target.yPos - edgeViewModel.source.yPos) / 2 - edgeViewModel.source.radius
+						)
+						.background(Color(175, 218, 252, 210), CircleShape), // todo(add to jetpack)
+					contentAlignment = Alignment.Center
+				) {
+					Text(text = edgeViewModel.label)
+				}
 			}
 		}
+
 		var isCtrlPressed by remember { mutableStateOf(false) }
 		graphViewModel.vertices.forEach { vertexViewModel ->
 			IconButton(

@@ -53,11 +53,11 @@ class ForceDirectedPlacementStrategy(
 			vertex,
 			2,
 			1.0,
-			10.0,
-			10.0,
+			200.0,
+			300.0,
 			0.0,
 			0,
-			50.0, // test 0.001
+			0.0005, // test 0.001
 			10.0,
 			1.0,
 			0.999
@@ -137,7 +137,9 @@ class ForceDirectedPlacementStrategy(
 				var forceAttr = 0.0
 				if (distanceOverlapping > 0) {
 					forceAttr = distanceOverlapping
+//					forceAttr = kAttr * (log2(1 + distanceOverlapping))
 				}
+//				val forceAttr = kAttr * (log2(1 + distance))
 //				val forceAttr = kAttr * edgeViewModel.edge.weight.pow(kDegree) * (distance / edgeViewModel.source.degree + 1)
 //				val forceAttr = kAttr * edgeViewModel.edge.weight.pow(kDegree) * (log2(1 + distance) / edgeViewModel.source.degree + 1) // todo(test)
 
