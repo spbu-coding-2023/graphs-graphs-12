@@ -214,6 +214,8 @@ style:
     active: true
     acceptableLength: 4
     allowNonStandardGrouping: false
+  MagicNumber:
+    active: false
 
 formatting:
   active: true
