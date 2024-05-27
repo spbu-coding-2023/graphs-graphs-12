@@ -19,7 +19,8 @@ data class VertexData(
 	val x: Dp,
 	val y: Dp,
 	val radius: Dp,
-	val color: Color
+	val color: Color,
+	val degree: Int
 )
 
 class Neo4jRepository() : Closeable {
@@ -61,7 +62,8 @@ class Neo4jRepository() : Closeable {
 						"xPos: ${it.xPos.value}, " +
 						"yPos: ${it.yPos.value}, " +
 						"radius: ${it.radius.value}, " +
-						"color: '${it.color.value}'" +
+						"color: '${it.color.value}', " +
+						"degree: ${it.degree}" +
 						"})"
 				)
 			}
@@ -127,7 +129,8 @@ class Neo4jRepository() : Closeable {
 						"v.xPos AS xPos, " +
 						"v.yPos AS yPos, " +
 						"v.radius AS radius, " +
-						"v.color AS color"
+						"v.color AS color, " +
+						"v.degree AS degree"
 				)
 			result.stream().forEach {
 				val vertex = it["label"].asString()
@@ -135,10 +138,11 @@ class Neo4jRepository() : Closeable {
 				val yPos = it["yPos"].toString().toDouble().dp
 				val radius = it["radius"].toString().toDouble().dp
 				val color = Color(it["color"].asString().toULong())
+				val degree = it["degree"].toString().toInt()
 
 				graph.addVertex(VertexID.vertexIDFromString(vertex, vertexType))
 				vertexMap[VertexID.vertexIDFromString(vertex, vertexType)] =
-							VertexData(x = xPos, y = yPos, radius = radius, color = color)
+							VertexData(x = xPos, y = yPos, radius = radius, color = color, degree = degree)
 			}
 
 			result =
@@ -163,6 +167,7 @@ class Neo4jRepository() : Closeable {
 				it.xPos = vertex.x.value.dp
 				it.yPos = vertex.y.value.dp
 				it.color = vertex.color
+				it.degree = vertex.degree
 			}
 		}
 		println("Graph was loaded")
