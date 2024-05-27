@@ -15,6 +15,7 @@ dependencies {
 	implementation(compose.material3)
 	implementation(compose.foundation)
 	implementation(project(":graphs-lab"))
+	implementation("org.neo4j.driver", "neo4j-java-driver", "4.4.5")
 }
 
 compose.desktop {
