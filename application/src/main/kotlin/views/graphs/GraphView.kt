@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.isSpecified
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.input.key.*
@@ -24,6 +25,7 @@ import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
 import viewmodels.graphs.colorVertexStart
 import views.pages.listZoom
+import views.radiusStart
 import views.sizeBottom
 import views.whiteCustom
 import windowSizeStart
@@ -190,9 +192,13 @@ fun Line(
 		val alpha = Math.PI / 10
 		val radius = scope.toPx(target.radius)
 		val startEndVector = Offset(end.x - start.x, end.y - start.y)
-		val normalizeSE = startEndVector / sqrt(startEndVector.x.pow(2) + startEndVector.y.pow(2))
+		val distance = sqrt(startEndVector.x.pow(2) + startEndVector.y.pow(2))
+		val delta = (arrowLength * cos(alpha).toFloat())
+		if (distance < abs(delta)) return
+		val normalizeSE = startEndVector / distance
+		if (!normalizeSE.isSpecified) return
 		val A = end - normalizeSE * radius
-		val deltaA = end - normalizeSE * (radius + (arrowLength * cos(alpha).toFloat()))
+		val deltaA = end - normalizeSE * (radius + delta)
 		val normalizeOrt = Offset(-normalizeSE.y, normalizeSE.x)
 		val B = deltaA + normalizeOrt * arrowLength * sin(alpha).toFloat()
 		val C = deltaA - normalizeOrt * arrowLength * sin(alpha).toFloat()

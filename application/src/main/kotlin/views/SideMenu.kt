@@ -4,11 +4,13 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import models.utils.TabItem
@@ -74,6 +76,7 @@ fun SideMenuTabColumn(tabsColumn: List<TabItem>, statePager: PagerState, indexSe
 						Modifier.padding(12.dp)
 					) {
 						DropdownMenu(
+							modifier = Modifier.background(JetTheme.colors.primaryBackground).padding(4.dp),
 							expanded = expanded,
 							onDismissRequest = { expanded = false },
 							content = {

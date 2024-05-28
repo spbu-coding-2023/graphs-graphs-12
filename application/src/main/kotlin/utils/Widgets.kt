@@ -139,20 +139,26 @@ fun <T> ComboBox(
 		}
 	) {
 		Column {
-			TextField(
+			OutlinedTextField(
 				value = selectedText,
 				onValueChange = {},
 				readOnly = true,
 				trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-				modifier = Modifier.fillMaxWidth(),
+				colors = TextFieldDefaults.textFieldColors(
+					focusedIndicatorColor = JetTheme.colors.secondaryText,
+					focusedLabelColor = JetTheme.colors.secondaryText,
+					cursorColor = JetTheme.colors.tintColor
+				),
 				textStyle = TextStyle(
 					textAlign = textAlign,
 					fontSize = JetTheme.typography.toolbar.fontSize,
 					fontFamily = JetTheme.typography.toolbar.fontFamily,
 					fontWeight = JetTheme.typography.toolbar.fontWeight
-				)
+				),
+				modifier = Modifier.fillMaxWidth()
 			)
 			ExposedDropdownMenu(
+				modifier = Modifier.background(JetTheme.colors.primaryBackground),
 				expanded = expanded,
 				onDismissRequest = { expanded = false },
 			) {
@@ -171,6 +177,10 @@ fun <T> ComboBox(
 							selectedText = item.toString()
 							expanded = false
 						}
+					)
+					TabRowDefaults.Divider(
+						thickness = 0.5.dp,
+						color = JetTheme.colors.tertiaryBackground
 					)
 				}
 			}

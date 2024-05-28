@@ -16,6 +16,8 @@ dependencies {
 	implementation(compose.foundation)
 	implementation(project(":graphs-lab"))
 	implementation("org.neo4j.driver", "neo4j-java-driver", "4.4.5")
+	// https://mvnrepository.com/artifact/org.json/json
+	implementation("org.json:json:20240303")
 }
 
 compose.desktop {

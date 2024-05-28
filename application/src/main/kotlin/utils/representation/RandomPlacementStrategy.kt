@@ -10,8 +10,8 @@ class RandomPlacementStrategy : RepresentationStrategy {
 		val randomizer = Random(Random.nextLong())
 
 		for (vertex in vertices) {
-			vertex.xPos = randomizer.nextDouble(radiusStart.value.toDouble(), width - radiusStart.value).dp
-			vertex.yPos = randomizer.nextDouble(radiusStart.value.toDouble(), height - radiusStart.value).dp
+			vertex.xPos = randomizer.nextDouble(2 * radiusStart.value.toDouble(), width - 2 * radiusStart.value).dp
+			vertex.yPos = randomizer.nextDouble(2 * radiusStart.value.toDouble(), height - 2 * radiusStart.value).dp
 		}
 	}
 }

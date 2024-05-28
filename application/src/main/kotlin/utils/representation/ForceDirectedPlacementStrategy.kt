@@ -1,3 +1,4 @@
+
 package utils.representation
 
 import androidx.compose.ui.unit.dp
@@ -184,11 +185,11 @@ class ForceDirectedPlacementStrategy(
 		}
 
 		viewModel.vertices.forEach { vertexViewModel -> // todo(test)
-			if (vertexViewModel.xPos > 0.dp) vertexViewModel.xPos = min(vertexViewModel.xPos.value, width.toFloat()).dp
-			else vertexViewModel.xPos = max(vertexViewModel.xPos.value, 0f).dp
+			if (vertexViewModel.xPos > radiusStart) vertexViewModel.xPos = min(vertexViewModel.xPos.value, width.toFloat() - radiusStart.value).dp
+			else vertexViewModel.xPos = max(vertexViewModel.xPos.value, 2 * radiusStart.value).dp
 
-			if (vertexViewModel.yPos > 0.dp) vertexViewModel.yPos = min(vertexViewModel.yPos.value, height.toFloat()).dp
-			else vertexViewModel.yPos = max(vertexViewModel.yPos.value, 0f).dp
+			if (vertexViewModel.yPos > radiusStart) vertexViewModel.yPos = min(vertexViewModel.yPos.value, height.toFloat() - radiusStart.value).dp
+			else vertexViewModel.yPos = max(vertexViewModel.yPos.value, 2 * radiusStart.value).dp
 		}
 	}
 }

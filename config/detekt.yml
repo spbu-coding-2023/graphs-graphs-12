@@ -1,6 +1,11 @@
 build:
   maxIssues: 0
   excludeCorrectable: false
+#  weights:
+#    complexity: 2
+#    LongParameterList: 1
+#    style: 1
+#    comments: 1
 
 config:
   validation: true
@@ -219,12 +224,10 @@ style:
     acceptableLength: 4
     allowNonStandardGrouping: false
   MagicNumber:
-    active: true
-    ignorePropertyDeclaration: true
-    ignoreCompanionObjectPropertyDeclaration: true
+    active: false
   UnusedPrivateMember:
     active: true
-    ignoreAnnotated: ['Preview']
+    ignoreAnnotated: [ 'Preview' ]
 
 formatting:
   active: true
