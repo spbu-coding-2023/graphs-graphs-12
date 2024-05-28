@@ -181,20 +181,17 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 							isFoundGraphName = false
 						} else {
 							isFoundGraphName = true
-							viewModel.homePageViewModel.isOpenDialogOfCreatingNewGraph = false
 							coroutineScope.launch {
-								val graph = viewModel.homePageViewModel.createGraph(
+								viewModel.homePageViewModel.createGraph(
 									viewModel.graphName.value,
 									viewModel.selectedVertexTypeID.value,
 									viewModel.isGraphDirected.value,
-									viewModel.isGraphWeighted.value
-								)
-								viewModel.homePageViewModel.settings.saveGraph(
-									graph,
-									viewModel.selectedVertexTypeID.value,
-									viewModel.selectedSaveType.value
+									viewModel.isGraphWeighted.value,
+									viewModel.selectedSaveType.value,
+									viewModel.saveFolder.value
 								)
 							}
+							viewModel.homePageViewModel.isOpenDialogOfCreatingNewGraph = false
 						}
 					}
 				) {
