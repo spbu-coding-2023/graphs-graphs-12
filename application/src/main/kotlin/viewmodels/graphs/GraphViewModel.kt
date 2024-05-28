@@ -1,9 +1,10 @@
 package viewmodels.graphs
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import graphs_lab.algs.DijkstraAlgorithm
+import graphs_lab.algs.*
 import graphs_lab.core.edges.WeightedEdge
 import graphs_lab.core.graphs.WeightedGraph
 import models.VertexID
@@ -51,9 +52,16 @@ class GraphViewModel(
 
 	fun addVertex(id: VertexID) {
 		graph.addVertex(id)
-		_vertices.putIfAbsent(id, VertexViewModel(id,
-			Random.nextInt(radiusStart.value.toInt(), windowSizeStart.second.toInt() - radiusStart.value.toInt()).dp,
-			Random.nextInt(radiusStart.value.toInt(), windowSizeStart.second.toInt() - radiusStart.value.toInt()).dp))
+		_vertices.putIfAbsent(
+			id, VertexViewModel(
+				id,
+				Random.nextInt(
+					radiusStart.value.toInt(),
+					windowSizeStart.second.toInt() - radiusStart.value.toInt()
+				).dp,
+				Random.nextInt(radiusStart.value.toInt(), windowSizeStart.second.toInt() - radiusStart.value.toInt()).dp
+			)
+		)
 	}
 
 	fun removeVertex(id: VertexID) {
@@ -76,16 +84,28 @@ class GraphViewModel(
 		val sourceViewModel = _vertices.getOrPut(idSource) {
 			VertexViewModel(
 				idSource,
-				Random.nextInt(radiusStart.value.toInt(), windowSizeStart.second.toInt() - radiusStart.value.toInt()).dp,  // todo(change 1000 to height)
-				Random.nextInt(radiusStart.value.toInt(), windowSizeStart.second.toInt() - radiusStart.value.toInt()).dp,
+				Random.nextInt(
+					radiusStart.value.toInt(),
+					windowSizeStart.second.toInt() - radiusStart.value.toInt()
+				).dp,  // todo(change 1000 to height)
+				Random.nextInt(
+					radiusStart.value.toInt(),
+					windowSizeStart.second.toInt() - radiusStart.value.toInt()
+				).dp,
 				degree = 1
 			)
 		}
 		val targetViewModel = _vertices.getOrPut(idTarget) {
 			VertexViewModel(
 				idTarget,
-				Random.nextInt(radiusStart.value.toInt(), windowSizeStart.second.toInt() - radiusStart.value.toInt()).dp,
-				Random.nextInt(radiusStart.value.toInt(), windowSizeStart.second.toInt() - radiusStart.value.toInt()).dp,
+				Random.nextInt(
+					radiusStart.value.toInt(),
+					windowSizeStart.second.toInt() - radiusStart.value.toInt()
+				).dp,
+				Random.nextInt(
+					radiusStart.value.toInt(),
+					windowSizeStart.second.toInt() - radiusStart.value.toInt()
+				).dp,
 				degree = 1
 			)
 		}
@@ -125,12 +145,110 @@ class GraphViewModel(
 
 		var idLast = idSource
 		path.forEach { id ->
-			_vertices[id]!!.color = Color.Magenta // todo(!!)
 			if (idLast != id) {
-				_edges[WeightedEdge(idLast, id, 1.0)]!!.color = Color.Magenta // todo(!!)
-				_edges[WeightedEdge(idLast, id, 1.0)]!!.size = 8f
+				_edges[WeightedEdge(idLast, id, 1.0)]!!.color = Color(0, 102, 51) // Green
+				_edges[WeightedEdge(idLast, id, 1.0)]!!.size = 8f // todo(!!)
 			}
 			idLast = id
 		}
 	}
+
+	fun parseBellmanFordAlgorithm(idSource: VertexID, idTarget: VertexID) {
+		val resultAlgo = BellmanFordShortestPath(graph)
+		val path = resultAlgo.getPath(idSource, idTarget) ?: return
+
+		var idLast = idSource
+		path.forEach { id ->
+			if (idLast != id) {
+				_edges[WeightedEdge(idLast, id, 1.0)]!!.color = Color(0, 102, 51) // Green
+				_edges[WeightedEdge(idLast, id, 1.0)]!!.size = 8f // todo(!!)
+			}
+			idLast = id
+		}
+	}
+
+	fun parseTarjanStrongConnectivityAlgorithm() {
+		val resultAlgo = TarjanStrongConnectivityInspector(graph)
+		val map = resultAlgo.stronglyConnectedComponents()
+		var color: Color
+
+		for (i in 0 until map.size) {
+			color = Color(Random.nextInt(64, 223), Random.nextInt(64, 223), Random.nextInt(64, 223))
+			map[i]?.forEach { id ->
+				graph.vertexEdges(id).forEach {
+					if (map[i]!!.contains(it.idTarget)) {
+						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.color = color
+						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.size = 8f
+					}
+				}
+			}
+		}
+	}
+
+	fun parseCyclesSearchAlgorithm(idVertex: VertexID) {
+		val resultAlgo = CyclesSearchAlgorithms(graph)
+		val set = resultAlgo.searchVertexCycles(idVertex)
+		var color: Color
+
+		set.forEach { list ->
+			color = Color(Random.nextInt(64, 223), Random.nextInt(64, 223), Random.nextInt(64, 223))
+			list.forEach { id ->
+				graph.vertexEdges(id).forEach {
+					if (list.contains(it.idTarget)) {
+						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.color = color
+						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.size = 8f
+					}
+				}
+			}
+		}
+	}
+
+	fun parseKruskalAlgorithm() {
+		val resultAlgo = MSTAlgorithms(graph)
+		val set = resultAlgo.kruskalAlgorithm()
+
+		set.forEach {
+			val idSource = it.idSource
+			val idTarget = it.idTarget
+			graph.vertexEdges(idSource).forEach { edge ->
+				if (edge.idTarget == idTarget) {
+					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.color = Color(83, 55, 122) // Purple
+					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.size = 8f
+				}
+			}
+		}
+	}
+
+	fun parsePrimAlgorithm() {
+		val resultAlgo = MSTAlgorithms(graph)
+		val set = resultAlgo.primAlgorithm()
+
+		set.forEach {
+			val idSource = it.idSource
+			val idTarget = it.idTarget
+			graph.vertexEdges(idSource).forEach { edge ->
+				if (edge.idTarget == idTarget) {
+					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.color = Color(83, 55, 122) // Purple
+					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.size = 8f
+				}
+			}
+		}
+	}
+
+	fun parseTarjanBridgeFinding() {
+		val resultAlgo = TarjanBridgeFinding(graph)
+		val set = resultAlgo.getBridges()
+
+		set.forEach {
+			val idSource = it.idSource
+			val idTarget = it.idTarget
+			graph.vertexEdges(idSource).forEach { edge ->
+				if (edge.idTarget == idTarget) {
+					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.color = Color(176,0,0) // Red
+					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.size = 8f
+				}
+			}
+		}
+	}
+
 }
