@@ -6,6 +6,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
@@ -36,9 +37,11 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 		title = "Create new graph",
 		resizable = false
 	) {
-		Column(Modifier
-			.fillMaxSize()
-			.background(JetTheme.colors.primaryBackground)
+		Column(
+			Modifier
+				.fillMaxSize()
+				.background(JetTheme.colors.primaryBackground)
+				.padding(4.dp)
 		) {
 			val modifierRow = Modifier.padding(0.dp, 5.dp, 0.dp, 5.dp)
 			val verticalRow = Alignment.CenterVertically
@@ -47,21 +50,28 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 				Text(
 					"Graph name:",
 					modifier = Modifier.weight(0.5f),
-					textAlign = TextAlign.Center
+					textAlign = TextAlign.Center,
+					style = JetTheme.typography.toolbar
 				)
-				TextField(
+				OutlinedTextField(
 					modifier = Modifier.weight(1f),
 					value = viewModel.graphName.value,
 					onValueChange = { newValue -> viewModel.graphName.value = newValue },
+					label = { Text("Name") },
 					singleLine = true,
-					textStyle = TextStyle(textAlign = TextAlign.Center)
+					colors = TextFieldDefaults.textFieldColors(
+						focusedIndicatorColor = JetTheme.colors.secondaryText,
+						focusedLabelColor = JetTheme.colors.secondaryText,
+						cursorColor = JetTheme.colors.tintColor
+					),
 				)
 			}
 			Row(modifierRow, verticalAlignment = verticalRow) {
 				Text(
 					"Vertices ID type:",
 					modifier = Modifier.weight(0.5f),
-					textAlign = TextAlign.Center
+					textAlign = TextAlign.Center,
+					style = JetTheme.typography.toolbar
 				)
 				ComboBox(
 					items = VertexIDType.entries.toTypedArray(),
@@ -91,7 +101,8 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 				Text(
 					"Vertices ID type:",
 					modifier = Modifier.weight(0.5f),
-					textAlign = TextAlign.Center
+					textAlign = TextAlign.Center,
+					style = JetTheme.typography.toolbar
 				)
 				ComboBox(
 					items = GraphSavingType.entries.toTypedArray(),
@@ -103,17 +114,28 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 			Row(modifierRow, verticalAlignment = verticalRow) {
 				Spacer(modifier = Modifier.weight(1f))
 				Button(
+					colors = ButtonDefaults.buttonColors(
+						backgroundColor = JetTheme.colors.tertiaryBackground,
+						contentColor = JetTheme.colors.secondaryText,
+						disabledContentColor = JetTheme.colors.secondaryText,
+						disabledBackgroundColor = JetTheme.colors.tertiaryBackground
+					),
 					onClick = { viewModel.homePageViewModel.isOpenDialogOfCreatingNewGraph = false }
 				) {
 					Text("Cancel")
 				}
-				Spacer(modifier = Modifier.weight(0.005f))
+				Spacer(modifier = Modifier.weight(0.01f))
 				Button(
+					colors = ButtonDefaults.buttonColors(
+						backgroundColor = JetTheme.colors.tertiaryBackground,
+						contentColor = JetTheme.colors.secondaryText,
+						disabledContentColor = JetTheme.colors.secondaryText,
+						disabledBackgroundColor = JetTheme.colors.tertiaryBackground
+					),
 					onClick = {
 						if (viewModel.graphName.value.trim() == "") {
 							println("Invalid value")
-						}
-						else {
+						} else {
 							viewModel.homePageViewModel.isOpenDialogOfCreatingNewGraph = false
 							coroutineScope.launch {
 								val graph = viewModel.homePageViewModel.createGraph(

@@ -89,6 +89,21 @@ fun MainTheme(
 				JetFontFamily.Serif -> FontFamily.Serif
 				JetFontFamily.SansSerif -> FontFamily.SansSerif
 			}
+		),
+		mini = TextStyle(
+			fontSize = when (textSize) {
+				JetSize.Small -> 14.sp
+				JetSize.Medium -> 16.sp
+				JetSize.Big -> 18.sp
+			},
+			fontWeight = FontWeight.Medium,
+			fontFamily = when(fonts) {
+				JetFontFamily.Default -> FontFamily.Default
+				JetFontFamily.Monospace -> FontFamily.Monospace
+				JetFontFamily.Cursive -> FontFamily.Cursive
+				JetFontFamily.Serif -> FontFamily.Serif
+				JetFontFamily.SansSerif -> FontFamily.SansSerif
+			}
 		)
 	)
 

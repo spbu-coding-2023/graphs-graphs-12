@@ -21,6 +21,7 @@ data class JetTypography(
 	val heading: TextStyle,
 	val body: TextStyle,
 	val toolbar: TextStyle,
+	val mini: TextStyle
 )
 
 data class JetShape(
