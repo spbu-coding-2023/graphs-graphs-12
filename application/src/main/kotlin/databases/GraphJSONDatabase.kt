@@ -14,6 +14,10 @@ import viewmodels.graphs.VertexViewModel
 import java.io.BufferedReader
 import java.io.BufferedWriter
 
+/**
+ * Graph json database.
+ * Its simple implementation of [FileDatabase] for [GraphViewModel] object to `load`/`save`.
+ */
 class GraphJSONDatabase : FileDatabase<GraphViewModel>() {
 	override fun load(reader: BufferedReader): GraphViewModel {
 		val graphJSONObject = JSONObject(JSONTokener(reader))
@@ -36,6 +40,7 @@ class GraphJSONDatabase : FileDatabase<GraphViewModel>() {
 					vertexJSONObject.getFloat("yPos").dp,
 					Color(vertexJSONObject.getInt("color")),
 					vertexJSONObject.getFloat("radius").dp,
+					vertexJSONObject.getInt("degree")
 				)
 			)
 		}
@@ -91,6 +96,7 @@ class GraphJSONDatabase : FileDatabase<GraphViewModel>() {
 					Pair("yPos", vertex.yPos.value),
 					Pair("color", vertex.color.toArgb()),
 					Pair("radius", vertex.radius.value),
+					Pair("degree", vertex.degree)
 				)
 			)
 			verticesJSONObjects.add(vertexJSONObject)

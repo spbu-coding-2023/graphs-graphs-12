@@ -15,7 +15,7 @@ import java.io.FileWriter
  */
 abstract class FileDatabase<T> {
 	/**
-	 * Load [file] and convert its data to object of type [T].
+	 * Open [file] and convert its data to object of type [T].
 	 *
 	 * @param file to read
 	 * @return object of type [T]
@@ -27,12 +27,31 @@ abstract class FileDatabase<T> {
 		return result
 	}
 
+	/**
+	 * Save object of type [T] to [file].
+	 *
+	 * @param file to write on it
+	 * @param obj to convert it to file data
+	 */
 	fun save(file: File, obj: T) {
 		val writer = BufferedWriter(FileWriter(file))
 		save(writer, obj)
 		writer.close()
 	}
 
+	/**
+	 * Convert [reader] data to object of type [T].
+	 *
+	 * @param reader to load object
+	 * @return object of type [T]
+	 */
 	protected abstract fun load(reader: BufferedReader): T
+
+	/**
+	 * Save object of type [T] to [writer].
+	 *
+	 * @param writer to write object data on its
+	 * @param obj to convert it to write data
+	 */
 	protected abstract fun save(writer: BufferedWriter, obj: T)
 }
