@@ -13,7 +13,7 @@ private const val DEFAULT_COMPARISON_MODULE = 1e-9
  * @param defaultWeight The default weight to return if the edge is not a WeightedEdge
  * @return The weight of the edge if it is a WeightedEdge, otherwise the defaultWeight
  */
-fun <I, E : Edge<I>> getEdgeWeightOrDefault(edge: E, defaultWeight: Double = 1.0): Double {
+fun <I, E : Edge<I>> getEdgeWeight(edge: E, defaultWeight: Double = 1.0): Double {
 	if (edge::class == WeightedEdge::class) {
 		edge as WeightedEdge<*>
 		return edge.weight

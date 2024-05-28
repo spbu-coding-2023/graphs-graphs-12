@@ -31,7 +31,7 @@ class WeightedAdjacencyMatrix<I, E : Edge<I>>(graph: Graph<I, E>) {
 	 *
 	 * @param idSource id of edge's source vertex
 	 * @param idTarget id of edge's target vertex
-	 * @return `0.0` if edge not found else its weight, by result of [getEdgeWeightOrDefault] method
+	 * @return `0.0` if edge not found else its weight, by result of [getEdgeWeight] method
 	 */
 	fun getEdgeWeightOrDefault(idSource: I, idTarget: I): Double {
 		return getEdgeWeightOrDefault(idSource, idTarget, 0.0)
@@ -43,7 +43,7 @@ class WeightedAdjacencyMatrix<I, E : Edge<I>>(graph: Graph<I, E>) {
 	 * @param idSource id of edge's source vertex
 	 * @param idTarget id of edge's target vertex
 	 * @param defaultWeight value of not found edge which source is [idSource] and target is [idTarget]
-	 * @return [defaultWeight] if edge not found else its weight, by result of [getEdgeWeightOrDefault] method
+	 * @return [defaultWeight] if edge not found else its weight, by result of [getEdgeWeight] method
 	 */
 	fun getEdgeWeightOrDefault(idSource: I, idTarget: I, defaultWeight: Double): Double {
 		return matrix.getOrDefault(idSource, mutableMapOf()).getOrDefault(idTarget, defaultWeight)
@@ -72,7 +72,7 @@ class WeightedAdjacencyMatrix<I, E : Edge<I>>(graph: Graph<I, E>) {
 		totalWeight = 0.0
 		for (idVertex in graph.idVertices) {
 			for (edge in graph.vertexEdges(idVertex)) {
-				val edgeWeight = getEdgeWeightOrDefault(edge, 1.0)
+				val edgeWeight = getEdgeWeight(edge, 1.0)
 				totalWeight += edgeWeight
 				addEdge(edge.idSource, edge.idTarget, edgeWeight)
 			}

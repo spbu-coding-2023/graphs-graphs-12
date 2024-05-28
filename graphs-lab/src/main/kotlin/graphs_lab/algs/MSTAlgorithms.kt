@@ -2,7 +2,7 @@ package graphs_lab.algs
 
 import graphs_lab.algs.utils.DisjointSets
 import graphs_lab.algs.utils.PriorityPair
-import graphs_lab.algs.utils.getEdgeWeightOrDefault
+import graphs_lab.algs.utils.getEdgeWeight
 import graphs_lab.core.edges.Edge
 import graphs_lab.core.graphs.Graph
 import java.util.PriorityQueue
@@ -82,7 +82,7 @@ class MSTAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 			for (edge in graph.vertexEdges(idVertex)) {
 				priorityQueue.add(
 					PriorityPair(
-						getEdgeWeightOrDefault(edge),
+						getEdgeWeight(edge),
 						edge
 					)
 				)
@@ -111,7 +111,7 @@ class MSTAlgorithms<I, E : Edge<I>>(val graph: Graph<I, E>) {
 		for (edge in graph.vertexEdges(idVertex)) {
 			priorityQueue.add(
 				PriorityPair(
-					getEdgeWeightOrDefault(edge),
+					getEdgeWeight(edge),
 					edge
 				)
 			)

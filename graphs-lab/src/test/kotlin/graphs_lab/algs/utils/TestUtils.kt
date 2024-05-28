@@ -12,7 +12,7 @@ class TestUtils {
 	@DisplayName("get weight from unweighted edge with default weight")
 	fun testGettingWeightFromUnweightedEdgeCase1() {
 		val edge = Edge(1, 2)
-		val weight = getEdgeWeightOrDefault(edge)
+		val weight = getEdgeWeight(edge)
 		Assertions.assertEquals(1.0, weight)
 	}
 
@@ -20,7 +20,7 @@ class TestUtils {
 	@DisplayName("get weight from unweighted edge with custom weight")
 	fun testGettingWeightFromUnweightedEdgeCase2() {
 		val edge = Edge(1, 2)
-		val weight = getEdgeWeightOrDefault(edge, 1.5)
+		val weight = getEdgeWeight(edge, 1.5)
 		Assertions.assertEquals(1.5, weight)
 	}
 
@@ -28,7 +28,7 @@ class TestUtils {
 	@DisplayName("get weight from weighted edge with default weight")
 	fun testGettingWeightFromWeightedEdgeCase1() {
 		val edge = WeightedEdge(1, 2, 1.25)
-		val weight = getEdgeWeightOrDefault(edge)
+		val weight = getEdgeWeight(edge)
 		Assertions.assertEquals(1.25, weight)
 	}
 
@@ -36,7 +36,7 @@ class TestUtils {
 	@DisplayName("get weight from weighted edge with custom weight")
 	fun testGettingWeightFromWeightedEdgeCase2() {
 		val edge = WeightedEdge(1, 2, 1.25)
-		val weight = getEdgeWeightOrDefault(edge, 1.5)
+		val weight = getEdgeWeight(edge, 1.5)
 		Assertions.assertEquals(1.25, weight)
 	}
 
