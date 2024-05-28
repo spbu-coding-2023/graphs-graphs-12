@@ -5,6 +5,7 @@ import utils.GraphSavingType
 import utils.VertexIDType
 
 class SettingsModel {
+	val graphNameRegEx = Regex("[a-zA-Z][a-zA-Z0-9_-]*")
 	// TODO(Implements save graph)
 	fun saveGraph(graph: WeightedGraph<VertexID>, vertexIDType: VertexIDType, value: GraphSavingType) {
 		println(graph)

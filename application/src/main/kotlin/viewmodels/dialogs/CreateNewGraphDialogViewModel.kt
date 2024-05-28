@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import utils.GraphSavingType
 import utils.VertexIDType
 import viewmodels.pages.HomePageViewModel
+import java.io.File
 
 class CreateNewGraphDialogViewModel(val homePageViewModel: HomePageViewModel) {
 	val graphName =  mutableStateOf("")
@@ -11,4 +12,9 @@ class CreateNewGraphDialogViewModel(val homePageViewModel: HomePageViewModel) {
 	val isGraphWeighted = mutableStateOf(false)
 	val isGraphDirected = mutableStateOf(false)
 	val selectedSaveType = mutableStateOf(GraphSavingType.LOCAL_FILE)
+	val saveFolder = mutableStateOf(File("").absolutePath)
+
+	fun isValidGraphName(newGraphName: String): Boolean {
+		return homePageViewModel.settings.graphNameRegEx.matches(newGraphName)
+	}
 }
