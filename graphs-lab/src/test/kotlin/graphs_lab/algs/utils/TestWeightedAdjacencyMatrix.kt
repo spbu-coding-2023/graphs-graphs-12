@@ -28,12 +28,12 @@ class TestWeightedAdjacencyMatrix {
 			var vertexDegree = 0.0
 			for (j in 1..10) {
 				if (i % j == 0 || j % j == 0) {
-					Assertions.assertEquals(1.0, matrix.getEdgeWeight(i, j))
-					Assertions.assertEquals(1.0, matrix.getEdgeWeight(i, j, 0.0))
+					Assertions.assertEquals(1.0, matrix.getEdgeWeightOrDefault(i, j))
+					Assertions.assertEquals(1.0, matrix.getEdgeWeightOrDefault(i, j, 0.0))
 					vertexDegree += 1.0
 				} else {
-					Assertions.assertEquals(0.0, matrix.getEdgeWeight(i, j))
-					Assertions.assertEquals(-1.0, matrix.getEdgeWeight(i, j, -1.0))
+					Assertions.assertEquals(0.0, matrix.getEdgeWeightOrDefault(i, j))
+					Assertions.assertEquals(-1.0, matrix.getEdgeWeightOrDefault(i, j, -1.0))
 				}
 			}
 			Assertions.assertEquals(vertexDegree, matrix.getVertexWeightedDegree(i))

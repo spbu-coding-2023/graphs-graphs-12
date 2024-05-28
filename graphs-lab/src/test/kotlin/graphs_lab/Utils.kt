@@ -1,6 +1,6 @@
 package graphs_lab
 
-import graphs_lab.algs.utils.getEdgeWeight
+import graphs_lab.algs.utils.getEdgeWeightOrDefault
 import graphs_lab.core.edges.Edge
 import graphs_lab.core.graphs.Graph
 import graphs_lab.core.graphs.UnweightedGraph
@@ -67,7 +67,7 @@ fun <I, E : Edge<I>> assertEdgesCollection(
 			val secondDirection = edge.idSource == edgeView.second && edge.idTarget == edgeView.first
 			if (firstDirection || (!isDirected && secondDirection)) {
 				// Comparing double or float numbers by epsilon method
-				if (abs(getEdgeWeight(edge) - edgeView.third) >= 1e-9) continue
+				if (abs(getEdgeWeightOrDefault(edge) - edgeView.third) >= 1e-9) continue
 				isFind = true
 				break
 			}

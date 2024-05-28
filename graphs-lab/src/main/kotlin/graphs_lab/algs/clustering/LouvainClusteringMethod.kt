@@ -22,7 +22,7 @@ fun <I, E : Edge<I>> louvainClusteringMethod(graph: Graph<I, E>): Pair<SetPartit
 }
 
 /**
- * Louvain clustering method implementation.
+ * Louvain clustering method implementation with custom partition.
  *
  * See more: [Wiki](https://en.wikipedia.org/wiki/Louvain_method).
  *

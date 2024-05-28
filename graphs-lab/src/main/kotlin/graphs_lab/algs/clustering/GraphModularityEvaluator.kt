@@ -43,8 +43,8 @@ class GraphModularityEvaluator<I, E : Edge<I>>(graph: Graph<I, E>) {
 				val sourceDegree: Double = adjacencyMatrix.getVertexWeightedDegree(idSource)
 				for (idTarget in community) {
 					if (idSource == idTarget) continue
-					val edgeWeight: Double = adjacencyMatrix.getEdgeWeight(idSource, idTarget)
-					val reversedEdgeWeight: Double = adjacencyMatrix.getEdgeWeight(idTarget, idSource)
+					val edgeWeight: Double = adjacencyMatrix.getEdgeWeightOrDefault(idSource, idTarget)
+					val reversedEdgeWeight: Double = adjacencyMatrix.getEdgeWeightOrDefault(idTarget, idSource)
 					val targetDegree: Double = adjacencyMatrix.getVertexWeightedDegree(idTarget)
 					val edgeNesting = edgeWeight - sourceDegree * targetDegree / adjacencyMatrix.totalWeight
 					modularity += edgeNesting
@@ -95,8 +95,8 @@ class GraphModularityEvaluator<I, E : Edge<I>>(graph: Graph<I, E>) {
 		for (idCommunityVertex in community) {
 			if (idCommunityVertex == idVertex) continue
 			summaryCommunityDegree += adjacencyMatrix.getVertexWeightedDegree(idCommunityVertex)
-			summaryEdges += adjacencyMatrix.getEdgeWeight(idVertex, idCommunityVertex)
-			summaryEdges += adjacencyMatrix.getEdgeWeight(idCommunityVertex, idVertex)
+			summaryEdges += adjacencyMatrix.getEdgeWeightOrDefault(idVertex, idCommunityVertex)
+			summaryEdges += adjacencyMatrix.getEdgeWeightOrDefault(idCommunityVertex, idVertex)
 		}
 		return (summaryEdges - (vertexDegree / module) * summaryCommunityDegree) / adjacencyMatrix.totalWeight
 	}
