@@ -9,15 +9,24 @@ repositories {
 	google()
 }
 
+val sqliteJdbcVersion: String by project
 dependencies {
 	implementation(compose.desktop.currentOs)
 	implementation(compose.materialIconsExtended)
 	implementation(compose.material3)
 	implementation(compose.foundation)
+
 	implementation(project(":graphs-lab"))
+
 	implementation("org.neo4j.driver", "neo4j-java-driver", "4.4.5")
+
 	// https://mvnrepository.com/artifact/org.json/json
 	implementation("org.json:json:20240303")
+
+	implementation("org.xerial", "sqlite-jdbc", sqliteJdbcVersion)
+	implementation("io.github.microutils", "kotlin-logging-jvm", "2.0.6")
+	implementation("org.slf4j", "slf4j-simple", "1.7.29")
+
 	implementation("com.darkrockstudios:mpfilepicker:3.1.0")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.1")
