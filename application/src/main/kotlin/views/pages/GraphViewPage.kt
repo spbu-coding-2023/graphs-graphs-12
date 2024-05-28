@@ -282,7 +282,20 @@ fun showAddItem(graphViewModel: GraphViewModel) {
 
 @Composable
 fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<VertexViewModel?>) {
-	val setEdges by remember { mutableStateOf(graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id)) }
+	var setEdges by remember { mutableStateOf(graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id)) }
+
+	var isChanged by remember { mutableStateOf(false) }
+	LaunchedEffect(isChanged) {
+		if (idVerticesInfo.value != null) {
+			setEdges = graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id)
+		}
+		isChanged = false
+	}
+	LaunchedEffect(idVerticesInfo.value) {
+		if (idVerticesInfo.value != null) {
+			setEdges = graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id)
+		}
+	}
 
 	val removingVertexSource: () -> Unit = {
 		graphViewModel.removeVertex(idVerticesInfo.value!!.id) // todo(!!)
@@ -290,9 +303,11 @@ fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<Ve
 	}
 	val removingVertexTarget: (WeightedEdge<VertexID>) -> Unit = {
 		graphViewModel.removeVertex(it.idTarget)
+		isChanged = true
 	}
 	val removingEdge: (WeightedEdge<VertexID>) -> Unit = {
 		graphViewModel.removeEdge(it.idSource, it.idTarget)
+		isChanged = true
 	}
 
 	val stringVertex: (WeightedEdge<VertexID>) -> String = {
@@ -320,7 +335,6 @@ fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<Ve
 		}
 		ColumnBoxEditItem(
 			setEdges,
-			idVerticesInfo,
 			removingVertexTarget,
 			"Doesn't have adjacent vertices",
 			stringVertex,
@@ -328,7 +342,6 @@ fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<Ve
 		)
 		ColumnBoxEditItem(
 			setEdges,
-			idVerticesInfo,
 			removingEdge,
 			"Doesn't have edges",
 			stringEdge,
@@ -434,7 +447,6 @@ fun BoxAddItem(text: String, count: Int, action: () -> Unit) {
 @Composable
 fun ColumnBoxEditItem(
 	setEdges: Set<WeightedEdge<VertexID>>,
-	idVerticesInfo: MutableState<VertexViewModel?>,
 	action: (WeightedEdge<VertexID>) -> Unit,
 	message: String,
 	string: (WeightedEdge<VertexID>) -> String,
@@ -450,7 +462,7 @@ fun ColumnBoxEditItem(
 			Text(message, Modifier.padding(paddingCustom))
 		}
 		setEdges.forEach {
-			BoxEditItem(it, idVerticesInfo, action, string)
+			BoxEditItem(it, action, string)
 		}
 	}
 }
@@ -458,17 +470,13 @@ fun ColumnBoxEditItem(
 @Composable
 fun BoxEditItem(
 	edge: WeightedEdge<VertexID>,
-	idVerticesInfo: MutableState<VertexViewModel?>,
 	action: (WeightedEdge<VertexID>) -> Unit,
 	string: (WeightedEdge<VertexID>) -> String
 ) {
 	Box(Modifier.fillMaxWidth()) {
 		Text(string(edge), Modifier.padding(paddingCustom).align(Alignment.CenterStart))
 		IconButton(
-			onClick = {
-				action(edge)
-				idVerticesInfo.value = null // todo(maybe can to better)
-			},
+			onClick = { action(edge) },
 			enabled = true,
 			modifier = Modifier
 				.width(sizeBottom)

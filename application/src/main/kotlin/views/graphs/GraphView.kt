@@ -57,7 +57,6 @@ fun GraphView(
 		changeCenter.value = false
 	}
 
-
 	Surface(Modifier
 //		.clip(JetTheme.shapes.cornerStyle)
 		.pointerInput(Unit) {
@@ -139,13 +138,16 @@ fun GraphView(
 					if (isCtrlPressed) {
 						if (idVerticesInfo.value != null) {
 							graphViewModel.addEdge(
-								idVerticesInfo.value!!.id, // todo(!!)
+								idVerticesInfo.value!!.id,
 								vertexViewModel.id
 							)
 						}
 						isCtrlPressed = !isCtrlPressed
 					} else {
 						if (idVerticesInfo.value != vertexViewModel) {
+							if (idVerticesInfo.value != null) {
+								idVerticesInfo.value!!.color = colorVerticesStart
+							}
 							idVerticesInfo.value = vertexViewModel
 							idVerticesInfo.value!!.color = whiteCustom
 						} else {
