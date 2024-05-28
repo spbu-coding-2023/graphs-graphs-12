@@ -7,17 +7,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import models.VertexID
-import views.radiusStart
-import javax.swing.text.StyledEditorKit.BoldAction
-
-val colorVertexStart = Color.Gray
+import themes.colorVerticesStart
+import themes.radiusVerticesStart
 
 class VertexViewModel(
 	val id: VertexID,
 	x: Dp = 0.dp,
 	y: Dp = 0.dp,
-	color: Color = colorVertexStart,
-	radius: Dp = radiusStart,
+	color: Color = colorVerticesStart,
+	radius: Dp = radiusVerticesStart,
 	degree: Int = 0,
 	visibility: Boolean = true
 ) {

@@ -6,14 +6,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import graphs_lab.core.edges.WeightedEdge
 import models.VertexID
+import themes.colorEdgesStart
+import themes.widthEdgesStart
 
 class EdgeViewModel(
 	val edge: WeightedEdge<VertexID>,
 	val source: VertexViewModel,
 	val target: VertexViewModel,
 	isUnweighted: Boolean,
-	color: Color = Color.Black, // Color(56, 90, 83)
-	size: Float = 1f, // todo(Float?)
+	color: Color = colorEdgesStart,
+	width: Float = widthEdgesStart,
 	visibility: Boolean = false
 ) {
 	private val _color = mutableStateOf(color)
@@ -22,11 +24,11 @@ class EdgeViewModel(
 		set(value) {
 			_color.value = value
 		}
-	private val _size = mutableFloatStateOf(size)
-	var size: Float
-		get() = _size.floatValue
+	private val _width = mutableFloatStateOf(width)
+	var width: Float
+		get() = _width.floatValue
 		set(value) {
-			_size.floatValue = value
+			_width.floatValue = value
 		}
 	private val _visibility = mutableStateOf(visibility)
 	var visibility: Boolean

@@ -6,13 +6,12 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import themes.JetTheme
+import themes.paddingCustom
 import utils.ListWidget
 import viewmodels.dialogs.CreateNewGraphDialogViewModel
 import viewmodels.pages.HomePageViewModel
@@ -22,11 +21,14 @@ import views.dialogs.CreateNewGraphDialog
 fun HomePage(viewModel: HomePageViewModel) {
 	val modifierColumn = Modifier
 		.fillMaxHeight()
-		.padding(4.dp)
+//		.padding(4.dp)
 		.clip(JetTheme.shapes.cornerStyle)
 		.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle)
 
-	Row {
+	Row(
+		modifier = Modifier.padding(paddingCustom),
+		horizontalArrangement = Arrangement.spacedBy(paddingCustom)
+	) {
 		ListWidget(
 			modifier = modifierColumn.weight(1f),
 			listItems = viewModel.previouslyLoadedGraph,

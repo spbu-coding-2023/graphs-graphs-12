@@ -5,21 +5,13 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import themes.*
 import views.pages.GraphViewPage
 import views.pages.HomePage
 import views.pages.SettingsPage
 import viewmodels.MainScreenViewModel
-
-// todo(add to jetpack)
-val whiteCustom = Color(254, 249, 231)
-val sizeBottom = 50.dp
-val radiusStart = 15.dp
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -45,7 +37,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
 		corners = currentCornersStyle.value,
 		fonts = currentFontFamily.value,
 	) {
-		Row(Modifier.fillMaxSize()) {
+		Row(Modifier.fillMaxSize()) { // todo(add padding and delete other places)
 			SideMenu(statePager, viewModel.indexSelectedPage, viewModel.sideMenuViewModel)
 			VerticalPager(
 				modifier = Modifier.fillMaxSize(),

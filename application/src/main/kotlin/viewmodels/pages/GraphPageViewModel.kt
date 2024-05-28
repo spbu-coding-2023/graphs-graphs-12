@@ -12,10 +12,7 @@ import models.VertexID
 import models.utils.AlgorithmButton
 import themes.JetColors
 import themes.JetTheme
-import utils.representation.AllCenterPlacementStrategy
-import utils.representation.CircularPlacementStrategy
-import utils.representation.RandomPlacementStrategy
-import utils.representation.RepresentationStrategy
+import utils.representation.*
 import viewmodels.graphs.GraphViewModel
 import windowSizeStart
 
@@ -248,6 +245,7 @@ class GraphPageViewModel {
 		"Central" to { graphPageViewModel -> graphPageViewModel.representationStrategy = AllCenterPlacementStrategy() },
 		"Random" to { graphPageViewModel -> graphPageViewModel.representationStrategy = RandomPlacementStrategy() },
 		"Circular" to { graphPageViewModel -> graphPageViewModel.representationStrategy = CircularPlacementStrategy() },
+		"Force-directed" to { graphPageViewModel -> graphPageViewModel.representationStrategy = ForceDirectedPlacementStrategy(graphViewModel!!) } // todo(!!)
 	)
 
 	private fun updateGraphRepresentation() {

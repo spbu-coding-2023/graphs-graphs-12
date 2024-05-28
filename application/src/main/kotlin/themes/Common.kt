@@ -6,7 +6,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
+val sizeBottom = 50.dp // todo(replace)
+val radiusVerticesStart = 15.dp
+val widthEdgesStart = 1f
+val paddingCustom = 4.dp
 
 data class JetColors(
 	val primaryBackground: Color,

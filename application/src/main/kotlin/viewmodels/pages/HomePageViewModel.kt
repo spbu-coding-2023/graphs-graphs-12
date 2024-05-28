@@ -112,7 +112,7 @@ class HomePageViewModel(
 //				graph.addEdge(VertexID(i, VertexIDType.INT_TYPE), VertexID(j, VertexIDType.INT_TYPE), 1.0)
 //			}
 //		}
-		graphPage.graphViewModel = GraphViewModel(graph, vertexIDType, isUnweighted = false)
+		graphPage.graphViewModel = GraphViewModel(graph, vertexIDType, isUnweighted = !isGraphWeighted)
 		indexSelectedPage.value = sideMenu.pageOfTab("GraphView")
 		return graph
 	}

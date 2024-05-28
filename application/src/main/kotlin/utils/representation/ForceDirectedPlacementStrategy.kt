@@ -1,10 +1,9 @@
-
 package utils.representation
 
 import androidx.compose.ui.unit.dp
+import themes.radiusVerticesStart
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
-import views.radiusStart
 import kotlin.math.*
 
 /**
@@ -31,13 +30,13 @@ class ForceDirectedPlacementStrategy(
 			width,
 			height,
 			null,
-			750, // recommend 10000 // test 750
+			10000, // recommend 10000 // test 750
 			1.0, // attraction
-			10.0, // repulsion: recommend 10
-			100.0, // repulsion overlapping: recommend 100
-			5.0, // gravity: recommend 5
+			200.0, // repulsion: recommend 10
+			1000.0, // repulsion overlapping: recommend 100
+			1.0, // gravity: recommend 5
 			1, // the weight effects: 0 / 1 / 2
-			0.002, // recommend 0.1 // test 0.01 // test 0.002
+			0.1, // recommend 0.1 // test 0.01 // test 0.002
 			10.0, // recommend 10
 			1.0, // recommend 1
 			0.999
@@ -113,7 +112,7 @@ class ForceDirectedPlacementStrategy(
 					val difY = (vertexTargetViewModel.yPos - vertexSourceViewModel.yPos).value.toDouble()
 
 					val distance = sqrt(difX.pow(2) + difY.pow(2))
-					val distanceOverlapping = distance - vertexSourceViewModel.radius / radiusStart - vertexTargetViewModel.radius / radiusStart
+					val distanceOverlapping = distance - vertexSourceViewModel.radius / radiusVerticesStart - vertexTargetViewModel.radius / radiusVerticesStart
 
 					var forceRepul = 0.0
 					if (distanceOverlapping > 0) {
@@ -133,7 +132,7 @@ class ForceDirectedPlacementStrategy(
 				val difY = (edgeViewModel.target.yPos - edgeViewModel.source.yPos).value.toDouble()
 
 				val distance = sqrt(difX.pow(2) + difY.pow(2))
-				val distanceOverlapping = distance - edgeViewModel.source.radius / radiusStart - edgeViewModel.target.radius / radiusStart
+				val distanceOverlapping = distance - edgeViewModel.source.radius / radiusVerticesStart - edgeViewModel.target.radius / radiusVerticesStart
 
 				var forceAttr = 0.0
 				if (distanceOverlapping > 0) {
@@ -184,13 +183,13 @@ class ForceDirectedPlacementStrategy(
 			speedGlobalLast = speedGlobal
 		}
 
-		viewModel.vertices.forEach { vertexViewModel -> // todo(test)
-			if (vertexViewModel.xPos > radiusStart) vertexViewModel.xPos = min(vertexViewModel.xPos.value, width.toFloat() - radiusStart.value).dp
-			else vertexViewModel.xPos = max(vertexViewModel.xPos.value, 2 * radiusStart.value).dp
-
-			if (vertexViewModel.yPos > radiusStart) vertexViewModel.yPos = min(vertexViewModel.yPos.value, height.toFloat() - radiusStart.value).dp
-			else vertexViewModel.yPos = max(vertexViewModel.yPos.value, 2 * radiusStart.value).dp
-		}
+//		viewModel.vertices.forEach { vertexViewModel -> // todo(test)
+//			if (vertexViewModel.xPos > 0.dp) vertexViewModel.xPos = min(vertexViewModel.xPos.value, width.toFloat()).dp
+//			else vertexViewModel.xPos = max(vertexViewModel.xPos.value, 0f).dp
+//
+//			if (vertexViewModel.yPos > 0.dp) vertexViewModel.yPos = min(vertexViewModel.yPos.value, height.toFloat()).dp
+//			else vertexViewModel.yPos = max(vertexViewModel.yPos.value, 0f).dp
+//		}
 	}
 }
 

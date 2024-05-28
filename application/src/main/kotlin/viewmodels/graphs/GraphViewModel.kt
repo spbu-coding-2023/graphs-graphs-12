@@ -8,8 +8,8 @@ import graphs_lab.algs.*
 import graphs_lab.core.edges.WeightedEdge
 import graphs_lab.core.graphs.WeightedGraph
 import models.VertexID
+import themes.radiusVerticesStart
 import utils.VertexIDType
-import views.radiusStart
 import windowSizeStart
 import kotlin.random.Random
 
@@ -56,10 +56,10 @@ class GraphViewModel(
 			id, VertexViewModel(
 				id,
 				Random.nextInt(
-					radiusStart.value.toInt(),
-					windowSizeStart.second.toInt() - radiusStart.value.toInt()
+					radiusVerticesStart.value.toInt(),
+					windowSizeStart.second.toInt() - radiusVerticesStart.value.toInt()
 				).dp,
-				Random.nextInt(radiusStart.value.toInt(), windowSizeStart.second.toInt() - radiusStart.value.toInt()).dp
+				Random.nextInt(radiusVerticesStart.value.toInt(), windowSizeStart.second.toInt() - radiusVerticesStart.value.toInt()).dp
 			)
 		)
 	}
@@ -90,12 +90,12 @@ class GraphViewModel(
 			VertexViewModel(
 				idSource,
 				Random.nextInt(
-					radiusStart.value.toInt(),
-					windowSizeStart.second.toInt() - radiusStart.value.toInt()
+					radiusVerticesStart.value.toInt(),
+					windowSizeStart.second.toInt() - radiusVerticesStart.value.toInt()
 				).dp,  // todo(change 1000 to height)
 				Random.nextInt(
-					radiusStart.value.toInt(),
-					windowSizeStart.second.toInt() - radiusStart.value.toInt()
+					radiusVerticesStart.value.toInt(),
+					windowSizeStart.second.toInt() - radiusVerticesStart.value.toInt()
 				).dp,
 				degree = 1
 			)
@@ -104,12 +104,12 @@ class GraphViewModel(
 			VertexViewModel(
 				idTarget,
 				Random.nextInt(
-					radiusStart.value.toInt(),
-					windowSizeStart.second.toInt() - radiusStart.value.toInt()
+					radiusVerticesStart.value.toInt(),
+					windowSizeStart.second.toInt() - radiusVerticesStart.value.toInt()
 				).dp,
 				Random.nextInt(
-					radiusStart.value.toInt(),
-					windowSizeStart.second.toInt() - radiusStart.value.toInt()
+					radiusVerticesStart.value.toInt(),
+					windowSizeStart.second.toInt() - radiusVerticesStart.value.toInt()
 				).dp,
 				degree = 1
 			)
@@ -152,7 +152,7 @@ class GraphViewModel(
 		path.forEach { id ->
 			if (idLast != id) {
 				_edges[WeightedEdge(idLast, id, 1.0)]!!.color = Color(0, 102, 51) // Green
-				_edges[WeightedEdge(idLast, id, 1.0)]!!.size = 8f // todo(!!)
+				_edges[WeightedEdge(idLast, id, 1.0)]!!.width = 8f // todo(!!)
 			}
 			idLast = id
 		}
@@ -166,7 +166,7 @@ class GraphViewModel(
 		path.forEach { id ->
 			if (idLast != id) {
 				_edges[WeightedEdge(idLast, id, 1.0)]!!.color = Color(0, 102, 51) // Green
-				_edges[WeightedEdge(idLast, id, 1.0)]!!.size = 8f // todo(!!)
+				_edges[WeightedEdge(idLast, id, 1.0)]!!.width = 8f // todo(!!)
 			}
 			idLast = id
 		}
@@ -183,7 +183,7 @@ class GraphViewModel(
 				graph.vertexEdges(id).forEach {
 					if (map[i]!!.contains(it.idTarget)) {
 						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.color = color
-						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.size = 8f
+						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.width = 8f
 					}
 				}
 			}
@@ -201,7 +201,7 @@ class GraphViewModel(
 				graph.vertexEdges(id).forEach {
 					if (list.contains(it.idTarget)) {
 						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.color = color
-						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.size = 8f
+						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.width = 8f
 					}
 				}
 			}
@@ -218,7 +218,7 @@ class GraphViewModel(
 			graph.vertexEdges(idSource).forEach { edge ->
 				if (edge.idTarget == idTarget) {
 					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.color = Color(83, 55, 122) // Purple
-					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.size = 8f
+					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.width = 8f
 				}
 			}
 		}
@@ -234,7 +234,7 @@ class GraphViewModel(
 			graph.vertexEdges(idSource).forEach { edge ->
 				if (edge.idTarget == idTarget) {
 					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.color = Color(83, 55, 122) // Purple
-					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.size = 8f
+					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.width = 8f
 				}
 			}
 		}
@@ -250,7 +250,7 @@ class GraphViewModel(
 			graph.vertexEdges(idSource).forEach { edge ->
 				if (edge.idTarget == idTarget) {
 					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.color = Color(176,0,0) // Red
-					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.size = 8f
+					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.width = 8f
 				}
 			}
 		}

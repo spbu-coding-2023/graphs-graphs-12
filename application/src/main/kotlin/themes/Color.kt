@@ -1,6 +1,11 @@
 package themes
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+
+val whiteCustom = Color(254, 249, 231) // todo(replace)
+val colorVerticesStart = Color.Gray
+val colorEdgesStart = Color.Black
 
 val baseLightPalette = JetColors(
 	primaryBackground = Color(218, 228, 205), // greenCustom

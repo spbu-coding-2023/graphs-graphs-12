@@ -6,7 +6,7 @@ import views.MainScreen
 import viewmodels.MainScreenViewModel
 import java.awt.Dimension
 
-val windowSizeStart = Pair(1000f, 700f)
+val windowSizeStart = Pair(1000f, 700f) // todo(replace)
 
 /**
  * Application entry point.
