@@ -21,7 +21,7 @@ class CircularPlacementStrategy : RepresentationStrategy {
 
         val sorted = vertices.sortedBy { it.label }
         val first = sorted.first()
-        var point = Pair(center.first, center.second - min(width, height) / 2 - radiusStart.value)
+        var point = Pair(center.first, center.second - min(width, height) / 2 + 2 * radiusStart.value)
         first.xPos = point.first.dp
         first.yPos = point.second.dp
         first.color = Color.Gray
