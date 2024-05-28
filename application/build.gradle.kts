@@ -15,6 +15,9 @@ dependencies {
 	implementation(compose.material3)
 	implementation(compose.foundation)
 	implementation(project(":graphs-lab"))
+	// https://mvnrepository.com/artifact/org.json/json
+	implementation("org.json:json:20240303")
+
 }
 
 compose.desktop {

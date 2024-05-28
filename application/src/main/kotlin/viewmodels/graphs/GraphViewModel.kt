@@ -64,6 +64,11 @@ class GraphViewModel(
 		)
 	}
 
+	fun addVertex(vertex: VertexViewModel) {
+		graph.addVertex(vertex.id)
+		_vertices.putIfAbsent(vertex.id, vertex)
+	}
+
 	fun removeVertex(id: VertexID) {
 		_vertices.remove(id)
 		_edges.forEach {
