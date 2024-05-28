@@ -2,6 +2,9 @@ package graphs_lab.algs.utils
 
 import graphs_lab.core.edges.Edge
 import graphs_lab.core.edges.WeightedEdge
+import kotlin.math.abs
+
+private const val DEFAULT_COMPARISON_MODULE = 1e-9
 
 /**
  * Retrieves the weight of the specified edge.
@@ -52,4 +55,29 @@ fun <I, T> checkAndGetSecond(pair: Pair<I?, T?>?): T {
 fun <I> MutableList<I>.removeAndReturn(item: I): I {
 	remove(item)
 	return item
+}
+
+/**
+ * Compares by equals two floating point numbers with double precision.
+ *
+ * __Important__: comparison is made according to module 1e-9.
+ *
+ * @param first is number for comparing
+ * @param second is number for comparing
+ * @return `true` if numbers is equals else `false`
+ */
+fun doubleEquality(first: Double, second: Double): Boolean {
+	return doubleEquality(first, second, DEFAULT_COMPARISON_MODULE)
+}
+
+/**
+ * Compares by equals two floating point numbers with double precision.
+ *
+ * @param first is number for comparing
+ * @param second is number for comparing
+ * @param comparisonModule to validate is numbers equals
+ * @return `true` if numbers is equals else `false`
+ */
+fun doubleEquality(first: Double, second: Double, comparisonModule: Double): Boolean {
+	return abs(abs(first) - abs(second)) < abs(comparisonModule)
 }
