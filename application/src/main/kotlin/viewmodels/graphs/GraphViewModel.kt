@@ -3,8 +3,10 @@ package viewmodels.graphs
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import graphs_lab.algs.*
+import graphs_lab.algs.clustering.louvainClusteringMethod
 import graphs_lab.core.edges.WeightedEdge
 import graphs_lab.core.graphs.WeightedGraph
 import models.VertexID
@@ -174,14 +176,14 @@ class GraphViewModel(
 
 	fun parseTarjanStrongConnectivityAlgorithm() {
 		val resultAlgo = TarjanStrongConnectivityInspector(graph)
-		val map = resultAlgo.stronglyConnectedComponents()
+		val components = resultAlgo.stronglyConnectedComponents()
 		var color: Color
 
-		for (i in 0 until map.size) {
+		for (i in 0 until components.size) {
 			color = Color(Random.nextInt(64, 223), Random.nextInt(64, 223), Random.nextInt(64, 223))
-			map[i]?.forEach { id ->
+			components[i]?.forEach { id ->
 				graph.vertexEdges(id).forEach {
-					if (map[i]!!.contains(it.idTarget)) {
+					if (components[i]!!.contains(it.idTarget)) {
 						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.color = color
 						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.width = 8f
 					}
@@ -192,14 +194,14 @@ class GraphViewModel(
 
 	fun parseCyclesSearchAlgorithm(idVertex: VertexID) {
 		val resultAlgo = CyclesSearchAlgorithms(graph)
-		val set = resultAlgo.searchVertexCycles(idVertex)
+		val cycles = resultAlgo.searchVertexCycles(idVertex)
 		var color: Color
 
-		set.forEach { list ->
+		cycles.forEach { cycle ->
 			color = Color(Random.nextInt(64, 223), Random.nextInt(64, 223), Random.nextInt(64, 223))
-			list.forEach { id ->
+			cycle.forEach { id ->
 				graph.vertexEdges(id).forEach {
-					if (list.contains(it.idTarget)) {
+					if (cycle.contains(it.idTarget)) {
 						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.color = color
 						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.width = 8f
 					}
@@ -210,9 +212,9 @@ class GraphViewModel(
 
 	fun parseKruskalAlgorithm() {
 		val resultAlgo = MSTAlgorithms(graph)
-		val set = resultAlgo.kruskalAlgorithm()
+		val mst = resultAlgo.kruskalAlgorithm()
 
-		set.forEach {
+		mst.forEach {
 			val idSource = it.idSource
 			val idTarget = it.idTarget
 			graph.vertexEdges(idSource).forEach { edge ->
@@ -226,9 +228,9 @@ class GraphViewModel(
 
 	fun parsePrimAlgorithm() {
 		val resultAlgo = MSTAlgorithms(graph)
-		val set = resultAlgo.primAlgorithm()
+		val mst = resultAlgo.primAlgorithm()
 
-		set.forEach {
+		mst.forEach {
 			val idSource = it.idSource
 			val idTarget = it.idTarget
 			graph.vertexEdges(idSource).forEach { edge ->
@@ -242,9 +244,9 @@ class GraphViewModel(
 
 	fun parseTarjanBridgeFinding() {
 		val resultAlgo = TarjanBridgeFinding(graph)
-		val set = resultAlgo.getBridges()
+		val bridges = resultAlgo.getBridges()
 
-		set.forEach {
+		bridges.forEach {
 			val idSource = it.idSource
 			val idTarget = it.idTarget
 			graph.vertexEdges(idSource).forEach { edge ->
@@ -252,6 +254,29 @@ class GraphViewModel(
 					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.color = Color(176,0,0) // Red
 					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.width = 8f
 				}
+			}
+		}
+	}
+
+	fun parseLeaderRank() {
+		val resultAlgo = LeaderRank(graph)
+		val scores = resultAlgo.getVerticesScores()
+
+		var newRadius: Dp
+		scores.forEach { (id, score) ->
+			newRadius = 15.dp * score.toFloat()
+			if (_vertices[id]!!.radius != newRadius) _vertices[id]!!.radius = newRadius
+		}
+	}
+
+	fun parseLouvainClustering() {
+		val resultAlgo = louvainClusteringMethod(graph)
+		var color: Color
+
+		resultAlgo.first.getPartition().forEach{ cluster ->
+			color = Color(Random.nextInt(64, 223), Random.nextInt(64, 223), Random.nextInt(64, 223))
+			cluster.forEach { id ->
+				_vertices[id]!!.color  = color
 			}
 		}
 	}

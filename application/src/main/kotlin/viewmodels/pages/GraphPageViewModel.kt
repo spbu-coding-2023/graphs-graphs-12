@@ -1,16 +1,13 @@
 package viewmodels.pages
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
-import androidx.compose.material3.ButtonColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import models.VertexID
 import models.utils.AlgorithmButton
-import themes.JetColors
 import themes.JetTheme
 import utils.representation.*
 import viewmodels.graphs.GraphViewModel
@@ -33,21 +30,29 @@ class GraphPageViewModel {
 		}
 	val algorithms = setOf<AlgorithmButton>(
 		AlgorithmButton(
+			"Key Vertices",
+			{ graphViewModel, _ -> graphViewModel.parseLeaderRank() },
+		),
+
+		AlgorithmButton(
+			"Clusters",
+			{ graphViewModel, _ -> graphViewModel.parseLouvainClustering() }
+		),
+
+		AlgorithmButton(
 			"Strongly Connected Component",
-			{ graphViewModel, _ -> graphViewModel.parseTarjanStrongConnectivityAlgorithm() },
-			{ algButton ->
-				if (graphViewModel?.graph?.isDirected == true) {
-					algButton.isRun.value = true
+			{ graphViewModel, _ ->
+				if (graphViewModel.graph.isDirected) {
+					graphViewModel.parseTarjanStrongConnectivityAlgorithm()
 				}
 			}
 		),
 
 		AlgorithmButton(
 			"Bridges",
-			{ graphViewModel, _ -> graphViewModel.parseTarjanBridgeFinding() },
-			{ algButton ->
-				if (graphViewModel?.graph?.isDirected == false) {
-					algButton.isRun.value = true
+			{ graphViewModel, _ ->
+				if (!graphViewModel.graph.isDirected) {
+					graphViewModel.parseTarjanBridgeFinding()
 				}
 			}
 		),
@@ -56,25 +61,33 @@ class GraphPageViewModel {
 			"Cycles",
 			{ graphViewModel, input -> graphViewModel.parseCyclesSearchAlgorithm(input.first()) },
 			{ algButton ->
-				val vertex = remember { mutableStateOf("") }
-				OutlinedTextFieldVertex(vertex, "Vertex")
+				var vertex by remember { mutableStateOf("") }
+				var errorVertex by remember { mutableStateOf<Boolean>(false) }
+
+				Text("Enter input details", style = JetTheme.typography.toolbar)
+				OutlinedTextField(
+					value = vertex,
+					onValueChange = { vertex = it },
+					label = { Text("Vertex") },
+					singleLine = true,
+					textStyle = JetTheme.typography.mini,
+					isError = errorVertex,
+					colors = colorsForOutlinedTextField(),
+					modifier = Modifier.padding(4.dp)
+				)
 				TextButton(
-					colors = ButtonDefaults.buttonColors(
-						backgroundColor = JetTheme.colors.tertiaryBackground,
-						contentColor = JetTheme.colors.secondaryText,
-						disabledContentColor = JetTheme.colors.secondaryText,
-						disabledBackgroundColor = JetTheme.colors.tertiaryBackground
-					),
+					colors = colorsForTextButton(),
 					onClick = {
-						if (graphViewModel!!.graph.containsVertex(
-								VertexID.vertexIDFromString(
-									vertex.value,
-									graphViewModel!!.vertexType
+						try {
+							if (graphViewModel!!.graph.containsVertex(
+									VertexID.vertexIDFromString(vertex, graphViewModel!!.vertexType)
 								)
-							)
-						) {
-							algButton.inputs.value = listOf(vertex.value)
-							algButton.isRun.value = true
+							) {
+								algButton.inputs.value = listOf(vertex)
+								algButton.isRun.value = true
+							} else errorVertex = true
+						} catch (e: Exception) {
+							errorVertex = true
 						}
 					}
 				) {
@@ -85,20 +98,18 @@ class GraphPageViewModel {
 
 		AlgorithmButton(
 			"Minimum Spanning Tree (Kruskal)",
-			{ graphViewModel, _ -> graphViewModel.parseKruskalAlgorithm() },
-			{ algButton ->
-				if (graphViewModel?.graph?.isDirected == false) {
-					algButton.isRun.value = true
+			{ graphViewModel, _ ->
+				if (!graphViewModel.graph.isDirected) {
+					graphViewModel.parseKruskalAlgorithm()
 				}
 			}
 		),
 
 		AlgorithmButton(
 			"Minimum Spanning Tree (Prim)",
-			{ graphViewModel, _ -> graphViewModel.parsePrimAlgorithm() },
-			{ algButton ->
-				if (graphViewModel?.graph?.isDirected == false) {
-					algButton.isRun.value = true
+			{ graphViewModel, _ ->
+				if (!graphViewModel.graph.isDirected) {
+					graphViewModel.parsePrimAlgorithm()
 				}
 			}
 		),
@@ -107,62 +118,7 @@ class GraphPageViewModel {
 			"Shortest Path (Bellman)",
 			{ graphViewModel, input -> graphViewModel.parseBellmanFordAlgorithm(input.first(), input.last()) },
 			{ algButton ->
-				var source by remember { mutableStateOf("") }
-				var target by remember { mutableStateOf("") }
-				OutlinedTextField(
-					value = source,
-					onValueChange = { source = it },
-					label = { Text("Source") },
-					singleLine = true,
-					textStyle = JetTheme.typography.mini,
-					colors = TextFieldDefaults.textFieldColors(
-						focusedIndicatorColor = JetTheme.colors.secondaryText,
-						focusedLabelColor = JetTheme.colors.secondaryText,
-						cursorColor = JetTheme.colors.tintColor
-					),
-					modifier = Modifier.padding(4.dp)
-				)
-				OutlinedTextField(
-					value = target,
-					onValueChange = { target = it },
-					label = { Text("Target") },
-					singleLine = true,
-					textStyle = JetTheme.typography.mini,
-					colors = TextFieldDefaults.textFieldColors(
-						focusedIndicatorColor = JetTheme.colors.secondaryText,
-						focusedLabelColor = JetTheme.colors.secondaryText,
-						cursorColor = JetTheme.colors.tintColor
-					),
-					modifier = Modifier.padding(4.dp)
-				)
-				TextButton(
-					colors = ButtonDefaults.buttonColors(
-						backgroundColor = JetTheme.colors.tertiaryBackground,
-						contentColor = JetTheme.colors.secondaryText,
-						disabledContentColor = JetTheme.colors.secondaryText,
-						disabledBackgroundColor = JetTheme.colors.tertiaryBackground
-					),
-					onClick = {
-						if (graphViewModel!!.graph.containsVertex(
-								VertexID.vertexIDFromString(
-									source,
-									graphViewModel!!.vertexType
-								)
-							) &&
-							graphViewModel!!.graph.containsVertex(
-								VertexID.vertexIDFromString(
-									target,
-									graphViewModel!!.vertexType
-								)
-							)
-						) {
-							algButton.inputs.value = listOf(source, target)
-							algButton.isRun.value = true
-						}
-					}
-				) {
-					Text("Run it!")
-				}
+				dropDownMenuForSP(graphViewModel, algButton)
 			}
 		),
 
@@ -170,62 +126,7 @@ class GraphPageViewModel {
 			"Shortest Path (Dijkstra)",
 			{ graphViewModel, input -> graphViewModel.parseDijkstraAlgorithm(input.first(), input.last()) },
 			{ algButton ->
-				var source by remember { mutableStateOf("") }
-				var target by remember { mutableStateOf("") }
-				OutlinedTextField(
-					value = source,
-					onValueChange = { source = it },
-					label = { Text("Source") },
-					singleLine = true,
-					textStyle = JetTheme.typography.mini,
-					colors = TextFieldDefaults.textFieldColors(
-						focusedIndicatorColor = JetTheme.colors.secondaryText,
-						focusedLabelColor = JetTheme.colors.secondaryText,
-						cursorColor = JetTheme.colors.tintColor
-					),
-					modifier = Modifier.padding(4.dp)
-				)
-				OutlinedTextField(
-					value = target,
-					onValueChange = { target = it },
-					label = { Text("Target") },
-					singleLine = true,
-					textStyle = JetTheme.typography.mini,
-					colors = TextFieldDefaults.textFieldColors(
-						focusedIndicatorColor = JetTheme.colors.secondaryText,
-						focusedLabelColor = JetTheme.colors.secondaryText,
-						cursorColor = JetTheme.colors.tintColor
-					),
-					modifier = Modifier.padding(4.dp)
-				)
-				TextButton(
-					colors = ButtonDefaults.buttonColors(
-						backgroundColor = JetTheme.colors.tertiaryBackground,
-						contentColor = JetTheme.colors.secondaryText,
-						disabledContentColor = JetTheme.colors.secondaryText,
-						disabledBackgroundColor = JetTheme.colors.tertiaryBackground
-					),
-					onClick = {
-						if (graphViewModel!!.graph.containsVertex(
-								VertexID.vertexIDFromString(
-									source,
-									graphViewModel!!.vertexType
-								)
-							) &&
-							graphViewModel!!.graph.containsVertex(
-								VertexID.vertexIDFromString(
-									target,
-									graphViewModel!!.vertexType
-								)
-							)
-						) {
-							algButton.inputs.value = listOf(source, target)
-							algButton.isRun.value = true
-						}
-					}
-				) {
-					Text("Run it!")
-				}
+				dropDownMenuForSP(graphViewModel, algButton)
 			}
 		),
 	)
@@ -249,44 +150,84 @@ class GraphPageViewModel {
 }
 
 @Composable
-fun OutlinedTextFieldVertex(vertex: MutableState<String>, message: String) {
-	OutlinedTextField(
-		value = vertex.value,
-		onValueChange = { vertex.value = it },
-		label = { Text(message) },
-		singleLine = true,
-		textStyle = JetTheme.typography.mini,
-		colors = TextFieldDefaults.textFieldColors(
-			focusedIndicatorColor = JetTheme.colors.secondaryText,
-			focusedLabelColor = JetTheme.colors.secondaryText,
-			cursorColor = JetTheme.colors.tintColor
-		),
-		modifier = Modifier.padding(4.dp)
+private fun colorsForOutlinedTextField(): TextFieldColors {
+	return TextFieldDefaults.textFieldColors(
+		focusedIndicatorColor = JetTheme.colors.secondaryText,
+		focusedLabelColor = JetTheme.colors.secondaryText,
+		cursorColor = JetTheme.colors.tintColor,
+		errorIndicatorColor = Color(176, 0, 0) // Red
 	)
 }
 
-//@Composable
-//fun TextButtonVertex(graphViewModel: GraphViewModel, vertex: String, algButton) {
-//	TextButton(
-//		colors = ButtonDefaults.buttonColors(
-//			backgroundColor = JetTheme.colors.tertiaryBackground,
-//			contentColor = JetTheme.colors.secondaryText,
-//			disabledContentColor = JetTheme.colors.secondaryText,
-//			disabledBackgroundColor = JetTheme.colors.tertiaryBackground
-//		),
-//		onClick = {
-//			if (graphViewModel.graph.containsVertex(
-//					VertexID.vertexIDFromString(
-//						vertex.value,
-//						graphViewModel!!.vertexType
-//					)
-//				)
-//			) {
-//				algButton.inputs.value = listOf(vertex.value)
-//				algButton.isRun.value = true
-//			}
-//		}
-//	) {
-//		Text("Run it!")
-//	}
-//}
+@Composable
+private fun colorsForTextButton(): ButtonColors {
+	return ButtonDefaults.buttonColors(
+		backgroundColor = JetTheme.colors.tertiaryBackground,
+		contentColor = JetTheme.colors.secondaryText,
+		disabledContentColor = JetTheme.colors.secondaryText,
+		disabledBackgroundColor = JetTheme.colors.tertiaryBackground
+	)
+}
+
+@Composable
+private fun dropDownMenuForSP(
+	graphViewModel: GraphViewModel?,
+	algButton: AlgorithmButton,
+) {
+	var source by remember { mutableStateOf("") }
+	var target by remember { mutableStateOf("") }
+	var errorSource by remember { mutableStateOf<Boolean>(false) }
+	var errorTarget by remember { mutableStateOf<Boolean>(false) }
+
+	Text("Enter input details", style = JetTheme.typography.toolbar)
+	OutlinedTextField(
+		value = source,
+		onValueChange = { source = it },
+		label = { Text("Source") },
+		singleLine = true,
+		textStyle = JetTheme.typography.mini,
+		isError = errorSource,
+		colors = colorsForOutlinedTextField(),
+		modifier = Modifier.padding(4.dp)
+	)
+	OutlinedTextField(
+		value = target,
+		onValueChange = { target = it },
+		label = { Text("Target") },
+		singleLine = true,
+		textStyle = JetTheme.typography.mini,
+		isError = errorTarget,
+		colors = colorsForOutlinedTextField(),
+		modifier = Modifier.padding(4.dp)
+	)
+	TextButton(
+		colors = colorsForTextButton(),
+		onClick = {
+			try {
+				if (
+					graphViewModel!!.graph.containsVertex(
+						VertexID.vertexIDFromString(source, graphViewModel.vertexType)
+					) &&
+					graphViewModel.graph.containsVertex(
+						VertexID.vertexIDFromString(target, graphViewModel.vertexType)
+					)
+				) {
+					algButton.inputs.value = listOf(source, target)
+					algButton.isRun.value = true
+				} else {
+					errorSource = !graphViewModel.graph.containsVertex(
+						VertexID.vertexIDFromString(source, graphViewModel.vertexType)
+					)
+					errorTarget = !graphViewModel.graph.containsVertex(
+						VertexID.vertexIDFromString(target, graphViewModel.vertexType)
+					)
+				}
+			} catch (e: Exception) {
+				errorSource = true
+				errorTarget = true
+			}
+		}
+	) {
+		Text("Run it!")
+	}
+}
