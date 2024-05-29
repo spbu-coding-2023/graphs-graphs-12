@@ -107,7 +107,10 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 					style = JetTheme.typography.toolbar
 				)
 				ComboBox(
-					items = GraphSavingType.entries.toTypedArray(),
+					items = GraphSavingType.entries.filter { type ->
+						if (!viewModel.settings.isNeo4jConnected && type == GraphSavingType.NEO4J_DB) false
+						else true
+					}.toTypedArray(),
 					modifier = Modifier.weight(1f),
 					onItemClick = { item: GraphSavingType -> viewModel.selectedSaveType.value = item },
 					textAlign = TextAlign.Center
