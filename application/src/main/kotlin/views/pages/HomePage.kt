@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import themes.JetTheme
 import utils.ListWidget
+import utils.StaticListWidget
 import viewmodels.dialogs.CreateNewGraphDialogViewModel
 import viewmodels.pages.HomePageViewModel
 import views.dialogs.CreateNewGraphDialog
@@ -56,7 +57,7 @@ fun HomePage(viewModel: HomePageViewModel) {
 				Text("Previously opened graphs:", style = JetTheme.typography.toolbar)
 			}
 		}
-		ListWidget(
+		StaticListWidget(
 			modifier = modifierColumn.weight(1f),
 			listItems = viewModel.tasks
 		) {

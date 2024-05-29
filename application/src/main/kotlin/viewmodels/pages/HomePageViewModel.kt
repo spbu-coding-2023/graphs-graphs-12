@@ -81,6 +81,7 @@ class HomePageViewModel(
 		if (saveResult != null) {
 			indexSelectedPage.value = sideMenu.pageOfTab("GraphView")
 			_previouslyLoadedGraph.add(saveResult)
+		} else {
 			graphPage.graphViewModel = null
 		}
 	}

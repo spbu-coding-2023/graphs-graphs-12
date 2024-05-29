@@ -18,6 +18,9 @@ dependencies {
 	implementation("org.neo4j.driver", "neo4j-java-driver", "4.4.5")
 	// https://mvnrepository.com/artifact/org.json/json
 	implementation("org.json:json:20240303")
+	implementation("com.darkrockstudios:mpfilepicker:3.1.0")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.1")
 }
 
 compose.desktop {
