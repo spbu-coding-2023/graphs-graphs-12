@@ -54,26 +54,39 @@ fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
 		.background(JetTheme.colors.primaryBackground, RoundedCornerShape(25.dp))
 
 	if (graphViewModel != null) {
-		BoxWithConstraints(Modifier
-			.fillMaxSize()
-			.padding(paddingCustom)
-			.clip(JetTheme.shapes.cornerStyle)
-			.background(JetTheme.colors.secondaryBackground, JetTheme.shapes.cornerStyle)
+		BoxWithConstraints(
+			Modifier
+				.fillMaxSize()
+				.padding(paddingCustom)
+				.clip(JetTheme.shapes.cornerStyle)
+				.background(JetTheme.colors.secondaryBackground, JetTheme.shapes.cornerStyle)
 		) {
 			GraphView(graphViewModel, idVerticesInfo, Offset(maxWidth.value, maxHeight.value), changeCenter)
 
-			IconResetGraph(graphViewModel, changeCenter, modifierButtons, Modifier.padding(paddingCustom).align(Alignment.TopEnd))
+			IconResetGraph(
+				graphViewModel,
+				changeCenter,
+				modifierButtons,
+				Modifier.padding(paddingCustom).align(Alignment.TopEnd)
+			)
 			Box(Modifier.fillMaxSize()) {
-				ColumnInfoGraph(graphViewModel, idVerticesInfo, isOpenedContextGraph, isOpenedContextEdge,
-					Modifier.align(Alignment.BottomEnd), modifierButtons)
+				ColumnInfoGraph(
+					graphViewModel, idVerticesInfo, isOpenedContextGraph, isOpenedContextEdge,
+					Modifier.align(Alignment.BottomEnd), modifierButtons
+				)
 			}
 		}
 	}
 }
 
 @Composable
-fun IconResetGraph(graphViewModel: GraphViewModel, changeCenter: MutableState<Boolean>, modifierButtons: Modifier, modifierBox: Modifier) {
-	Column(modifierBox){
+fun IconResetGraph(
+	graphViewModel: GraphViewModel,
+	changeCenter: MutableState<Boolean>,
+	modifierButtons: Modifier,
+	modifierBox: Modifier
+) {
+	Column(modifierBox) {
 		IconButton(
 			onClick = {
 				graphViewModel.vertices.forEach {
@@ -92,7 +105,8 @@ fun IconResetGraph(graphViewModel: GraphViewModel, changeCenter: MutableState<Bo
 			content = {
 				Icon(
 					imageVector = Icons.Default.ResetTv,
-					contentDescription = "Reset the graph"
+					contentDescription = "Reset the graph",
+					tint = JetTheme.colors.tintColor,
 				)
 			}
 		)
@@ -122,7 +136,7 @@ fun ColumnInfoGraph(
 	}
 
 	Column(
-		modifier = modifierBox.padding(paddingCustom),
+		modifier = modifierBox.padding(paddingCustom).clip(JetTheme.shapes.cornerStyle),
 		verticalArrangement = Arrangement.spacedBy(paddingCustom)
 	) {
 		IconButton(
@@ -133,7 +147,8 @@ fun ColumnInfoGraph(
 			content = {
 				Icon(
 					imageVector = if (isOpenedContextGraph.value) Icons.Default.ArrowDownward else Icons.Default.ArrowUpward,
-					contentDescription = "Show menu"
+					contentDescription = "Show menu",
+					tint = JetTheme.colors.tintColor
 				)
 			}
 		)
@@ -180,7 +195,8 @@ fun showAddItem(graphViewModel: GraphViewModel, isShownWeigh: MutableState<Boole
 
 		graphViewModel.vertices.find { it.id == idSourceNew }!!.visibility = isShownId.value
 		graphViewModel.vertices.find { it.id == idTargetNew }!!.visibility = isShownId.value
-		graphViewModel.edges.find { it.edge == WeightedEdge(idSourceNew, idTargetNew, 1.0) }!!.visibility = isShownWeigh.value
+		graphViewModel.edges.find { it.edge == WeightedEdge(idSourceNew, idTargetNew, 1.0) }!!.visibility =
+			isShownWeigh.value
 	}
 
 	Row(
@@ -192,7 +208,7 @@ fun showAddItem(graphViewModel: GraphViewModel, isShownWeigh: MutableState<Boole
 		horizontalArrangement = Arrangement.spacedBy(paddingCustom)
 	) {
 		Column(
-			modifier = Modifier.weight(1f),
+			modifier = Modifier.weight(1f).padding(paddingCustom),
 			verticalArrangement = Arrangement.spacedBy(paddingCustom)
 		) {
 			val fontSizeText = 14.sp
@@ -200,8 +216,9 @@ fun showAddItem(graphViewModel: GraphViewModel, isShownWeigh: MutableState<Boole
 
 			Text(
 				"Graph name: ${graphViewModel.graph.label}",
-				fontSize = 20.sp,
-				maxLines = 1
+				style = JetTheme.typography.toolbar,
+				maxLines = 1,
+				color = JetTheme.colors.secondaryText
 			)
 			Row(horizontalArrangement = Arrangement.spacedBy(paddingCustom)) {
 				Column(
@@ -209,19 +226,49 @@ fun showAddItem(graphViewModel: GraphViewModel, isShownWeigh: MutableState<Boole
 					verticalArrangement = Arrangement.spacedBy(paddingCustom)
 				) {
 					if (graphViewModel.graph.isDirected) {
-						Text("Directed", fontSize = fontSizeText, fontWeight = fontWeightText)
+						Text(
+							"Directed",
+							fontSize = fontSizeText,
+							fontWeight = fontWeightText,
+							color = JetTheme.colors.secondaryText
+						)
 					} else {
-						Text("Undirected", fontSize = fontSizeText, fontWeight = fontWeightText)
+						Text(
+							"Undirected",
+							fontSize = fontSizeText,
+							fontWeight = fontWeightText,
+							color = JetTheme.colors.secondaryText
+						)
 					}
 					if (!graphViewModel.isUnweighted) {
-						Text("Weighted", fontSize = fontSizeText, fontWeight = fontWeightText)
+						Text(
+							"Weighted",
+							fontSize = fontSizeText,
+							fontWeight = fontWeightText,
+							color = JetTheme.colors.secondaryText
+						)
 					} else {
-						Text("Unweighted", fontSize = fontSizeText, fontWeight = fontWeightText)
+						Text(
+							"Unweighted",
+							fontSize = fontSizeText,
+							fontWeight = fontWeightText,
+							color = JetTheme.colors.secondaryText
+						)
 					}
 					if (graphViewModel.vertexType == VertexIDType.INT_TYPE) {
-						Text("Int type", fontSize = fontSizeText, fontWeight = fontWeightText)
+						Text(
+							"Int type",
+							fontSize = fontSizeText,
+							fontWeight = fontWeightText,
+							color = JetTheme.colors.secondaryText
+						)
 					} else {
-						Text("String type", fontSize = fontSizeText, fontWeight = fontWeightText)
+						Text(
+							"String type",
+							fontSize = fontSizeText,
+							fontWeight = fontWeightText,
+							color = JetTheme.colors.secondaryText
+						)
 					}
 
 					val modifierCheckbox = Modifier
@@ -233,7 +280,7 @@ fun showAddItem(graphViewModel: GraphViewModel, isShownWeigh: MutableState<Boole
 
 					if (!graphViewModel.isUnweighted) {
 						Box(Modifier.fillMaxWidth()) {
-							Text("Show weight", fontSize = fontSizeText)
+							Text("Show weight", fontSize = fontSizeText, color = JetTheme.colors.secondaryText)
 							Checkbox(
 								checked = isShownWeigh.value,
 								onCheckedChange = { isShownWeigh.value = !isShownWeigh.value },
@@ -244,7 +291,7 @@ fun showAddItem(graphViewModel: GraphViewModel, isShownWeigh: MutableState<Boole
 					}
 
 					Box(Modifier.fillMaxWidth()) {
-						Text("Show id", fontSize = fontSizeText)
+						Text("Show id", fontSize = fontSizeText, color = JetTheme.colors.secondaryText)
 						Checkbox(
 							checked = isShownId.value,
 							onCheckedChange = { isShownId.value = !isShownId.value },
@@ -264,9 +311,10 @@ fun showAddItem(graphViewModel: GraphViewModel, isShownWeigh: MutableState<Boole
 			}
 		}
 
-		Column(Modifier
-			.weight(1f)
-			.height(145.dp)
+		Column(
+			Modifier
+				.weight(1f)
+				.height(145.dp)
 		) {
 			HorizontalPager(
 				modifier = Modifier
@@ -340,12 +388,24 @@ fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<Ve
 		horizontalArrangement = Arrangement.spacedBy(paddingCustom)
 	) {
 		Column(
-			modifier = Modifier.weight(1f),
+			modifier = Modifier.weight(1f).padding(paddingCustom),
 			verticalArrangement = Arrangement.spacedBy(paddingCustom)
 		) {
 			if (idVerticesInfo.value != null) {
-				Text("Vertex: ${idVerticesInfo.value!!.id.valueToString()}", maxLines = 1, modifier = Modifier.padding(1.dp)) // todo(fontSize and clip!!!)
-				Text("Count edges: ${graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id).size}", maxLines = 1, modifier = Modifier.padding(1.dp)) // todo(fontSize)
+				Text(
+					"Vertex: ${idVerticesInfo.value!!.id.valueToString()}",
+					color = JetTheme.colors.secondaryText,
+					style = JetTheme.typography.mini,
+					maxLines = 1,
+					modifier = Modifier.padding(1.dp)
+				)
+				Text(
+					"Count edges: ${graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id).size}",
+					color = JetTheme.colors.secondaryText,
+					style = JetTheme.typography.mini,
+					maxLines = 1,
+					modifier = Modifier.padding(1.dp)
+				)
 				ButtonCustom(removingVertexSource, "Delete", Modifier)
 			}
 		}
@@ -439,7 +499,8 @@ fun showMenuEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWeig
 
 				graphViewModel.vertices.find { it.id == idSource }!!.visibility = isShownId
 				graphViewModel.vertices.find { it.id == idTarget }!!.visibility = isShownId
-				graphViewModel.edges.find { it.edge == WeightedEdge(idSource, idTarget, 1.0) }!!.visibility = isShownWeigh
+				graphViewModel.edges.find { it.edge == WeightedEdge(idSource, idTarget, 1.0) }!!.visibility =
+					isShownWeigh
 			}
 		} else {
 			if (weight.value.toDoubleOrNull() != null) {
@@ -448,7 +509,13 @@ fun showMenuEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWeig
 
 					graphViewModel.vertices.find { it.id == idSource }!!.visibility = isShownId
 					graphViewModel.vertices.find { it.id == idTarget }!!.visibility = isShownId
-					graphViewModel.edges.find { it.edge == WeightedEdge(idSource, idTarget, weight.value.toDouble()) }!!.visibility = isShownWeigh
+					graphViewModel.edges.find {
+						it.edge == WeightedEdge(
+							idSource,
+							idTarget,
+							weight.value.toDouble()
+						)
+					}!!.visibility = isShownWeigh
 					statusWeight = false
 				}
 			} else statusWeight = true
@@ -490,17 +557,19 @@ fun showMenuEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWeig
 
 @Composable
 fun BoxAddItem(text: String, count: Int, action: () -> Unit) {
-	Box(Modifier
-		.fillMaxWidth()
-		.clip(JetTheme.shapes.cornerStyle)
-		.background(whiteCustom, JetTheme.shapes.cornerStyle)
+	Box(
+		Modifier
+			.fillMaxWidth()
+			.clip(JetTheme.shapes.cornerStyle)
+			.background(whiteCustom, JetTheme.shapes.cornerStyle)
 	) {
-		Text(text, fontSize = 16.sp, modifier = Modifier.padding(15.dp).align(Alignment.CenterStart))
-		Row(Modifier
-			.padding(paddingCustom)
-			.align(Alignment.TopEnd)
+		Text(text, style = JetTheme.typography.mini, modifier = Modifier.padding(15.dp).align(Alignment.CenterStart))
+		Row(
+			Modifier
+				.padding(paddingCustom)
+				.align(Alignment.TopEnd)
 		) {
-			Text("$count", fontSize = 16.sp, modifier = Modifier.padding(15.dp))
+			Text("$count", style = JetTheme.typography.mini, modifier = Modifier.padding(15.dp))
 			IconButton(
 				onClick = action,
 				enabled = true,
@@ -524,16 +593,18 @@ fun ColumnBoxEditItem(
 	string: (WeightedEdge<VertexID>) -> String,
 	modifierRow: Modifier
 ) {
-	Column(modifierRow
-		.heightIn(100.dp, 180.dp)
-		.clip(JetTheme.shapes.cornerStyle)
-		.background(whiteCustom, JetTheme.shapes.cornerStyle)
-		.verticalScroll(rememberScrollState())
+	Column(
+		modifierRow
+			.heightIn(100.dp, 180.dp)
+			.clip(JetTheme.shapes.cornerStyle)
+			.background(whiteCustom, JetTheme.shapes.cornerStyle)
+			.verticalScroll(rememberScrollState())
 	) {
 		if (setEdges.isEmpty()) {
-			Box(Modifier
-				.fillMaxWidth()
-				.height(100.dp)
+			Box(
+				Modifier
+					.fillMaxWidth()
+					.height(100.dp)
 			) {
 				Text(message, Modifier.align(Alignment.Center))
 			}
@@ -553,6 +624,7 @@ fun BoxEditItem(
 	Box(Modifier.fillMaxWidth()) {
 		Text(
 			text = string(edge),
+			style = JetTheme.typography.mini,
 			modifier = Modifier
 				.padding(15.dp)
 				.align(Alignment.CenterStart)
@@ -578,7 +650,8 @@ fun ButtonCustom(action: () -> Unit, message: String, modifier: Modifier) {
 	Button(
 		onClick = action,
 		modifier = modifier,
-		colors = ButtonDefaults.buttonColors(Color.White)
+		shape = JetTheme.shapes.cornerStyle,
+		colors = ButtonDefaults.buttonColors(JetTheme.colors.primaryText)
 	) {
 		Text(message)
 	}
@@ -591,8 +664,15 @@ fun TextFieldItem(string: MutableState<String>, status: Boolean, label: String, 
 		onValueChange = { string.value = it },
 		label = { Text(label) },
 		modifier = modifier,
-		maxLines = 1,
+		singleLine = true,
+		textStyle = JetTheme.typography.mini,
 		isError = status,
+		colors = TextFieldDefaults.textFieldColors(
+			focusedIndicatorColor = Color.Black,
+			focusedLabelColor = Color.Black	,
+			cursorColor = JetTheme.colors.tintColor,
+			errorIndicatorColor = Color(176, 0, 0) // Red
+		)
 	)
 }
 

@@ -57,7 +57,11 @@ fun HomePage(viewModel: HomePageViewModel) {
 					modifier = Modifier.size(sizeBottom).clip(JetTheme.shapes.cornerStyle),
 					tint = JetTheme.colors.tintColor
 				)
-				Text("Previously opened graphs:", style = JetTheme.typography.toolbar)
+				Text(
+					"Previously opened graphs:",
+					style = JetTheme.typography.toolbar,
+					color = JetTheme.colors.secondaryText
+				)
 			}
 		}
 		StaticListWidget(
@@ -75,7 +79,10 @@ fun HomePage(viewModel: HomePageViewModel) {
 					modifier = Modifier.size(sizeBottom).clip(JetTheme.shapes.cornerStyle),
 					tint = JetTheme.colors.tintColor
 				)
-				Text("Tasks:", style = JetTheme.typography.toolbar)
+				Text("Tasks:",
+					style = JetTheme.typography.toolbar,
+					color = JetTheme.colors.secondaryText
+				)
 			}
 		}
 	}

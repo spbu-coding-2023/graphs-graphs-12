@@ -58,7 +58,8 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 					"Graph name",
 					modifier = Modifier.weight(0.5f),
 					textAlign = TextAlign.Center,
-					style = JetTheme.typography.toolbar
+					style = JetTheme.typography.toolbar,
+					color = JetTheme.colors.secondaryText
 				)
 				OutlinedTextField(
 					modifier = Modifier.weight(1f).focusRequester(focusRequester),
@@ -74,6 +75,7 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 					label = { Text("Name") },
 					singleLine = true,
 					colors = TextFieldDefaults.textFieldColors(
+						textColor = JetTheme.colors.secondaryText,
 						focusedIndicatorColor = JetTheme.colors.secondaryText,
 						focusedLabelColor = JetTheme.colors.secondaryText,
 						cursorColor = JetTheme.colors.tintColor
@@ -94,7 +96,8 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 					"Vertices ID type",
 					modifier = Modifier.weight(0.5f),
 					textAlign = TextAlign.Center,
-					style = JetTheme.typography.toolbar
+					style = JetTheme.typography.toolbar,
+					color = JetTheme.colors.secondaryText
 				)
 				ComboBox(
 					items = VertexIDType.entries.toTypedArray(),
@@ -108,7 +111,8 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 					"Database type",
 					modifier = Modifier.weight(0.5f),
 					textAlign = TextAlign.Center,
-					style = JetTheme.typography.toolbar
+					style = JetTheme.typography.toolbar,
+					color = JetTheme.colors.secondaryText
 				)
 				ComboBox(
 					items = GraphSavingType.entries.toTypedArray(),
@@ -131,6 +135,7 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 						modifier = Modifier.weight(1f),
 						singleLine = true,
 						colors = TextFieldDefaults.textFieldColors(
+							textColor = JetTheme.colors.secondaryText,
 							focusedIndicatorColor = JetTheme.colors.secondaryText,
 							focusedLabelColor = JetTheme.colors.secondaryText,
 							cursorColor = JetTheme.colors.tintColor

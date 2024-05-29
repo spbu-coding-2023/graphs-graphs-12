@@ -59,11 +59,16 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 				mutableStateOf(true),
 				isSelectablePage = false,
 				dropDownMenuContext = { tabItem ->
-					Text("Algorithms", style = JetTheme.typography.toolbar) // todo(hide out of layout and add modifier)
-					Column(modifier = Modifier
-						.padding(4.dp)
-						.clip(JetTheme.shapes.cornerStyle)
-						.background(JetTheme.colors.tertiaryBackground)
+					Text(
+						"Algorithms",
+						style = JetTheme.typography.toolbar,
+						color = JetTheme.colors.secondaryText
+					) // todo(hide out of layout and add modifier)
+					Column(
+						modifier = Modifier
+							.padding(4.dp)
+							.clip(JetTheme.shapes.cornerStyle)
+							.background(JetTheme.colors.tertiaryBackground)
 					) {
 						graphPageViewModel.algorithms.forEach {
 							TextButtonAlgorithm(graphPageViewModel.graphViewModel, it, Modifier.fillMaxWidth())
@@ -82,11 +87,16 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 				mutableStateOf(true),
 				isSelectablePage = false,
 				dropDownMenuContext = { tabItem ->
-					Text("Representation", style = JetTheme.typography.toolbar) // todo(hide out of layout and add modifier)
-					Column(modifier = Modifier
-						.padding(4.dp)
-						.clip(JetTheme.shapes.cornerStyle)
-						.background(JetTheme.colors.tertiaryBackground)
+					Text(
+						"Representation",
+						style = JetTheme.typography.toolbar,
+						color = JetTheme.colors.secondaryText
+					) // todo(hide out of layout and add modifier)
+					Column(
+						modifier = Modifier
+							.padding(4.dp)
+							.clip(JetTheme.shapes.cornerStyle)
+							.background(JetTheme.colors.tertiaryBackground)
 					) {
 						graphPageViewModel.mapRepresentationModes.forEach {
 							TextButtonRepresentation(graphPageViewModel, it, Modifier.fillMaxWidth())

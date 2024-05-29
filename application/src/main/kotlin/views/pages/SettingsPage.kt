@@ -53,6 +53,7 @@ fun SettingsPage(
 				"Settings",
 				style = JetTheme.typography.heading,
 				modifier = Modifier.align(Alignment.CenterVertically),
+				color = JetTheme.colors.secondaryText
 			)
 		}
 

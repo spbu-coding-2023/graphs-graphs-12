@@ -26,6 +26,7 @@ import themes.JetTheme
 import themes.sizeBottom
 import viewmodels.graphs.GraphViewModel
 import viewmodels.pages.GraphPageViewModel
+import kotlin.streams.toList
 
 /**
  * [Composable] Widget of List with elements, which implements [ListWidgetItem].
@@ -226,7 +227,8 @@ fun <T> ComboBox(
 					textAlign = textAlign,
 					fontSize = JetTheme.typography.toolbar.fontSize,
 					fontFamily = JetTheme.typography.toolbar.fontFamily,
-					fontWeight = JetTheme.typography.toolbar.fontWeight
+					fontWeight = JetTheme.typography.toolbar.fontWeight,
+					color = JetTheme.colors.secondaryText
 				),
 				modifier = Modifier.fillMaxWidth()
 			)
@@ -242,7 +244,8 @@ fun <T> ComboBox(
 								text = item.toString(),
 								modifier = Modifier.fillMaxWidth(),
 								textAlign = textAlign,
-								style = textStyle
+								style = textStyle,
+								color = JetTheme.colors.secondaryText
 							)
 						},
 						onClick = {
@@ -296,24 +299,26 @@ fun CustomRadioButton(
 					selected = selected,
 					onClick = onClick,
 					modifier = Modifier.align(Alignment.CenterVertically),
-					colors = RadioButtonDefaults.colors(JetTheme.colors.tintColor)
+					colors = RadioButtonDefaults.colors(JetTheme.colors.secondaryText)
 				)
 				TextButton(
 					onClick = onClick,
 					modifier = Modifier,
+					colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent)
 				) {
-					Text(text, textAlign = textAlign, style = textStyle, color = Color.Black)
+					Text(text, textAlign = textAlign, style = textStyle, color = JetTheme.colors.secondaryText)
 				}
 			} else {
 				TextButton(
 					onClick = onClick,
+					colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent)
 				) {
-					Text(text, textAlign = textAlign, style = textStyle, color = Color.Black)
+					Text(text, textAlign = textAlign, style = textStyle, color = JetTheme.colors.secondaryText)
 				}
 				RadioButton(
 					selected = selected,
 					onClick = onClick,
-					colors = RadioButtonDefaults.colors(JetTheme.colors.tintColor)
+					colors = RadioButtonDefaults.colors(JetTheme.colors.secondaryText)
 				)
 			}
 		}
@@ -381,7 +386,10 @@ fun TextButtonRepresentation(
 ) {
 	TextButton(
 		onClick = { entry.value(graphPageViewModel) },
-		modifier = modifier
+		modifier = modifier,
+		colors = ButtonDefaults.buttonColors(
+			backgroundColor = Color.Transparent
+		)
 	) {
 		Text(entry.key, color = JetTheme.colors.secondaryText, style = JetTheme.typography.mini)
 	}
