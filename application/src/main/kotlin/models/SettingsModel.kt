@@ -16,20 +16,15 @@ class SettingsModel {
 	var isNeo4jConnected = false
 	val graphNameRegEx = Regex("[a-zA-Z][a-zA-Z0-9_-]*")
 
-	init {
-		connectToNeo4J()
-	}
-
-	private fun connectToNeo4J() {
-		val uri = "bolt://localhost:7687"
-		val password = "neo4j"
-		val user = "neo4j"
+	fun connectToNeo4J(uri: String, user: String, password: String) {
+		isNeo4jConnected = false
 		try {
 			neo4jDB.connect(uri, user, password)
 			isNeo4jConnected = true
 		} catch (ex: ServiceUnavailableException) {
 			println("Can't access to Neo4J: ${ex.message}")
-			isNeo4jConnected = false
+		} catch (ex: IllegalArgumentException) {
+			println("Neo4j invalid connection: ${ex.message}")
 		}
 	}
 

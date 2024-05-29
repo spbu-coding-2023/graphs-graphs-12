@@ -32,6 +32,10 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 	val focusRequester = remember { FocusRequester() }
 	var isFoundGraphName by remember { mutableStateOf(true) }
 	var isOpenFolderPickDialog by remember { mutableStateOf(false) }
+	var neo4jHost by remember { mutableStateOf("") }
+	var neo4jUserName by remember { mutableStateOf("") }
+	var neo4jPassword by remember { mutableStateOf("") }
+	var isCrateNeo4jConnection by remember { mutableStateOf(false) }
 	DialogWindow(
 		onCloseRequest = { viewModel.homePageViewModel.isOpenDialogOfCreatingNewGraph = false },
 		state = rememberDialogState(position = WindowPosition(Alignment.Center), size = DpSize(700.dp, 470.dp)),
@@ -107,17 +111,18 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 					style = JetTheme.typography.toolbar
 				)
 				ComboBox(
-					items = GraphSavingType.entries.filter { type ->
-						if (!viewModel.settings.isNeo4jConnected && type == GraphSavingType.NEO4J_DB) false
-						else true
-					}.toTypedArray(),
+					items = GraphSavingType.entries.toTypedArray(),
 					modifier = Modifier.weight(1f),
 					onItemClick = { item: GraphSavingType -> viewModel.selectedSaveType.value = item },
 					textAlign = TextAlign.Center
 				)
 			}
-			if (viewModel.selectedSaveType.value != GraphSavingType.NEO4J_DB) {
-				Row(modifierRow, verticalAlignment = verticalRow) {
+			Row(
+				modifierRow,
+				verticalAlignment = verticalRow,
+				horizontalArrangement = Arrangement.spacedBy(4.dp)
+			) {
+				if (viewModel.selectedSaveType.value != GraphSavingType.NEO4J_DB) {
 					OutlinedTextField(
 						value = viewModel.saveFolder.value,
 						readOnly = true,
@@ -136,9 +141,47 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 					) {
 						Icon(Icons.Filled.Folder, "img-folder")
 					}
+				} else {
+					OutlinedTextField(
+						value = neo4jHost,
+						label = { Text("Host", style = JetTheme.typography.toolbar) },
+						onValueChange = {newValue -> neo4jHost = newValue; isCrateNeo4jConnection = false},
+						modifier = Modifier.weight(1f),
+						singleLine = true,
+						colors = TextFieldDefaults.textFieldColors(
+							focusedIndicatorColor = JetTheme.colors.secondaryText,
+							focusedLabelColor = JetTheme.colors.secondaryText,
+							cursorColor = JetTheme.colors.tintColor
+						),
+						isError = isCrateNeo4jConnection
+					)
+					OutlinedTextField(
+						value = neo4jUserName,
+						label = { Text("User", style = JetTheme.typography.toolbar) },
+						onValueChange = {newValue -> neo4jUserName = newValue; isCrateNeo4jConnection = false},
+						modifier = Modifier.weight(1f),
+						singleLine = true,
+						colors = TextFieldDefaults.textFieldColors(
+							focusedIndicatorColor = JetTheme.colors.secondaryText,
+							focusedLabelColor = JetTheme.colors.secondaryText,
+							cursorColor = JetTheme.colors.tintColor
+						),
+						isError = isCrateNeo4jConnection
+					)
+					OutlinedTextField(
+						value = neo4jPassword,
+						label = { Text("Password", style = JetTheme.typography.toolbar) },
+						onValueChange = {newValue -> neo4jPassword = newValue; isCrateNeo4jConnection = false},
+						modifier = Modifier.weight(1f),
+						singleLine = true,
+						colors = TextFieldDefaults.textFieldColors(
+							focusedIndicatorColor = JetTheme.colors.secondaryText,
+							focusedLabelColor = JetTheme.colors.secondaryText,
+							cursorColor = JetTheme.colors.tintColor
+						),
+						isError = isCrateNeo4jConnection
+					)
 				}
-			} else {
-				Spacer(modifierRow)
 			}
 			Row(modifierRow, verticalAlignment = verticalRow) {
 				CustomRadioButton(
@@ -183,6 +226,14 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 						if (viewModel.graphName.value.isEmpty()) {
 							isFoundGraphName = false
 						} else {
+							if (viewModel.selectedSaveType.value == GraphSavingType.NEO4J_DB){
+								viewModel.settings.connectToNeo4J(neo4jHost, neo4jUserName, neo4jPassword)
+								if (!viewModel.settings.isNeo4jConnected) {
+									isCrateNeo4jConnection = true
+									return@TextButton
+								}
+							}
+							println("Load")
 							isFoundGraphName = true
 							coroutineScope.launch {
 								viewModel.homePageViewModel.createGraph(
