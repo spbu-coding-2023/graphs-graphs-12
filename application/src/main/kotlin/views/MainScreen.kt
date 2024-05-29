@@ -48,18 +48,21 @@ fun MainScreen(viewModel: MainScreenViewModel) {
 					viewModel.sideMenuViewModel.pageOfTab("Home") -> {
 						viewModel.sideMenuViewModel.changeVisibility("Algorithms", true)
 						viewModel.sideMenuViewModel.changeVisibility("Representation", true)
+						viewModel.sideMenuViewModel.changeVisibility("Save", true)
 						HomePage(viewModel.homePageViewModel)
 					}
 					viewModel.sideMenuViewModel.pageOfTab("GraphView") -> {
 						viewModel.sideMenuViewModel.changeVisibility("GraphView", false)
 						viewModel.sideMenuViewModel.changeVisibility("Algorithms", false)
 						viewModel.sideMenuViewModel.changeVisibility("Representation", false)
+						viewModel.sideMenuViewModel.changeVisibility("Save", false)
 						GraphViewPage(viewModel.graphPageViewModel)
 					}
 
 					viewModel.sideMenuViewModel.pageOfTab("Settings") -> {
 						viewModel.sideMenuViewModel.changeVisibility("Algorithms", true)
 						viewModel.sideMenuViewModel.changeVisibility("Representation", true)
+						viewModel.sideMenuViewModel.changeVisibility("Save", true)
 						SettingsPage(
 							viewModel.settingsPageViewModel, isDarkMode,
 							currentFontSize,

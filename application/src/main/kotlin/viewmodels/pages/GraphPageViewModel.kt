@@ -31,8 +31,7 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 	var graphViewModel: GraphViewModel?
 		get() = _graph.value
 		set(newModel) {
-			val graph = _graph.value
-			if (graph != null) settings.saveGraph(this, dbType, File(dbPath).parent)
+			save()
 			_graph.value = newModel
 			if (newModel == null) indexSelectedPage.value = PageType.HOME_PAGE.ordinal
 			updateGraphRepresentation()
@@ -149,6 +148,11 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 			windowSizeStart.second.toDouble(),
 			model.vertices
 		)
+	}
+
+	fun save() {
+		val graph = _graph.value
+		if (graph != null) settings.saveGraph(this, dbType, File(dbPath).parent)
 	}
 }
 

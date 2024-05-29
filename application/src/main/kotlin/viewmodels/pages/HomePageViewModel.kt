@@ -81,6 +81,8 @@ class HomePageViewModel(
 		if (saveResult != null) {
 			indexSelectedPage.value = sideMenu.pageOfTab("GraphView")
 			_previouslyLoadedGraph.add(saveResult)
+			graphPageViewModel.dbPath = File(saveFolder, graphName).absolutePath
+			graphPageViewModel.dbType = savingType
 		} else {
 			graphPage.graphViewModel = null
 		}
