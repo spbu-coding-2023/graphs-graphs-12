@@ -23,7 +23,7 @@ class ForceDirectedPlacementStrategy(
 	private val viewModel: GraphViewModel,
 ) : RepresentationStrategy {
 	/**
-	 * PLaces the [viewModel] vertices on an imaginary canvas.
+	 * Places the [viewModel] vertices on an imaginary canvas.
 	 */
 	override fun place(width: Double, height: Double, vertices: Collection<VertexViewModel>) {
 		placeForceDirected(
@@ -44,7 +44,7 @@ class ForceDirectedPlacementStrategy(
 	}
 
 	/**
-	 * PLaces the [viewModel] vertices but [vertex] on an imaginary canvas.
+	 * Places the [viewModel] vertices but [vertex] on an imaginary canvas.
 	 */
 	fun placeWithoutVertex(width: Double, height: Double, vertex: VertexViewModel) {
 		placeForceDirected(
@@ -52,7 +52,7 @@ class ForceDirectedPlacementStrategy(
 			height,
 			vertex,
 			3,
-			3.0,
+			8.0, // 3
 			30.0,
 			60.0,
 			0.0,
@@ -65,7 +65,7 @@ class ForceDirectedPlacementStrategy(
 	}
 
 	/**
-	 * PLaces the [viewModel] vertices but [vertex] on an imaginary canvas with the help of some coefficients.
+	 * Places the [viewModel] vertices but [vertex] on an imaginary canvas with the help of some coefficients.
 	 */
 	private fun placeForceDirected(
 		width: Double,

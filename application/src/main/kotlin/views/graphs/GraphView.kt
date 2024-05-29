@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -51,180 +52,19 @@ fun GraphView(
 
 	val coroutinePlace = rememberCoroutineScope { Dispatchers.Main }
 
-	Box(Modifier // todo(surface?)
-//		.clip(JetTheme.shapes.cornerStyle)
-		.pointerInput(Unit) {
-			detectDragGestures(PointerMatcher.Primary) {
-				print("center: $center ")
-				center += it * (1 / zoom) // todo(в какой-то момент начинает отрицать)
-				println("it: $it ===> center: $center ")
-			}
-		}
-		.onPointerEvent(PointerEventType.Scroll) {
-			if (it.changes.first().scrollDelta.y > 0) {
-				zoom -= zoom / 100 // todo(10)
-			} else {
-				zoom += zoom / 100 // todo(10)
-			}
-		}
-	) {
-		Canvas(Modifier
-			.fillMaxSize()
-			.background(JetTheme.colors.secondaryBackground)
-		) {
-			graphViewModel.edges.forEach { edgeViewModel ->
-				Line(
-					this,
-					center,
-					Offset(
-						center.x + (edgeViewModel.source.xPos - center.x.dp).toPx() * zoomAnimated,
-						center.y + (edgeViewModel.source.yPos - center.y.dp).toPx() * zoomAnimated
-					),
-					Offset(
-						center.x + (edgeViewModel.target.xPos - center.x.dp).toPx() * zoomAnimated,
-						center.y + (edgeViewModel.target.yPos - center.y.dp).toPx() * zoomAnimated
-					),
-					edgeViewModel.target.radius,
-					20f,
-					color = edgeViewModel.color,
-					strokeWidth = edgeViewModel.width,
-					isArrow = graphViewModel.graph.isDirected
-				)
-
-//				drawLine(
-//					start = Offset(
-//						center.x + center.x + (edgeViewModel.source.xPos - center.x.dp).toPx() * zoomAnimated,
-//						center.y + center.y + (edgeViewModel.source.yPos - center.y.dp).toPx() * zoomAnimated
-//					),
-//					end = Offset(
-//						center.x + center.x + (edgeViewModel.target.xPos - center.x.dp).toPx() * zoomAnimated,
-//						center.y + center.y + (edgeViewModel.target.yPos - center.y.dp).toPx() * zoomAnimated,
-//					),
-//					color = Color.Black
-//				)
-				drawCircle(
-					center = center,
-					radius = radiusVerticesStart.toPx(),
-					color = Color.Black
-				)
-			}
-		}
-
-		graphViewModel.edges.forEach { edgeViewModel ->
-			if (edgeViewModel.visibility) {
-				Box(
-					modifier = Modifier
-						.size(edgeViewModel.source.radius * zoomAnimated * 2)
-						.offset(
-							center.x.dp + (edgeViewModel.source.xPos - center.x.dp) * zoomAnimated -
-								(edgeViewModel.source.xPos - edgeViewModel.target.xPos) * zoomAnimated / 2 - edgeViewModel.source.radius * zoomAnimated,
-							center.y.dp + (edgeViewModel.source.yPos - center.y.dp) * zoomAnimated -
-								(edgeViewModel.source.yPos - edgeViewModel.target.yPos) * zoomAnimated / 2 - edgeViewModel.source.radius * zoomAnimated,
-						)
-						.background(Color(175, 218, 252, 210), CircleShape), // todo(add to jetpack)
-					contentAlignment = Alignment.Center
-				) {
-					Text(text = edgeViewModel.label)
-				}
-			}
-		}
-
-		var isCtrlPressed by remember { mutableStateOf(false) }
-		graphViewModel.vertices.forEach { vertexViewModel ->
-			IconButton(
-				onClick = {
-					if (isCtrlPressed) {
-						if (idVerticesInfo.value != null) {
-							graphViewModel.addEdge(
-								idVerticesInfo.value!!.id,
-								vertexViewModel.id
-							)
-						}
-						isCtrlPressed = !isCtrlPressed
-					} else {
-						if (idVerticesInfo.value != vertexViewModel) {
-							if (idVerticesInfo.value != null) {
-								idVerticesInfo.value!!.color = colorVerticesStart
-							}
-							idVerticesInfo.value = vertexViewModel
-							idVerticesInfo.value!!.color = whiteCustom
-						} else {
-							idVerticesInfo.value!!.color = colorVerticesStart
-							idVerticesInfo.value = null
-						}
-					}
-				},
-				modifier = Modifier
-					.size(vertexViewModel.radius * zoomAnimated * 2, vertexViewModel.radius * zoomAnimated * 2)
-					.offset(
-						center.x.dp + (vertexViewModel.xPos - center.x.dp) * zoomAnimated - vertexViewModel.radius * zoomAnimated,
-						center.y.dp + (vertexViewModel.yPos - center.y.dp) * zoomAnimated - vertexViewModel.radius * zoomAnimated
-					)
-					.background(
-						color = vertexViewModel.color,
-						shape = CircleShape
-					)
-					.pointerInput(vertexViewModel) {
-						detectDragGestures { change, dragAmount ->
-							change.consume()
-							vertexViewModel.onDrag(dragAmount)
-							coroutinePlace.launch {
-								ForceDirectedPlacementStrategy(graphViewModel).placeWithoutVertex(
-									windowSizeStart.second.toDouble(),
-									windowSizeStart.second.toDouble(),
-									vertexViewModel
-								)
-							}
-						}
-					}
-					.onPreviewKeyEvent {
-						isCtrlPressed = it.isCtrlPressed // todo(on mac don't work)
-						false
-					}
-			) {
-				if (vertexViewModel.visibility) {
-					Text(text = vertexViewModel.label)
-				}
-			}
-		}
-	}
-}
-
-
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
-@Composable
-fun GraphViewTest(
-	graphViewModel: GraphViewModel,
-	idVerticesInfo: MutableState<VertexViewModel?>,
-	centerBox: Offset,
-	changeCenter: MutableState<Boolean>
-) {
-	var zoom by remember { mutableFloatStateOf(0.95f) }
-	val zoomAnimated by animateFloatAsState(zoom, tween(200, 0, LinearOutSlowInEasing))
-	var center by remember { mutableStateOf(centerBox) }
-	if (changeCenter.value) {
-		center = centerBox
-		zoom = 0.95f
-		changeCenter.value = false
-	}
-
-	val coroutinePlace = rememberCoroutineScope { Dispatchers.Main }
-
-	Box(Modifier // todo(surface?)
+	Box(Modifier
 		.fillMaxSize()
-//		.clip(JetTheme.shapes.cornerStyle)
+		.clip(JetTheme.shapes.cornerStyle)
 		.pointerInput(Unit) {
 			detectDragGestures(PointerMatcher.Primary) {
-				print("center: $center ")
-				center += it * (1 / zoom) // todo(в какой-то момент начинает отрицать)
-				println("it: $it ===> center: $center ")
+				center += it * (1 / zoom)
 			}
 		}
 		.onPointerEvent(PointerEventType.Scroll) {
 			if (it.changes.first().scrollDelta.y > 0) {
-				zoom -= zoom / 100 // todo(10)
+				zoom -= zoom / 100 // todo(10 for mouse)
 			} else {
-				zoom += zoom / 100 // todo(10)
+				zoom += zoom / 100 // todo(10 for mouse)
 			}
 		}
 	) {
@@ -241,7 +81,7 @@ fun GraphViewTest(
 						center.x + (edgeViewModel.target.xPos - center.x.dp).toPx() * zoomAnimated,
 						center.y + (edgeViewModel.target.yPos - center.y.dp).toPx() * zoomAnimated
 					),
-					edgeViewModel.target.radius,
+					edgeViewModel.target.radius * zoomAnimated,
 					20f,
 					color = edgeViewModel.color,
 					strokeWidth = edgeViewModel.width,
@@ -258,37 +98,37 @@ fun GraphViewTest(
 							center.y.dp + (edgeViewModel.source.yPos - center.y.dp) * zoomAnimated -
 								(edgeViewModel.source.yPos - edgeViewModel.target.yPos) * zoomAnimated / 2 - edgeViewModel.source.radius * zoomAnimated,
 						)
-						.background(Color(175, 218, 252, 210), CircleShape), // todo(add to jetpack)
+						.background(Color(175, 218, 252, 210), CircleShape),
 					contentAlignment = Alignment.Center
 				) {
-					Text(text = edgeViewModel.label)
+					Text(text = edgeViewModel.label, maxLines = 1)
 				}
 			}
 		}
 
-		var isCtrlPressed by remember { mutableStateOf(false) }
+		var isKeyboardPressed by remember { mutableStateOf(false) }
 		graphViewModel.vertices.forEach { vertexViewModel ->
 			Canvas(Modifier) {
 				drawCircle(
 					center = Offset(
-						(center.x.dp + (vertexViewModel.xPos - center.x.dp) * zoomAnimated).toPx(),
-						(center.y.dp + (vertexViewModel.yPos - center.y.dp) * zoomAnimated).toPx()
+						center.x.dp.toPx() + (vertexViewModel.xPos - center.x.dp).toPx() * zoomAnimated,
+						center.y.dp.toPx() + (vertexViewModel.yPos - center.y.dp).toPx() * zoomAnimated
 					),
-					radius = (vertexViewModel.radius * zoomAnimated).toPx(),
+					radius = vertexViewModel.radius.toPx() * zoomAnimated,
 					color = vertexViewModel.color
 				)
 			}
 			if (vertexViewModel.visibility) {
 				IconButton(
 					onClick = {
-						if (isCtrlPressed) {
+						if (isKeyboardPressed) {
 							if (idVerticesInfo.value != null) {
-								graphViewModel.addEdge(
-									idVerticesInfo.value!!.id,
-									vertexViewModel.id
-								)
+								val vertexSource = idVerticesInfo.value!!
+								idVerticesInfo.value = null
+								graphViewModel.addEdge(vertexSource.id, vertexViewModel.id)
+								idVerticesInfo.value = vertexSource
 							}
-							isCtrlPressed = !isCtrlPressed
+							isKeyboardPressed = !isKeyboardPressed
 						} else {
 							if (idVerticesInfo.value != vertexViewModel) {
 								if (idVerticesInfo.value != null) {
@@ -322,10 +162,15 @@ fun GraphViewTest(
 							}
 						}
 						.onPreviewKeyEvent {
-							isCtrlPressed = it.isCtrlPressed // todo(on mac don't work)
+//							isKeyboardPressed = it.key == Key.CtrlLeft || it.key == Key.CtrlRight || it.isCtrlPressed
+							isKeyboardPressed = it.isShiftPressed
 							false
 						},
-					content = { Text(text = vertexViewModel.label) }
+					content = {
+						if ((vertexViewModel.radius * zoomAnimated * 2).value > 22) {
+							Text(text = vertexViewModel.label, maxLines = 1)
+						}
+					}
 				)
 			}
 		}

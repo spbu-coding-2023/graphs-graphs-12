@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 val sizeBottom = 50.dp // todo(replace)
-val radiusVerticesStart = 15.dp
+val radiusVerticesStart = 20.dp
 val widthEdgesStart = 1f
 val paddingCustom = 4.dp
 

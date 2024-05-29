@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import models.utils.ListWidgetItem
 import themes.JetTheme
+import themes.sizeBottom
 
 /**
  * [Composable] Widget of List with elements, which implements [ListWidgetItem].
@@ -72,7 +73,7 @@ fun ListWidget(
 									imageVector = item.icon,
 									contentDescription = "image-${item.mainText}",
 									contentScale = ContentScale.Crop,
-									modifier = Modifier.size(52.dp, 52.dp).clip(JetTheme.shapes.cornerStyle),
+									modifier = Modifier.size(sizeBottom).clip(JetTheme.shapes.cornerStyle),
 								)
 							}
 							Column(
@@ -149,7 +150,7 @@ fun StaticListWidget(
 									imageVector = item.icon,
 									contentDescription = "image-${item.mainText}",
 									contentScale = ContentScale.Crop,
-									modifier = Modifier.size(52.dp, 52.dp).clip(JetTheme.shapes.cornerStyle),
+									modifier = Modifier.size(sizeBottom).clip(JetTheme.shapes.cornerStyle),
 								)
 							}
 							Column(

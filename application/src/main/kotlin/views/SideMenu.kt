@@ -114,7 +114,7 @@ fun newVersion(statePager: PagerState, indexSelectedPage: MutableState<Int>, vie
 					val itemPageIndex = viewModel.pageOfTab(tab.title)
 					val onItemClick = tab.onClick()
 					NavigationRailItem(
-						modifier = Modifier.size(52.dp, 52.dp),
+						modifier = Modifier.size(sizeBottom),
 						icon = {
 							Icon(
 								imageVector = if (statePager.currentPage == itemPageIndex) tab.iconSelected else tab.iconUnselected,

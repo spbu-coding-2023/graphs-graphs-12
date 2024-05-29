@@ -61,7 +61,10 @@ class GraphViewModel(
 					radiusVerticesStart.value.toInt(),
 					windowSizeStart.second.toInt() - radiusVerticesStart.value.toInt()
 				).dp,
-				Random.nextInt(radiusVerticesStart.value.toInt(), windowSizeStart.second.toInt() - radiusVerticesStart.value.toInt()).dp
+				Random.nextInt(
+					radiusVerticesStart.value.toInt(),
+					windowSizeStart.second.toInt() - radiusVerticesStart.value.toInt()
+				).dp
 			)
 		)
 	}
@@ -126,21 +129,23 @@ class GraphViewModel(
 				isUnweighted
 			)
 		)
-		val edgeUndirected = graph.vertexEdges(idTarget).filter { it.idTarget == idSource }.first()
-		_edges.putIfAbsent(
-			edgeUndirected,
-			EdgeViewModel(
+		if (!graph.isDirected) {
+			val edgeUndirected = graph.vertexEdges(idTarget).filter { it.idTarget == idSource }.first()
+			_edges.putIfAbsent(
 				edgeUndirected,
-				targetViewModel,
-				sourceViewModel,
-				isUnweighted
+				EdgeViewModel(
+					edgeUndirected,
+					targetViewModel,
+					sourceViewModel,
+					isUnweighted
+				)
 			)
-		)
+		}
 	}
 
 	fun removeEdge(idSource: VertexID, idTarget: VertexID) {
-		_vertices[idSource]!!.degree-- // todo(!!)
-		_vertices[idTarget]!!.degree-- // todo(!!)
+		_vertices[idSource]!!.degree--
+		_vertices[idTarget]!!.degree--
 		_edges.remove(WeightedEdge(idSource, idTarget, 1.0))
 		if (!graph.isDirected) _edges.remove(WeightedEdge(idTarget, idSource, 1.0))
 		graph.removeEdge(idSource, idTarget)
@@ -154,7 +159,7 @@ class GraphViewModel(
 		path.forEach { id ->
 			if (idLast != id) {
 				_edges[WeightedEdge(idLast, id, 1.0)]!!.color = Color(0, 102, 51) // Green
-				_edges[WeightedEdge(idLast, id, 1.0)]!!.width = 8f // todo(!!)
+				_edges[WeightedEdge(idLast, id, 1.0)]!!.width = 4f
 			}
 			idLast = id
 		}
@@ -168,7 +173,7 @@ class GraphViewModel(
 		path.forEach { id ->
 			if (idLast != id) {
 				_edges[WeightedEdge(idLast, id, 1.0)]!!.color = Color(0, 102, 51) // Green
-				_edges[WeightedEdge(idLast, id, 1.0)]!!.width = 8f // todo(!!)
+				_edges[WeightedEdge(idLast, id, 1.0)]!!.width = 4f
 			}
 			idLast = id
 		}
@@ -185,7 +190,7 @@ class GraphViewModel(
 				graph.vertexEdges(id).forEach {
 					if (components[i]!!.contains(it.idTarget)) {
 						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.color = color
-						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.width = 8f
+						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.width = 4f
 					}
 				}
 			}
@@ -203,7 +208,7 @@ class GraphViewModel(
 				graph.vertexEdges(id).forEach {
 					if (cycle.contains(it.idTarget)) {
 						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.color = color
-						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.width = 8f
+						_edges[WeightedEdge(id, it.idTarget, 1.0)]!!.width = 4f
 					}
 				}
 			}
@@ -220,7 +225,7 @@ class GraphViewModel(
 			graph.vertexEdges(idSource).forEach { edge ->
 				if (edge.idTarget == idTarget) {
 					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.color = Color(83, 55, 122) // Purple
-					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.width = 8f
+					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.width = 4f
 				}
 			}
 		}
@@ -236,7 +241,7 @@ class GraphViewModel(
 			graph.vertexEdges(idSource).forEach { edge ->
 				if (edge.idTarget == idTarget) {
 					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.color = Color(83, 55, 122) // Purple
-					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.width = 8f
+					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.width = 4f
 				}
 			}
 		}
@@ -252,7 +257,7 @@ class GraphViewModel(
 			graph.vertexEdges(idSource).forEach { edge ->
 				if (edge.idTarget == idTarget) {
 					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.color = Color(176,0,0) // Red
-					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.width = 8f
+					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.width = 4f
 				}
 			}
 		}
@@ -264,7 +269,7 @@ class GraphViewModel(
 
 		var newRadius: Dp
 		scores.forEach { (id, score) ->
-			newRadius = 15.dp * score.toFloat()
+			newRadius = radiusVerticesStart * score.toFloat()
 			if (_vertices[id]!!.radius != newRadius) _vertices[id]!!.radius = newRadius
 		}
 	}
@@ -280,5 +285,4 @@ class GraphViewModel(
 			}
 		}
 	}
-
 }

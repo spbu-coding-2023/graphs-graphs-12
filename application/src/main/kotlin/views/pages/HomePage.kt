@@ -13,6 +13,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import themes.JetTheme
+import themes.paddingCustom
+import themes.sizeBottom
 import utils.ListWidget
 import utils.StaticListWidget
 import viewmodels.dialogs.CreateNewGraphDialogViewModel
@@ -23,7 +25,7 @@ import views.dialogs.CreateNewGraphDialog
 fun HomePage(viewModel: HomePageViewModel) {
 	val modifierColumn = Modifier
 		.fillMaxHeight()
-		.padding(4.dp)
+		.padding(paddingCustom)
 		.clip(JetTheme.shapes.cornerStyle)
 		.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle)
 
@@ -31,6 +33,7 @@ fun HomePage(viewModel: HomePageViewModel) {
 		ListWidget(
 			modifier = modifierColumn.weight(1f),
 			listItems = viewModel.previouslyLoadedGraph,
+			itemWidth = 0.75f,
 			dropDownMenuContext = { item ->
 				// TODO(Change onClick lambdas and coroutines)
 				TextButton(onClick = { println("Copy $item") }, modifier = Modifier.fillMaxWidth()) {
@@ -51,7 +54,7 @@ fun HomePage(viewModel: HomePageViewModel) {
 				Icon(
 					imageVector = Icons.Default.DateRange,
 					contentDescription = "Calendar",
-					modifier = Modifier.size(52.dp, 52.dp).clip(JetTheme.shapes.cornerStyle),
+					modifier = Modifier.size(sizeBottom).clip(JetTheme.shapes.cornerStyle),
 					tint = JetTheme.colors.tintColor
 				)
 				Text("Previously opened graphs:", style = JetTheme.typography.toolbar)
@@ -59,7 +62,8 @@ fun HomePage(viewModel: HomePageViewModel) {
 		}
 		StaticListWidget(
 			modifier = modifierColumn.weight(1f),
-			listItems = viewModel.tasks
+			listItems = viewModel.tasks,
+			itemWidth = 0.75f
 		) {
 			Row(
 				modifier = Modifier.padding(20.dp),
@@ -68,7 +72,7 @@ fun HomePage(viewModel: HomePageViewModel) {
 				Icon(
 					imageVector = Icons.Default.Task,
 					contentDescription = "image-tasks",
-					modifier = Modifier.size(52.dp, 52.dp).clip(JetTheme.shapes.cornerStyle),
+					modifier = Modifier.size(sizeBottom).clip(JetTheme.shapes.cornerStyle),
 					tint = JetTheme.colors.tintColor
 				)
 				Text("Tasks:", style = JetTheme.typography.toolbar)

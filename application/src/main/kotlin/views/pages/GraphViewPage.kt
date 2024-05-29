@@ -27,7 +27,7 @@ import utils.VertexIDType
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
 import viewmodels.pages.GraphPageViewModel
-import views.graphs.GraphViewTest
+import views.graphs.GraphView
 
 @Composable
 fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
@@ -60,8 +60,7 @@ fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
 			.clip(JetTheme.shapes.cornerStyle)
 			.background(JetTheme.colors.secondaryBackground, JetTheme.shapes.cornerStyle)
 		) {
-//			GraphView(graphViewModel, idVerticesInfo, centerBox = Offset(maxWidth.value, maxHeight.value), changeCenter)
-			GraphViewTest(graphViewModel, idVerticesInfo, centerBox = Offset(maxWidth.value, maxHeight.value), changeCenter)
+			GraphView(graphViewModel, idVerticesInfo, Offset(maxWidth.value, maxHeight.value), changeCenter)
 
 			IconResetGraph(graphViewModel, changeCenter, modifierButtons, Modifier.padding(paddingCustom).align(Alignment.TopEnd))
 			Box(Modifier.fillMaxSize()) {
@@ -268,8 +267,8 @@ fun showAddItem(graphViewModel: GraphViewModel, isShownWeigh: MutableState<Boole
 		Column(Modifier
 			.weight(1f)
 			.height(145.dp)
-		) { // todo(size!!!)
-			HorizontalPager( // todo(how to fix double show pagers?)
+		) {
+			HorizontalPager(
 				modifier = Modifier
 					.fillMaxSize()
 					.clip(JetTheme.shapes.cornerStyle)

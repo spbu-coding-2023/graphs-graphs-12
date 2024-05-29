@@ -16,7 +16,7 @@ fun main() {
 		val settings: SettingsModel = SettingsModel.loadSettings()
 		Window(
 			onCloseRequest = ::exitApplication,
-			title = "AppYMOM",
+			title = "YMOM",
 			state = rememberWindowState(position = WindowPosition(Alignment.Center)),
 		) {
 			window.minimumSize = Dimension(windowSizeStart.first.toInt(), windowSizeStart.second.toInt())
