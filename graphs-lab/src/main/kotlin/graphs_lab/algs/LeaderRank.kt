@@ -38,8 +38,12 @@ open class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 		createGraphMatrix()
 
 		val auxiliaryMatrix = Array(countOfVertices) { DoubleArray(countOfVertices) { 0.0 } }
+		var sum: Double
 		for (i in 0 until countOfVertices) {
-			auxiliaryMatrix[i][i] = 1.0 / graphMatrix[i].sum()
+			sum = graphMatrix[i].sum()
+			if (sum != 0.0) {
+				auxiliaryMatrix[i][i] = 1.0 / sum
+			}
 		}
 		graphMatrix = matrixMultiplication(auxiliaryMatrix, graphMatrix, countOfVertices)
 
@@ -91,10 +95,15 @@ open class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	 * Creates an adjacency matrix for a graph based on its vertices and edges.
 	 */
 	protected fun createGraphMatrix() {
+		var weight: Double
 		graph.idVertices.forEach { vertex ->
 			graph.vertexEdges(vertex).forEach { edge ->
-				graphMatrix[indexedVertices[edge.idSource]!!][indexedVertices[edge.idTarget]!!] =
-					getEdgeWeight(edge, 1.0)
+				weight = getEdgeWeight(edge, 1.0)
+				if (weight >= 0) {
+					graphMatrix[indexedVertices[edge.idSource]!!][indexedVertices[edge.idTarget]!!] = weight
+				} else {
+					graphMatrix[indexedVertices[edge.idTarget]!!][indexedVertices[edge.idSource]!!] = abs(weight)
+				}
 			}
 		}
 
