@@ -344,8 +344,8 @@ fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<Ve
 			verticalArrangement = Arrangement.spacedBy(paddingCustom)
 		) {
 			if (idVerticesInfo.value != null) {
-				Text("Vertex: ${idVerticesInfo.value!!.id.valueToString()}", maxLines = 1) // todo(fontSize and clip!!!)
-				Text("Count edges: ${graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id).size}", maxLines = 1) // todo(fontSize)
+				Text("Vertex: ${idVerticesInfo.value!!.id.valueToString()}", maxLines = 1, modifier = Modifier.padding(1.dp)) // todo(fontSize and clip!!!)
+				Text("Count edges: ${graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id).size}", maxLines = 1, modifier = Modifier.padding(1.dp)) // todo(fontSize)
 				ButtonCustom(removingVertexSource, "Delete", Modifier)
 			}
 		}
@@ -369,6 +369,7 @@ fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<Ve
 @Composable
 fun showMenuVertex(graphViewModel: GraphViewModel, isShownId: Boolean) {
 	val idVertex = remember { mutableStateOf("") }
+	var statusIdVertex by remember { mutableStateOf(false) }
 
 	val creationVertex = {
 		if (idVertex.value != "") {
@@ -377,8 +378,9 @@ fun showMenuVertex(graphViewModel: GraphViewModel, isShownId: Boolean) {
 				graphViewModel.addVertex(id)
 
 				graphViewModel.vertices.find { it.id == id }!!.visibility = isShownId
-			}
-		}
+				statusIdVertex = false
+			} else statusIdVertex = true
+		} else statusIdVertex = true
 	}
 
 	Box(Modifier.fillMaxSize()) {
@@ -387,7 +389,7 @@ fun showMenuVertex(graphViewModel: GraphViewModel, isShownId: Boolean) {
 				modifier = Modifier.padding(paddingCustom),
 				horizontalArrangement = Arrangement.spacedBy(paddingCustom)
 			) {
-				TextFieldItem(idVertex, "Vertex", Modifier.weight(1f))
+				TextFieldItem(idVertex, statusIdVertex, "Vertex", Modifier.weight(1f))
 				Spacer(Modifier.weight(1f))
 			}
 			ButtonCustom(creationVertex, "Create", Modifier.padding(paddingCustom))
@@ -405,21 +407,66 @@ fun showMenuEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWeig
 	val idVertexSource = remember { mutableStateOf("") }
 	val idVertexTarget = remember { mutableStateOf("") }
 	val weight = remember { mutableStateOf("") }
+	var statusIdVertexSource by remember { mutableStateOf(false) }
+	var statusIdVertexTarget by remember { mutableStateOf(false) }
+	var statusWeight by remember { mutableStateOf(false) }
 
 	val creationEdge = {
-		if (idVertexSource.value != "" && idVertexTarget.value != "" && idVertexSource.value != idVertexTarget.value
-			&& weight.value.toDoubleOrNull() != null) {
-			if (graphViewModel.vertexType == VertexIDType.INT_TYPE && idVertexSource.value.all { it.isDigit() }
-				&& idVertexTarget.value.all { it.isDigit() }) {
-				val idSource = VertexID(idVertexSource.value, graphViewModel.vertexType)
-				val idTarget = VertexID(idVertexTarget.value, graphViewModel.vertexType)
-				graphViewModel.addEdge(idSource, idTarget, weight.value.toDouble())
+		var idSource: VertexID? = null
+		var idTarget: VertexID? = null
+
+		if (idVertexSource.value != "") {
+			if (graphViewModel.vertexType == VertexIDType.INT_TYPE) {
+				if (idVertexSource.value.all { it.isDigit() }) {
+					idSource = VertexID(idVertexSource.value, graphViewModel.vertexType)
+					statusIdVertexSource = false
+				} else statusIdVertexSource = true
+			} else idSource = VertexID(idVertexSource.value, graphViewModel.vertexType)
+		} else statusIdVertexSource = true
+
+		if (idVertexTarget.value != "" && idVertexTarget.value != idVertexSource.value) {
+			if (graphViewModel.vertexType == VertexIDType.INT_TYPE) {
+				if (idVertexTarget.value.all { it.isDigit() }) {
+					idTarget = VertexID(idVertexTarget.value, graphViewModel.vertexType)
+					statusIdVertexTarget = false
+				} else statusIdVertexTarget = true
+			} else idTarget = VertexID(idVertexTarget.value, graphViewModel.vertexType)
+		} else statusIdVertexTarget = true
+
+		if (graphViewModel.isUnweighted) {
+			if (idSource != null && idTarget != null) {
+				graphViewModel.addEdge(idSource, idTarget, 1.0)
 
 				graphViewModel.vertices.find { it.id == idSource }!!.visibility = isShownId
 				graphViewModel.vertices.find { it.id == idTarget }!!.visibility = isShownId
 				graphViewModel.edges.find { it.edge == WeightedEdge(idSource, idTarget, 1.0) }!!.visibility = isShownWeigh
 			}
+		} else {
+			if (weight.value.toDoubleOrNull() != null) {
+				if (idSource != null && idTarget != null) {
+					graphViewModel.addEdge(idSource, idTarget, weight.value.toDouble())
+
+					graphViewModel.vertices.find { it.id == idSource }!!.visibility = isShownId
+					graphViewModel.vertices.find { it.id == idTarget }!!.visibility = isShownId
+					graphViewModel.edges.find { it.edge == WeightedEdge(idSource, idTarget, weight.value.toDouble()) }!!.visibility = isShownWeigh
+					statusWeight = false
+				}
+			} else statusWeight = true
 		}
+
+//		if (idVertexSource.value != "" && idVertexTarget.value != "" && idVertexSource.value != idVertexTarget.value
+//			&& weight.value.toDoubleOrNull() != null) {
+//			if (graphViewModel.vertexType == VertexIDType.INT_TYPE && idVertexSource.value.all { it.isDigit() }
+//				&& idVertexTarget.value.all { it.isDigit() }) {
+//				val idSource = VertexID(idVertexSource.value, graphViewModel.vertexType)
+//				val idTarget = VertexID(idVertexTarget.value, graphViewModel.vertexType)
+//				graphViewModel.addEdge(idSource, idTarget, weight.value.toDouble())
+//
+//				graphViewModel.vertices.find { it.id == idSource }!!.visibility = isShownId
+//				graphViewModel.vertices.find { it.id == idTarget }!!.visibility = isShownId
+//				graphViewModel.edges.find { it.edge == WeightedEdge(idSource, idTarget, 1.0) }!!.visibility = isShownWeigh
+//			}
+//		}
 	}
 
 	Column {
@@ -427,8 +474,8 @@ fun showMenuEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWeig
 			modifier = Modifier.padding(paddingCustom),
 			horizontalArrangement = Arrangement.spacedBy(paddingCustom)
 		) {
-			TextFieldItem(idVertexSource, "Source vertex", Modifier.weight(1f))
-			TextFieldItem(idVertexTarget, "Target vertex", Modifier.weight(1f))
+			TextFieldItem(idVertexSource, statusIdVertexSource, "Source vertex", Modifier.weight(1f))
+			TextFieldItem(idVertexTarget, statusIdVertexTarget, "Target vertex", Modifier.weight(1f))
 		}
 
 		Row(Modifier.padding(paddingCustom)) {
@@ -436,7 +483,7 @@ fun showMenuEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWeig
 				Spacer(Modifier.fillMaxWidth())
 				ButtonCustom(creationEdge, "Create", Modifier.align(Alignment.CenterStart))
 			}
-			TextFieldItem(weight, "Weight", Modifier.weight(1f))
+			if (!graphViewModel.isUnweighted) TextFieldItem(weight, statusWeight, "Weight", Modifier.weight(1f))
 		}
 	}
 }
@@ -538,12 +585,14 @@ fun ButtonCustom(action: () -> Unit, message: String, modifier: Modifier) {
 }
 
 @Composable
-fun TextFieldItem(string: MutableState<String>, label: String, modifier: Modifier) {
+fun TextFieldItem(string: MutableState<String>, status: Boolean, label: String, modifier: Modifier) {
 	OutlinedTextField(
 		value = string.value,
 		onValueChange = { string.value = it },
 		label = { Text(label) },
-		modifier = modifier
+		modifier = modifier,
+		maxLines = 1,
+		isError = status,
 	)
 }
 

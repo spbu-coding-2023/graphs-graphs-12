@@ -109,7 +109,7 @@ class HomePageViewModel(
 //				graph.addEdge(VertexID(i, VertexIDType.INT_TYPE), VertexID(j, VertexIDType.INT_TYPE), 1.0)
 //			}
 //		}
-		val graphViewModel = GraphViewModel(graph, vertexIDType, isUnweighted = false)
+		val graphViewModel = GraphViewModel(graph, vertexIDType, isUnweighted = !isGraphWeighted)
 		graphPage.graphViewModel = graphViewModel
 		val saveResult = settings.saveGraph(graphPage, savingType, saveFolder)
 		if (saveResult != null) {
