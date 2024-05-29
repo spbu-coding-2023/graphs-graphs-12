@@ -15,19 +15,13 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import models.utils.TabItem
 import themes.JetTheme
-import themes.paddingCustom
+import themes.sizeBottom
 import viewmodels.SideMenuViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SideMenu(statePager: PagerState, indexSelectedPage: MutableState<Int>, viewModel: SideMenuViewModel) {
-	Column(
-		modifier = Modifier
-			.width(themes.sizeBottom)
-			.fillMaxHeight()
-			.padding(paddingCustom),
-		verticalArrangement = Arrangement.spacedBy(paddingCustom)
-	) {
+	Column(Modifier.width(sizeBottom).fillMaxHeight()) {
 		viewModel.tabsItems.forEach { tabsColumn ->
 			if (tabsColumn == null) Spacer(Modifier.weight(1f))
 			else SideMenuTabColumn(tabsColumn, statePager, indexSelectedPage, viewModel)
@@ -41,10 +35,9 @@ fun SideMenu(statePager: PagerState, indexSelectedPage: MutableState<Int>, viewM
 @Composable
 fun SideMenuTabColumn(tabsColumn: List<TabItem>, statePager: PagerState, indexSelectedPage: MutableState<Int>, viewModel: SideMenuViewModel) {
 	val modifierColumns = Modifier
-//		.padding(4.dp)
+		.padding(4.dp)
 		.clip(JetTheme.shapes.cornerStyle)
-		.background(themes.whiteCustom, JetTheme.shapes.cornerStyle)
-//		.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle)
+		.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle)
 
 	val coroutineScope = rememberCoroutineScope()
 	Column(
@@ -104,7 +97,7 @@ fun SideMenuTabColumn(tabsColumn: List<TabItem>, statePager: PagerState, indexSe
 @Composable
 fun newVersion(statePager: PagerState, indexSelectedPage: MutableState<Int>, viewModel: SideMenuViewModel) {
 	val modifierColumns = Modifier
-//		.padding(4.dp)
+		.padding(4.dp)
 		.clip(JetTheme.shapes.cornerStyle)
 		.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle)
 

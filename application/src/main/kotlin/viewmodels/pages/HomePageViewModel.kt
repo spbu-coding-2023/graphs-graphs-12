@@ -39,14 +39,14 @@ class HomePageViewModel(
 	init {
 		_tasks.add(
 			ListWidgetItem(
-				mainText = "Create new graph",
+				mainText = "Create Graph",
 				icon = Icons.Default.Add,
 				alignment = Alignment.Center
 			) { isOpenDialogOfCreatingNewGraph = true }
 		)
 		_tasks.add(
 			ListWidgetItem(
-				mainText = "Load new graph",
+				mainText = "Load graph",
 				icon = Icons.Default.Download,
 				alignment = Alignment.Center,
 			) {

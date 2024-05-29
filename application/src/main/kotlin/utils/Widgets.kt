@@ -36,6 +36,7 @@ fun ListWidget(
 	modifier: Modifier = Modifier,
 	listItems: List<ListWidgetItem> = listOf(),
 	textStyle: TextStyle = JetTheme.typography.body,
+	itemWidth: Float = 1.0f,
 	dropDownMenuContext: @Composable ((ListWidgetItem) -> (Unit))? = null,
 	headlineContext: @Composable () -> (Unit),
 ) {
@@ -43,12 +44,12 @@ fun ListWidget(
 		modifier = modifier
 	) {
 		headlineContext()
-		LazyColumn {
+		LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
 			items(listItems) { item: ListWidgetItem ->
 				if (item.isHidden) return@items // analog of continue
 				Card(
 					modifier = Modifier
-						.fillMaxWidth()
+						.fillMaxWidth(itemWidth)
 						.padding(10.dp)
 						.clip(JetTheme.shapes.cornerStyle),
 					elevation = 5.dp,
@@ -98,6 +99,69 @@ fun ListWidget(
 										expanded = expanded,
 										onDismissRequest = { expanded = false },
 										content = { dropDownMenuContext(item) }
+									)
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun StaticListWidget(
+	modifier: Modifier = Modifier,
+	listItems: List<ListWidgetItem> = listOf(),
+	textStyle: TextStyle = JetTheme.typography.body,
+	itemWidth: Float = 1.0f,
+	headlineContext: @Composable () -> (Unit),
+) {
+	Column(modifier = modifier) {
+		headlineContext()
+		Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+			listItems.forEach { item: ListWidgetItem ->
+				if (item.isHidden) return@forEach
+				Card(
+					modifier = Modifier
+						.fillMaxWidth(itemWidth)
+						.padding(10.dp)
+						.clip(JetTheme.shapes.cornerStyle),
+					elevation = 5.dp,
+					onClick = item.onClick,
+					backgroundColor = JetTheme.colors.primaryText
+				) {
+					Box(
+						contentAlignment = item.alignment,
+						modifier = Modifier.background(Color.Transparent)
+					) {
+						Row(
+							modifier = Modifier.padding(10.dp),
+							verticalAlignment = Alignment.CenterVertically
+						) {
+							if (item.icon != null) {
+								Image(
+									imageVector = item.icon,
+									contentDescription = "image-${item.mainText}",
+									contentScale = ContentScale.Crop,
+									modifier = Modifier.size(52.dp, 52.dp).clip(JetTheme.shapes.cornerStyle),
+								)
+							}
+							Column(
+								modifier = Modifier.padding(horizontal = 15.dp, vertical = 0.dp),
+								horizontalAlignment = Alignment.CenterHorizontally
+							) {
+								Text(
+									item.mainText,
+									style = textStyle,
+									modifier = Modifier.padding(horizontal = 0.dp, vertical = 6.dp)
+								)
+								if (item.subText != null) {
+									Text(
+										item.subText,
+										style = textStyle
 									)
 								}
 							}
