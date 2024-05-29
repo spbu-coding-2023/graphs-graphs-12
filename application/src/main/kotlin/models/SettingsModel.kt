@@ -51,34 +51,38 @@ class SettingsModel {
 			savingType,
 			onClick = { name, folder, saveType ->
 				when (saveType) {
-					GraphSavingType.LOCAL_FILE -> loadGraphFromJSON(graphPageViewModel, name, folder)
-					GraphSavingType.NEO4J_DB -> loadGraphFromNEO4J(graphPageViewModel, name)
+					GraphSavingType.LOCAL_FILE -> loadGraphFromJSON(graphPageViewModel, File(folder, name).absolutePath)
+					GraphSavingType.NEO4J_DB -> loadGraphFromNEO4J(graphPageViewModel)
 					else -> println("Unsupported saving type: ${savingType.label}")
 				}
 			}
 		)
 	}
 
-	private fun loadGraphFromNEO4J(graphPageViewModel: GraphPageViewModel, name: String) {
+	fun loadGraphFromNEO4J(graphPageViewModel: GraphPageViewModel): Boolean {
 		if (!isNeo4jConnected) {
-			println("Can't load graph: $name because not found connection to neo4j DB")
-			return
+			println("Can't load graph because not found connection to neo4j DB")
+			return false
 		}
 		try {
 			neo4jDB.writeData(graphPageViewModel)
 		} catch (ex: Exception) {
 			println("Load neo4j error: ${ex.message}")
+			return false
 		}
+		return true
 	}
 
-	private fun loadGraphFromJSON(graphPageViewModel: GraphPageViewModel, name: String, folder: String) {
+	fun loadGraphFromJSON(graphPageViewModel: GraphPageViewModel, path: String): Boolean {
 		try {
-			val graphViewModel = jsonDB.load(File(folder, name))
+			val graphViewModel = jsonDB.load(File(path))
 			graphPageViewModel.graphViewModel = graphViewModel
 			graphPageViewModel.indexSelectedPage.value = PageType.GRAPH_VIEW_PAGE.ordinal
 		} catch (ex: Exception) {
 			println("Load JSON error: ${ex.message}")
+			return false
 		}
+		return true
 	}
 
 	private fun saveGraphByNeo4j(graphPageViewModel: GraphPageViewModel) {

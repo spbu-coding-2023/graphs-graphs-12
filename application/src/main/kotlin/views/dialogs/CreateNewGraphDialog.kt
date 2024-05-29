@@ -30,7 +30,7 @@ import viewmodels.dialogs.CreateNewGraphDialogViewModel
 fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 	val coroutineScope = rememberCoroutineScope()
 	val focusRequester = remember { FocusRequester() }
-	var isFoundGraphName by remember { mutableStateOf(true) }
+	var isValidGraphName by remember { mutableStateOf(true) }
 	var isOpenFolderPickDialog by remember { mutableStateOf(false) }
 	var neo4jHost by remember { mutableStateOf("") }
 	var neo4jUserName by remember { mutableStateOf("") }
@@ -66,9 +66,9 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 					value = viewModel.graphName.value,
 					onValueChange = { newValue ->
 						if (!viewModel.isValidGraphName(newValue) && newValue.length >= viewModel.graphName.value.length) {
-							isFoundGraphName = false
+							isValidGraphName = false
 						} else {
-							isFoundGraphName = true
+							isValidGraphName = true
 							viewModel.graphName.value = newValue
 						}
 					},
@@ -80,10 +80,10 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 						focusedLabelColor = JetTheme.colors.secondaryText,
 						cursorColor = JetTheme.colors.tintColor
 					),
-					isError = !isFoundGraphName,
+					isError = !isValidGraphName,
 				)
 			}
-			AnimatedVisibility(visible = !isFoundGraphName) {
+			AnimatedVisibility(visible = !isValidGraphName) {
 				Text(
 					text = "Graph name regex: '${viewModel.homePageViewModel.settings.graphNameRegEx}'",
 					modifier = Modifier.fillMaxWidth(),
@@ -229,7 +229,7 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 					modifier = Modifier.weight(0.5f).padding(5.dp, 0.dp),
 					onClick = {
 						if (viewModel.graphName.value.isEmpty()) {
-							isFoundGraphName = false
+							isValidGraphName = false
 						} else {
 							if (viewModel.selectedSaveType.value == GraphSavingType.NEO4J_DB){
 								viewModel.settings.connectToNeo4J(neo4jHost, neo4jUserName, neo4jPassword)
@@ -238,8 +238,7 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 									return@TextButton
 								}
 							}
-							println("Load")
-							isFoundGraphName = true
+							isValidGraphName = true
 							coroutineScope.launch {
 								viewModel.homePageViewModel.createGraph(
 									viewModel.graphName.value,

@@ -18,8 +18,10 @@ import themes.sizeBottom
 import utils.ListWidget
 import utils.StaticListWidget
 import viewmodels.dialogs.CreateNewGraphDialogViewModel
+import viewmodels.dialogs.LoadNewGraphDialogViewModel
 import viewmodels.pages.HomePageViewModel
 import views.dialogs.CreateNewGraphDialog
+import views.dialogs.LoadNewGraphDialog
 
 @Composable
 fun HomePage(viewModel: HomePageViewModel) {
@@ -88,5 +90,8 @@ fun HomePage(viewModel: HomePageViewModel) {
 	}
 	if (viewModel.isOpenDialogOfCreatingNewGraph) {
 		CreateNewGraphDialog(CreateNewGraphDialogViewModel(viewModel))
+	}
+	if (viewModel.isOpenDialogOfLoadingNewGraph) {
+		LoadNewGraphDialog(LoadNewGraphDialogViewModel(viewModel))
 	}
 }

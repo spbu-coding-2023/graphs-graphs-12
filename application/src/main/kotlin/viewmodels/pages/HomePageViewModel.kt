@@ -36,6 +36,12 @@ class HomePageViewModel(
 		set(value) {
 			_isOpenDialogOfCreatingNewGraph.value = value
 		}
+	private val _isOpenDialogOfLoadingNewGraph = mutableStateOf(false)
+	var isOpenDialogOfLoadingNewGraph: Boolean
+		get() = _isOpenDialogOfLoadingNewGraph.value
+		set(value) {
+			_isOpenDialogOfLoadingNewGraph.value = value
+		}
 
 	init {
 		_tasks.add(
@@ -50,9 +56,7 @@ class HomePageViewModel(
 				mainText = "Load graph",
 				icon = Icons.Default.Download,
 				alignment = Alignment.Center,
-			) {
-				println("load")
-			}
+			) { isOpenDialogOfLoadingNewGraph = true }
 		)
 	}
 
