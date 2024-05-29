@@ -19,6 +19,7 @@ import viewmodels.graphs.GraphViewModel
 import java.io.File
 
 class HomePageViewModel(
+	val graphPageViewModel: GraphPageViewModel,
 	val indexSelectedPage: MutableState<Int>,
 	val settings: SettingsModel,
 	val sideMenu: SideMenuViewModel,
@@ -74,46 +75,6 @@ class HomePageViewModel(
 		} else {
 			WeightedUnweightedGraph<VertexID>(graphName, isGraphDirected, isAutoAddVertex = true)
 		}
-		graph.addEdge(VertexID(1, VertexIDType.INT_TYPE), VertexID(2, VertexIDType.INT_TYPE), 1.0)
-		graph.addEdge(VertexID(1, VertexIDType.INT_TYPE), VertexID(3, VertexIDType.INT_TYPE), 10.0)
-		graph.addEdge(VertexID(1, VertexIDType.INT_TYPE), VertexID(4, VertexIDType.INT_TYPE), 100.0)
-		graph.addEdge(VertexID(1, VertexIDType.INT_TYPE), VertexID(5, VertexIDType.INT_TYPE), 50.0)
-		graph.addEdge(VertexID(2, VertexIDType.INT_TYPE), VertexID(6, VertexIDType.INT_TYPE), -11.0)
-		graph.addEdge(VertexID(2, VertexIDType.INT_TYPE), VertexID(7, VertexIDType.INT_TYPE), 1.0)
-		graph.addEdge(VertexID(2, VertexIDType.INT_TYPE), VertexID(8, VertexIDType.INT_TYPE), 1.0)
-		graph.addEdge(VertexID(2, VertexIDType.INT_TYPE), VertexID(9, VertexIDType.INT_TYPE), 1.0)
-		graph.addEdge(VertexID(3, VertexIDType.INT_TYPE), VertexID(8, VertexIDType.INT_TYPE), 1.0)
-		graph.addEdge(VertexID(3, VertexIDType.INT_TYPE), VertexID(10, VertexIDType.INT_TYPE), 1.0)
-		graph.addEdge(VertexID(3, VertexIDType.INT_TYPE), VertexID(11, VertexIDType.INT_TYPE), 1.0)
-		graph.addEdge(VertexID(6, VertexIDType.INT_TYPE), VertexID(10, VertexIDType.INT_TYPE), 1.0)
-		graph.addEdge(VertexID(6, VertexIDType.INT_TYPE), VertexID(11, VertexIDType.INT_TYPE), 1.0)
-		graph.addEdge(VertexID(6, VertexIDType.INT_TYPE), VertexID(12, VertexIDType.INT_TYPE), 1.0)
-		graph.addEdge(VertexID(13, VertexIDType.INT_TYPE), VertexID(14, VertexIDType.INT_TYPE), 1.0)
-		graph.addEdge(VertexID(13, VertexIDType.INT_TYPE), VertexID(15, VertexIDType.INT_TYPE), 1.0)
-		graph.addEdge(VertexID(13, VertexIDType.INT_TYPE), VertexID(16, VertexIDType.INT_TYPE), 1.0)
-		graph.addEdge(VertexID(14, VertexIDType.INT_TYPE), VertexID(17, VertexIDType.INT_TYPE), 1.0)
-		graph.addEdge(VertexID(14, VertexIDType.INT_TYPE), VertexID(18, VertexIDType.INT_TYPE), 1.0)
-		graph.addEdge(VertexID(17, VertexIDType.INT_TYPE), VertexID(19, VertexIDType.INT_TYPE), 1.0)
-		graph.addEdge(VertexID(19, VertexIDType.INT_TYPE), VertexID(20, VertexIDType.INT_TYPE), 1.0)
-
-//		for (i in 0..20) {
-//			for (j in 0..20) {
-//				if (i == j) continue
-//				graph.addEdge(VertexID(i, VertexIDType.INT_TYPE), VertexID(j, VertexIDType.INT_TYPE), 1.0)
-//			}
-//		}
-//		for (i in 30..34) {
-//			for (j in 30..34) {
-//				if (i == j) continue
-//				graph.addEdge(VertexID(i, VertexIDType.INT_TYPE), VertexID(j, VertexIDType.INT_TYPE), 1.0)
-//			}
-//		}
-//		for (i in 35..50) {
-//			for (j in 40..50) {
-//				if (i == j) continue
-//				graph.addEdge(VertexID(i, VertexIDType.INT_TYPE), VertexID(j, VertexIDType.INT_TYPE), 1.0)
-//			}
-//		}
 		val graphViewModel = GraphViewModel(graph, vertexIDType, isUnweighted = !isGraphWeighted)
 		graphPage.graphViewModel = graphViewModel
 		val saveResult = settings.saveGraph(graphPage, savingType, saveFolder)
@@ -133,6 +94,21 @@ class HomePageViewModel(
 				graphView.graph.label,
 				file.parent,
 				savingType,
+				onClick = { name, folder, saveType ->
+					when (saveType) {
+						GraphSavingType.LOCAL_FILE -> {
+							settings.loadGraphFromJSON(graphPageViewModel, File(folder, name).absolutePath)
+							graphPageViewModel.dbType = saveType
+							graphPageViewModel.dbPath = File(folder, name).absolutePath
+						}
+						GraphSavingType.NEO4J_DB -> {
+							settings.loadGraphFromNEO4J(graphPageViewModel)
+							graphPageViewModel.dbType = saveType
+							graphPageViewModel.dbPath = ""
+						}
+						else -> println("Unsupported saving type: ${savingType.label}")
+					}
+				}
 			)
 		)
 	}

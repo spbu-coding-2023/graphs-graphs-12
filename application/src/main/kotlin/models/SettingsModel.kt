@@ -33,6 +33,7 @@ class SettingsModel {
 		savingType: GraphSavingType,
 		folderPath: String
 	): GraphInfo? {
+		println("Save: $savingType $folderPath")
 		val graphViewModel = graphPageViewModel.graphViewModel ?: return null
 		when (savingType) {
 			GraphSavingType.LOCAL_FILE -> saveGraphByJSON(graphViewModel, folderPath)
@@ -51,8 +52,16 @@ class SettingsModel {
 			savingType,
 			onClick = { name, folder, saveType ->
 				when (saveType) {
-					GraphSavingType.LOCAL_FILE -> loadGraphFromJSON(graphPageViewModel, File(folder, name).absolutePath)
-					GraphSavingType.NEO4J_DB -> loadGraphFromNEO4J(graphPageViewModel)
+					GraphSavingType.LOCAL_FILE -> {
+						loadGraphFromJSON(graphPageViewModel, File(folder, name).absolutePath)
+						graphPageViewModel.dbType = saveType
+						graphPageViewModel.dbPath = File(folder, name).absolutePath
+					}
+					GraphSavingType.NEO4J_DB -> {
+						loadGraphFromNEO4J(graphPageViewModel)
+						graphPageViewModel.dbType = saveType
+						graphPageViewModel.dbPath = ""
+					}
 					else -> println("Unsupported saving type: ${savingType.label}")
 				}
 			}
@@ -66,6 +75,8 @@ class SettingsModel {
 		}
 		try {
 			neo4jDB.writeData(graphPageViewModel)
+			graphPageViewModel.dbType = GraphSavingType.NEO4J_DB
+			graphPageViewModel.dbPath = ""
 		} catch (ex: Exception) {
 			println("Load neo4j error: ${ex.message}")
 			return false
@@ -78,6 +89,8 @@ class SettingsModel {
 			val graphViewModel = jsonDB.load(File(path))
 			graphPageViewModel.graphViewModel = graphViewModel
 			graphPageViewModel.indexSelectedPage.value = PageType.GRAPH_VIEW_PAGE.ordinal
+			graphPageViewModel.dbType = GraphSavingType.LOCAL_FILE
+			graphPageViewModel.dbPath = path
 		} catch (ex: Exception) {
 			println("Load JSON error: ${ex.message}")
 			return false

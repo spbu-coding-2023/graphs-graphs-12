@@ -6,15 +6,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import models.SettingsModel
 import models.VertexID
 import models.utils.AlgorithmButton
 import themes.JetTheme
+import utils.GraphSavingType
 import utils.PageType
 import utils.representation.*
 import viewmodels.graphs.GraphViewModel
 import windowSizeStart
+import java.io.File
 
-class GraphPageViewModel(val indexSelectedPage: MutableState<Int>) {
+class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: MutableState<Int>) {
 	private val _representationStrategy = mutableStateOf<RepresentationStrategy>(RandomPlacementStrategy())
 	private val _graph = mutableStateOf<GraphViewModel?>(null)
 	var representationStrategy: RepresentationStrategy
@@ -23,9 +26,13 @@ class GraphPageViewModel(val indexSelectedPage: MutableState<Int>) {
 			_representationStrategy.value = newStrategy
 			updateGraphRepresentation()
 		}
+	var dbType = GraphSavingType.LOCAL_FILE
+	var dbPath = ""
 	var graphViewModel: GraphViewModel?
 		get() = _graph.value
 		set(newModel) {
+			val graph = _graph.value
+			if (graph != null) settings.saveGraph(this, dbType, File(dbPath).parent)
 			_graph.value = newModel
 			if (newModel == null) indexSelectedPage.value = PageType.HOME_PAGE.ordinal
 			updateGraphRepresentation()
@@ -35,12 +42,10 @@ class GraphPageViewModel(val indexSelectedPage: MutableState<Int>) {
 			"Key Vertices",
 			{ graphViewModel, _ -> graphViewModel.parseLeaderRank() },
 		),
-
 		AlgorithmButton(
 			"Clusters",
 			{ graphViewModel, _ -> graphViewModel.parseLouvainClustering() }
 		),
-
 		AlgorithmButton(
 			"Strongly Connected Component",
 			{ graphViewModel, _ ->
@@ -49,7 +54,6 @@ class GraphPageViewModel(val indexSelectedPage: MutableState<Int>) {
 				}
 			}
 		),
-
 		AlgorithmButton(
 			"Bridges",
 			{ graphViewModel, _ ->
@@ -58,7 +62,6 @@ class GraphPageViewModel(val indexSelectedPage: MutableState<Int>) {
 				}
 			}
 		),
-
 		AlgorithmButton(
 			"Cycles",
 			{ graphViewModel, input -> graphViewModel.parseCyclesSearchAlgorithm(input.first()) },
@@ -97,7 +100,6 @@ class GraphPageViewModel(val indexSelectedPage: MutableState<Int>) {
 				}
 			}
 		),
-
 		AlgorithmButton(
 			"Minimum Spanning Tree (Kruskal)",
 			{ graphViewModel, _ ->
@@ -106,7 +108,6 @@ class GraphPageViewModel(val indexSelectedPage: MutableState<Int>) {
 				}
 			}
 		),
-
 		AlgorithmButton(
 			"Minimum Spanning Tree (Prim)",
 			{ graphViewModel, _ ->
@@ -115,7 +116,6 @@ class GraphPageViewModel(val indexSelectedPage: MutableState<Int>) {
 				}
 			}
 		),
-
 		AlgorithmButton(
 			"Shortest Path (Bellman)",
 			{ graphViewModel, input -> graphViewModel.parseBellmanFordAlgorithm(input.first(), input.last()) },
@@ -123,7 +123,6 @@ class GraphPageViewModel(val indexSelectedPage: MutableState<Int>) {
 				dropDownMenuForSP(graphViewModel, algButton)
 			}
 		),
-
 		AlgorithmButton(
 			"Shortest Path (Dijkstra)",
 			{ graphViewModel, input -> graphViewModel.parseDijkstraAlgorithm(input.first(), input.last()) },
@@ -136,7 +135,9 @@ class GraphPageViewModel(val indexSelectedPage: MutableState<Int>) {
 		"Central" to { graphPageViewModel -> graphPageViewModel.representationStrategy = AllCenterPlacementStrategy() },
 		"Random" to { graphPageViewModel -> graphPageViewModel.representationStrategy = RandomPlacementStrategy() },
 		"Circular" to { graphPageViewModel -> graphPageViewModel.representationStrategy = CircularPlacementStrategy() },
-		"Force-directed" to { graphPageViewModel -> graphPageViewModel.representationStrategy = ForceDirectedPlacementStrategy(graphViewModel!!) } // todo(!!)
+		"Force-directed" to { graphPageViewModel ->
+			graphPageViewModel.representationStrategy = ForceDirectedPlacementStrategy(graphViewModel!!)
+		} // todo(!!)
 	)
 
 	private fun updateGraphRepresentation() {
