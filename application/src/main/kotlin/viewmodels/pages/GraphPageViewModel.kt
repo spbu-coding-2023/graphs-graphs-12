@@ -13,7 +13,7 @@ import utils.representation.*
 import viewmodels.graphs.GraphViewModel
 import windowSizeStart
 
-class GraphPageViewModel {
+class GraphPageViewModel(val indexSelectedPage: MutableState<Int>) {
 	private val _representationStrategy = mutableStateOf<RepresentationStrategy>(RandomPlacementStrategy())
 	private val _graph = mutableStateOf<GraphViewModel?>(null)
 	var representationStrategy: RepresentationStrategy

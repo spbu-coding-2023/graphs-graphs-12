@@ -9,7 +9,7 @@ import viewmodels.pages.SettingsPageViewModel
 class MainScreenViewModel(settings: SettingsModel) {
 	val indexSelectedPage = mutableStateOf(0) // todo(change to mutableIntState)
 	val settingsPageViewModel = SettingsPageViewModel(settings)
-	val graphPageViewModel = GraphPageViewModel()
+	val graphPageViewModel = GraphPageViewModel(indexSelectedPage)
 	val sideMenuViewModel = SideMenuViewModel(graphPageViewModel)
 	val homePageViewModel = HomePageViewModel(indexSelectedPage, settings, sideMenuViewModel, graphPageViewModel)
 }

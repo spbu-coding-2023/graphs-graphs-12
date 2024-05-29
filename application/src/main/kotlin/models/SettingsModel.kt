@@ -5,6 +5,7 @@ import databases.Neo4jRepository
 import models.utils.GraphInfo
 import org.neo4j.driver.exceptions.ServiceUnavailableException
 import utils.GraphSavingType
+import utils.PageType
 import viewmodels.graphs.GraphViewModel
 import viewmodels.pages.GraphPageViewModel
 import java.io.File
@@ -77,8 +78,9 @@ class SettingsModel {
 
 	private fun loadGraphFromJSON(graphPageViewModel: GraphPageViewModel, name: String, folder: String) {
 		try {
-			val graphViewModel = jsonDB.load(File(name, folder))
+			val graphViewModel = jsonDB.load(File(folder, name))
 			graphPageViewModel.graphViewModel = graphViewModel
+			graphPageViewModel.indexSelectedPage.value = PageType.GRAPH_VIEW_PAGE.ordinal
 		} catch (ex: Exception) {
 			println("Load JSON error: ${ex.message}")
 		}
@@ -97,16 +99,9 @@ class SettingsModel {
 	}
 
 	private fun saveGraphByJSON(graphViewModel: GraphViewModel, folderPath: String) {
-		val file = File(folderPath)
+		val file = File(folderPath, graphViewModel.graph.label)
 		try {
-			jsonDB.save(
-				if (file.isDirectory) {
-					File("$folderPath${File.separator}${graphViewModel.graph.label}.json")
-				} else {
-					file
-				},
-				graphViewModel
-			)
+			jsonDB.save(file, graphViewModel)
 		} catch (ex: Exception) {
 			println("Save JSON error: ${ex.message}")
 		}

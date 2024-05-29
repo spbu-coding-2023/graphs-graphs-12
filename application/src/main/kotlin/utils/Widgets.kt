@@ -18,9 +18,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+import models.VertexID
+import models.utils.AlgorithmButton
 import models.utils.ListWidgetItem
 import themes.JetTheme
 import themes.sizeBottom
+import viewmodels.graphs.GraphViewModel
+import viewmodels.pages.GraphPageViewModel
 
 /**
  * [Composable] Widget of List with elements, which implements [ListWidgetItem].
@@ -312,5 +317,72 @@ fun CustomRadioButton(
 				)
 			}
 		}
+	}
+}
+
+@Composable
+fun TextButtonAlgorithm(
+	graphViewModel: GraphViewModel?,
+	algButton: AlgorithmButton,
+	modifier: Modifier = Modifier
+) {
+	val coroutineScope = rememberCoroutineScope()
+	val expanded = mutableStateOf(false)
+	val dropContext = algButton.dropDownMenuContext
+
+	TextButton(
+		modifier = modifier,
+		onClick = {
+			if (dropContext != null) expanded.value = true
+			else algButton.isRun.value = true
+		},
+		colors = ButtonDefaults.buttonColors(
+			backgroundColor = Color.Transparent
+		)
+	) {
+		Text(algButton.label, color = JetTheme.colors.secondaryText, style = JetTheme.typography.mini)
+
+		if (dropContext != null) {
+			Box {
+				DropdownMenu(
+					modifier = Modifier
+						.background(JetTheme.colors.primaryBackground)
+						.clip(JetTheme.shapes.cornerStyle),
+					expanded = expanded.value,
+					onDismissRequest = { expanded.value = false },
+					content = {
+						Column(horizontalAlignment = Alignment.CenterHorizontally) {
+							dropContext(algButton)
+						}
+					}
+				)
+			}
+		}
+	}
+	if (graphViewModel != null && algButton.isRun.value) {
+		expanded.value = false
+		coroutineScope.launch {
+			algButton.onRun(
+				graphViewModel,
+				algButton.inputs.value.stream().map {
+					VertexID.vertexIDFromString(it, graphViewModel.vertexType)
+				}.toList()
+			)
+			algButton.isRun.value = false
+		}
+	}
+}
+
+@Composable
+fun TextButtonRepresentation(
+	graphPageViewModel: GraphPageViewModel,
+	entry: Map.Entry<String, (GraphPageViewModel) -> Unit>,
+	modifier: Modifier
+) {
+	TextButton(
+		onClick = { entry.value(graphPageViewModel) },
+		modifier = modifier
+	) {
+		Text(entry.key, color = JetTheme.colors.secondaryText, style = JetTheme.typography.mini)
 	}
 }

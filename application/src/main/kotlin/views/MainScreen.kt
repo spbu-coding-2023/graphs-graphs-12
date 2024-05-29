@@ -45,23 +45,29 @@ fun MainScreen(viewModel: MainScreenViewModel) {
 				userScrollEnabled = false
 			) { pageIndex ->
 				when (pageIndex) {
-					viewModel.sideMenuViewModel.pageOfTab("Home") -> HomePage(viewModel.homePageViewModel)
+					viewModel.sideMenuViewModel.pageOfTab("Home") -> {
+						viewModel.sideMenuViewModel.changeVisibility("Algorithms", true)
+						viewModel.sideMenuViewModel.changeVisibility("Representation", true)
+						HomePage(viewModel.homePageViewModel)
+					}
 					viewModel.sideMenuViewModel.pageOfTab("GraphView") -> {
 						viewModel.sideMenuViewModel.changeVisibility("GraphView", false)
 						viewModel.sideMenuViewModel.changeVisibility("Algorithms", false)
 						viewModel.sideMenuViewModel.changeVisibility("Representation", false)
-						viewModel.sideMenuViewModel.changeVisibility("Test", false)
 						GraphViewPage(viewModel.graphPageViewModel)
 					}
 
-					viewModel.sideMenuViewModel.pageOfTab("Settings") -> SettingsPage(
-						viewModel.settingsPageViewModel, isDarkMode,
-						currentFontSize,
-						currentStyle,
-						currentCornersStyle,
-						currentFontFamily
-					)
-
+					viewModel.sideMenuViewModel.pageOfTab("Settings") -> {
+						viewModel.sideMenuViewModel.changeVisibility("Algorithms", true)
+						viewModel.sideMenuViewModel.changeVisibility("Representation", true)
+						SettingsPage(
+							viewModel.settingsPageViewModel, isDarkMode,
+							currentFontSize,
+							currentStyle,
+							currentCornersStyle,
+							currentFontFamily
+						)
+					}
 					else -> HomePage(viewModel.homePageViewModel)
 				}
 			}
