@@ -35,7 +35,7 @@ import themes.JetTheme
 fun ListWidget(
 	modifier: Modifier = Modifier,
 	listItems: List<ListWidgetItem> = listOf(),
-	textStyle: TextStyle = JetTheme.typography.body,
+	textStyle: TextStyle = JetTheme.typography.toolbar,
 	itemWidth: Float = 1.0f,
 	dropDownMenuContext: @Composable ((ListWidgetItem) -> (Unit))? = null,
 	headlineContext: @Composable () -> (Unit),
@@ -44,8 +44,11 @@ fun ListWidget(
 		modifier = modifier
 	) {
 		headlineContext()
-		LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
-			items(listItems) { item: ListWidgetItem ->
+		LazyColumn(
+			modifier = Modifier.fillMaxWidth(),
+			horizontalAlignment = Alignment.CenterHorizontally,
+		) {
+			items(listItems.reversed()) { item: ListWidgetItem ->
 				if (item.isHidden) return@items // analog of continue
 				Card(
 					modifier = Modifier
@@ -83,7 +86,7 @@ fun ListWidget(
 								if (item.subText != null) {
 									Text(
 										item.subText,
-										style = textStyle
+										style = textStyle.copy(fontSize = textStyle.fontSize / 3 * 2)
 									)
 								}
 							}

@@ -12,7 +12,7 @@ class CreateNewGraphDialogViewModel(val homePageViewModel: HomePageViewModel) {
 	val isGraphWeighted = mutableStateOf(false)
 	val isGraphDirected = mutableStateOf(false)
 	val selectedSaveType = mutableStateOf(GraphSavingType.LOCAL_FILE)
-	val saveFolder = mutableStateOf(File("").absolutePath)
+	val saveFolder = mutableStateOf(System.getProperty("user.home"))
 
 	fun isValidGraphName(newGraphName: String): Boolean {
 		return homePageViewModel.settings.graphNameRegEx.matches(newGraphName)

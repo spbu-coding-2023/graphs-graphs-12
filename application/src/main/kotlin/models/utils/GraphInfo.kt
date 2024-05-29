@@ -2,23 +2,25 @@ package models.utils
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoGraph
+import utils.GraphSavingType
 import java.nio.file.Path
 import java.time.LocalDateTime
 
 class GraphInfo(
 	name: String,
-	val pathTo: Path,
+	val folderPath: String,
+	val savingType: GraphSavingType,
 	val previouslyOpenDateTime: LocalDateTime = LocalDateTime.now(),
 	isHidden: Boolean = false,
-	onClick: ((Path) -> (Unit))? = null
+	onClick: ((String, String, GraphSavingType) -> (Unit))? = null
 ) : ListWidgetItem(
 	mainText = name,
-	subText = pathTo.toString(),
+	subText = if (savingType == GraphSavingType.NEO4J_DB) "Neo4j" else folderPath,
 	isHidden = isHidden,
 	onClick = if (onClick != null) {
-		{ onClick(pathTo) }
+		{ onClick(name, folderPath, savingType) }
 	} else {
-		{ println("Click on graph info item ${name}") }
+		{ println("Click on graph info item $name") }
 	},
 	icon = Icons.Default.AutoGraph
 	// TODO(Choose item icon as random from files)
@@ -28,6 +30,6 @@ class GraphInfo(
 	}
 
 	override fun toString(): String {
-		return "GraphInfo(pathTo = $pathTo, previouslyOpenDateTime = $previouslyOpenDateTime)"
+		return "GraphInfo(name = $mainText, folder = $folderPath, previouslyOpenDateTime = $previouslyOpenDateTime)"
 	}
 }

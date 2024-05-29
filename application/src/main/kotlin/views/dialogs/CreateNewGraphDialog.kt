@@ -60,7 +60,7 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 					modifier = Modifier.weight(1f).focusRequester(focusRequester),
 					value = viewModel.graphName.value,
 					onValueChange = { newValue ->
-						if (!viewModel.isValidGraphName(newValue)) {
+						if (!viewModel.isValidGraphName(newValue) && newValue.length >= viewModel.graphName.value.length) {
 							isFoundGraphName = false
 						} else {
 							isFoundGraphName = true
