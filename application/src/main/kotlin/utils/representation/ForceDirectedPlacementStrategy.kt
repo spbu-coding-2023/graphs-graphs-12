@@ -30,15 +30,15 @@ class ForceDirectedPlacementStrategy(
 			width,
 			height,
 			null,
-			7000, // recommend 10000 // test 750
-			1.0, // attraction
-			1000.0, // repulsion: recommend 10
-			1000.0, // repulsion overlapping: recommend 100
+			2000, // recommend 10000
+			5.0, // attraction: recommend 1
+			60.0, // repulsion: recommend 10
+			120.0, // repulsion overlapping: recommend 100
 			2.0, // gravity: recommend 5
 			1, // the weight effects: 0 / 1 / 2
-			6.0, // recommend 0.1 // test 0.01 // test 0.002
-			20.0, // recommend 10
-			1.0, // recommend 1
+			8.0, // recommend 0.1
+			30.0, // recommend 10
+			1.5, // recommend 1
 			0.999
 		)
 	}
@@ -51,14 +51,14 @@ class ForceDirectedPlacementStrategy(
 			width,
 			height,
 			vertex,
-			2,
-			1.0,
-			100.0,
-			100.0,
+			3,
+			3.0,
+			30.0,
+			60.0,
 			0.0,
-			0,
-			0.00005, // test 0.001
-			10.0,
+			1,
+			0.0005,
+			2.0,
 			1.0,
 			0.999
 		)
@@ -92,7 +92,6 @@ class ForceDirectedPlacementStrategy(
 		}.toMutableMap()
 
 		var speedGlobalLast: Double = Double.POSITIVE_INFINITY
-		var maxForceTotal = 1.0 // todo
 
 		var countCur = 0
 		while (countCur++ < countIteration) {
@@ -101,9 +100,9 @@ class ForceDirectedPlacementStrategy(
 			}.toMutableMap()
 
 			viewModel.vertices.forEach { vertexSourceViewModel ->
-				val length = sqrt(vertexSourceViewModel.xPos.value.toDouble().pow(2) + vertexSourceViewModel.yPos.value.toDouble().pow(2))
-//				val forceGrav = kGrav * (vertexSourceViewModel.degree + 1) * length
-				val forceGrav = kGrav * (vertexSourceViewModel.degree + 1)
+//				val length = sqrt(vertexSourceViewModel.xPos.value.toDouble().pow(2) + vertexSourceViewModel.yPos.value.toDouble().pow(2))
+//				val forceGrav = kGrav * (vertexSourceViewModel.degree + 1) * length // strong gravity
+				val forceGrav = kGrav * (vertexSourceViewModel.degree + 1) // gravity
 
 				tableForce[vertexSourceViewModel] = mutableListOf(forceGrav, forceGrav)
 
@@ -116,11 +115,11 @@ class ForceDirectedPlacementStrategy(
 
 					var forceRepul = 0.0
 					if (distanceOverlapping > 0) {
-						forceRepul = kRepul * (vertexSourceViewModel.degree + 1) * (vertexTargetViewModel.degree + 1) / distanceOverlapping
+						forceRepul = kRepul * (vertexSourceViewModel.degree + 1) * (vertexTargetViewModel.degree + 1) / distanceOverlapping  // prevent overlapping
 					} else if (distanceOverlapping < 0) {
-						forceRepul = kRepulOver * (vertexSourceViewModel.degree + 1) * (vertexTargetViewModel.degree + 1)
+						forceRepul = kRepulOver * (vertexSourceViewModel.degree + 1) * (vertexTargetViewModel.degree + 1) // prevent overlapping
 					}
-//					val forceRepul = kRepul * (vertexSourceViewModel.degree + 1) * (vertexTargetViewModel.degree + 1) / (inaccuracy + distance)
+//					val forceRepul = kRepul * (vertexSourceViewModel.degree + 1) * (vertexTargetViewModel.degree + 1) / distance // classic
 
 					checkAndAddFirst(tableForce[vertexSourceViewModel],  - forceRepul * difX)
 					checkAndAddSecond(tableForce[vertexSourceViewModel],  - forceRepul * difY)
@@ -132,16 +131,16 @@ class ForceDirectedPlacementStrategy(
 				val difY = (edgeViewModel.target.yPos - edgeViewModel.source.yPos).value.toDouble()
 
 				val distance = sqrt(difX.pow(2) + difY.pow(2))
-				val distanceOverlapping = distance - edgeViewModel.source.radius / radiusVerticesStart - edgeViewModel.target.radius / radiusVerticesStart
+//				val distanceOverlapping = distance - edgeViewModel.source.radius / radiusVerticesStart - edgeViewModel.target.radius / radiusVerticesStart
 
-				var forceAttr = 0.0
-				if (distanceOverlapping > 0) {
-					forceAttr = distanceOverlapping
-//					forceAttr = kAttr * (log2(1 + distanceOverlapping))
-				}
-//				val forceAttr = kAttr * (log2(1 + distance))
-//				val forceAttr = kAttr * edgeViewModel.edge.weight.pow(kDegree) * (distance / edgeViewModel.source.degree + 1)
-//				val forceAttr = kAttr * edgeViewModel.edge.weight.pow(kDegree) * (log2(1 + distance) / edgeViewModel.source.degree + 1) // todo(test)
+				val forceAttr = kAttr * (log2(1 + distance)) // linlog mode
+//				var forceAttr = 0.0
+//				if (distanceOverlapping > 0) {
+//					forceAttr = distanceOverlapping // prevent overlapping
+//					forceAttr = kAttr * (log2(1 + distanceOverlapping)) // unity linlog and prevent overlapping
+//				}
+//				val forceAttr = kAttr * edgeViewModel.edge.weight.pow(kDegree) * (distance / edgeViewModel.source.degree + 1) // dissuade hubs mode
+//				val forceAttr = kAttr * edgeViewModel.edge.weight.pow(kDegree) * (log2(1 + distance) / edgeViewModel.source.degree + 1) // unity linlog and dissuade hubs
 
 				checkAndAddFirst(tableForce[edgeViewModel.source], forceAttr * difX)
 				checkAndAddSecond(tableForce[edgeViewModel.source], forceAttr * difY)
@@ -152,7 +151,6 @@ class ForceDirectedPlacementStrategy(
 					checkAndGetFirst(tableForce[vertexViewModel]).pow(2) +
 						checkAndGetSecond(tableForce[vertexViewModel]).pow(2)
 				)
-				maxForceTotal = max(maxForceTotal, forceCur) // todo(test)
 
 				val switchingCur = abs(forceCur - checkAndGetFirst(tableForceLastAndSwitching[vertexViewModel]))
 				val tractionCur = abs(forceCur + checkAndGetFirst(tableForceLastAndSwitching[vertexViewModel])) / 2
@@ -162,7 +160,7 @@ class ForceDirectedPlacementStrategy(
 				tableForceLastAndSwitching[vertexViewModel] = mutableListOf(forceCur, switchingCur)
 			}
 
-			speedGlobal = kTolerance * tractionGlobal / switchingGlobal
+			speedGlobal = kTolerance * tractionGlobal / switchingGlobal // adapting the global speed
 			if (speedGlobal > speedGlobalLast / 2 ) {
 				speedGlobal = speedGlobalLast / 2 * inaccuracy
 			}
@@ -171,8 +169,8 @@ class ForceDirectedPlacementStrategy(
 				val forceCur = checkAndGetFirst(tableForceLastAndSwitching[vertexViewModel])
 
 				var speedForce = kSpeed * speedGlobal /
-					(1 + speedGlobal * sqrt(checkAndGetSecond(tableForceLastAndSwitching[vertexViewModel])))
-				if (speedForce >= kSpeedMax / forceCur) { // todo(analyse forceCur?)
+					(1 + speedGlobal * sqrt(checkAndGetSecond(tableForceLastAndSwitching[vertexViewModel]))) // adapting the local speed
+				if (speedForce >= kSpeedMax / forceCur) {
 					speedForce = kSpeedMax / forceCur * inaccuracy
 				}
 
@@ -182,14 +180,6 @@ class ForceDirectedPlacementStrategy(
 
 			speedGlobalLast = speedGlobal
 		}
-
-//		viewModel.vertices.forEach { vertexViewModel -> // todo(test)
-//			if (vertexViewModel.xPos > 0.dp) vertexViewModel.xPos = min(vertexViewModel.xPos.value, width.toFloat()).dp
-//			else vertexViewModel.xPos = max(vertexViewModel.xPos.value, 0f).dp
-//
-//			if (vertexViewModel.yPos > 0.dp) vertexViewModel.yPos = min(vertexViewModel.yPos.value, height.toFloat()).dp
-//			else vertexViewModel.yPos = max(vertexViewModel.yPos.value, 0f).dp
-//		}
 	}
 }
 

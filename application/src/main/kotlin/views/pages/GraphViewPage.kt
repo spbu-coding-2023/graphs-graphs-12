@@ -188,7 +188,8 @@ fun showAddItem(graphViewModel: GraphViewModel, isShownWeigh: MutableState<Boole
 		modifier = Modifier
 			.fillMaxWidth()
 			.padding(paddingCustom)
-			.background(JetTheme.colors.primaryBackground, RoundedCornerShape(10.dp)),
+			.clip(JetTheme.shapes.cornerStyle)
+			.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle),
 		horizontalArrangement = Arrangement.spacedBy(paddingCustom)
 	) {
 		Column(
@@ -335,13 +336,17 @@ fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<Ve
 		modifier = Modifier
 			.fillMaxWidth()
 			.padding(paddingCustom)
-			.background(JetTheme.colors.primaryBackground, RoundedCornerShape(10.dp)),
+			.clip(JetTheme.shapes.cornerStyle)
+			.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle),
 		horizontalArrangement = Arrangement.spacedBy(paddingCustom)
 	) {
-		Column(Modifier.weight(1f)) {
+		Column(
+			modifier = Modifier.weight(1f),
+			verticalArrangement = Arrangement.spacedBy(paddingCustom)
+		) {
 			if (idVerticesInfo.value != null) {
-				Text("Vertex: ${idVerticesInfo.value!!.id.valueToString()}")
-				Text("Count edges: ${graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id).size}")
+				Text("Vertex: ${idVerticesInfo.value!!.id.valueToString()}", maxLines = 1) // todo(fontSize and clip!!!)
+				Text("Count edges: ${graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id).size}", maxLines = 1) // todo(fontSize)
 				ButtonCustom(removingVertexSource, "Delete", Modifier)
 			}
 		}
