@@ -1,56 +1,36 @@
 package databases
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import graphs_lab.core.graphs.UnweightedGraph
 import graphs_lab.core.graphs.WeightedGraph
 import models.VertexID
 import mu.KotlinLogging
 import utils.VertexIDType
 import viewmodels.graphs.GraphViewModel
-import viewmodels.pages.GraphPageViewModel
-import java.io.Closeable
-import java.sql.DriverManager
-import java.sql.ResultSet
-import java.sql.SQLException
-import java.sql.Types
+import java.sql.*
 
 private val logger = KotlinLogging.logger { }
 
-class SqliteRepository(private val labelGraph: String) : Closeable {
-	private val connection = DriverManager.getConnection("$DB_DRIVER:$labelGraph.db")
-		?: throw SQLException("Cannot connect to database.")
-	private val addGraphStatement by lazy {
-		connection.prepareStatement(
-			"INSERT INTO graphs (name, type, isWeighted, isDirected, isAutoAddVertex) VALUES (?, ?, ?, ?, ?);"
-		)
-	}
-	private val addVertexStatement by lazy {
-		connection.prepareStatement(
-			"INSERT INTO vertices (id, xPos, yPos, color, radius, degree) VALUES (?, ?, ?, ?, ?, ?);"
-		)
-	}
-	private val addEdgeStatement by lazy {
-		connection.prepareStatement(
-			"INSERT INTO edges (idSource, idTarget, weight) VALUES (?, ?, ?);"
-		)
-	}
+class SqliteRepository(private val labelGraph: String) {
 
 	init {
 		logger.info { "Connected to database: $labelGraph." }
 	}
 
 	fun writeDb(graphViewModel: GraphViewModel) {
-		createDb()
-		addGraph(graphViewModel)
-		addVertices(graphViewModel)
-		addEdges(graphViewModel)
-		closeWrite()
+		val connection = DriverManager.getConnection("$DB_DRIVER:$labelGraph.db")
+			?: throw SQLException("Cannot connect to database.")
+
+		createDb(connection)
+		addGraph(graphViewModel, connection)
+		addVertices(graphViewModel, connection)
+		addEdges(graphViewModel, connection)
+
+		connection.close()
+		logger.info { "Connection closed." }
 	}
 
-	fun createDb() {
+	private fun createDb(connection: Connection) {
 		connection.createStatement().also { statement ->
 			try {
 				statement.execute(
@@ -88,7 +68,13 @@ class SqliteRepository(private val labelGraph: String) : Closeable {
 		}
 	}
 
-	fun addGraph(graphViewModel: GraphViewModel) {
+	private fun addGraph(graphViewModel: GraphViewModel, connection: Connection) {
+		val addGraphStatement by lazy {
+			connection.prepareStatement(
+				"INSERT INTO graphs (name, type, isWeighted, isDirected, isAutoAddVertex) VALUES (?, ?, ?, ?, ?);"
+			)
+		}
+
 		try {
 			val graph = graphViewModel.graph
 			addGraphStatement.setString(1, graph.label)
@@ -101,12 +87,18 @@ class SqliteRepository(private val labelGraph: String) : Closeable {
 			logger.info { "Added ${graph.label} graph." }
 		} catch (exception: Exception) {
 			logger.error(exception) { "Cannot add ${graphViewModel.graph.label} graph." }
+		} finally {
+			addGraphStatement.close()
 		}
 	}
 
+	private fun addVertices(graphViewModel: GraphViewModel, connection: Connection) {
+		val addVertexStatement by lazy {
+			connection.prepareStatement(
+				"INSERT INTO vertices (id, xPos, yPos, color, radius, degree) VALUES (?, ?, ?, ?, ?, ?);"
+			)
+		}
 
-
-	fun addVertices(graphViewModel: GraphViewModel) {
 		try {
 			graphViewModel.vertices.forEach { vertexViewModel ->
 				addVertexStatement.setString(1, vertexViewModel.id.valueToString())
@@ -121,10 +113,18 @@ class SqliteRepository(private val labelGraph: String) : Closeable {
 			logger.info { "Added vertices." }
 		} catch (exception: Exception) {
 			logger.error(exception) { "Cannot add vertices." }
+		} finally {
+			addVertexStatement.close()
 		}
 	}
 
-	fun addEdges(graphViewModel: GraphViewModel) {
+	private fun addEdges(graphViewModel: GraphViewModel, connection: Connection) {
+		val addEdgeStatement by lazy {
+			connection.prepareStatement(
+				"INSERT INTO edges (idSource, idTarget, weight) VALUES (?, ?, ?);"
+			)
+		}
+
 		try {
 			graphViewModel.edges.forEach { edgeViewModel ->
 				addEdgeStatement.setString(1, edgeViewModel.source.id.valueToString())
@@ -136,27 +136,19 @@ class SqliteRepository(private val labelGraph: String) : Closeable {
 			logger.info { "Added edges." }
 		} catch (exception: Exception) {
 			logger.error(exception) { "Cannot add edges." }
+		} finally {
+			addEdgeStatement.close()
 		}
 	}
 
-	fun closeWrite() {
-		addGraphStatement.close()
-		addVertexStatement.close()
-		addEdgeStatement.close()
-		connection.close()
-		logger.info { "Connection closed." }
-	}
-
-	fun getGraph(labelGraph: String): GraphViewModel? {
-		val database = "$DB_DRIVER:$labelGraph.db"
-
+	fun loadGraph(labelGraph: String): GraphViewModel? {
 		var graphViewModel: GraphViewModel? = null
 
 		var resultGraphs: ResultSet? = null
 		var resultVertices: ResultSet? = null
 		var resultEdges: ResultSet? = null
 
-		DriverManager.getConnection(database).use { connection ->
+		DriverManager.getConnection("$DB_DRIVER:$labelGraph.db").use { connection ->
 			val metaData = connection.metaData
 			val tables = metaData.getTables(null, null, "%", null)
 
@@ -195,7 +187,6 @@ class SqliteRepository(private val labelGraph: String) : Closeable {
 
 			while (tables.next()) {
 				val tableName = tables.getString("TABLE_NAME")
-				println(tableName)
 
 				if (tableName == "graphs") {
 					resultGraphs = getGraphStatement.executeQuery()
@@ -245,18 +236,43 @@ class SqliteRepository(private val labelGraph: String) : Closeable {
 					it.color = vertex.color
 					it.degree = vertex.degree
 				}
-			} catch (exception: Exception) {
-				logger.error(exception) { "Cannot load graph." }
-			}
 
-			connection.close()
+				logger.info { "Loaded $labelGraph graph." }
+			} catch (exception: Exception) {
+				logger.error(exception) { "Cannot load $labelGraph graph." }
+			} finally {
+				connection.close()
+			}
 		}
 
 		return graphViewModel
 	}
 
-	override fun close() {
-		closeWrite()
+	fun clear(labelGraph: String) {
+		DriverManager.getConnection("$DB_DRIVER:$labelGraph.db").use { connection ->
+			val metaData = connection.metaData
+			val tables = metaData.getTables(null, null, "%", null)
+
+			val deleteGraphStatement by lazy { connection.prepareStatement("DELETE FROM graphs;") }
+			val deleteVertexStatement by lazy { connection.prepareStatement("DELETE FROM vertices;") }
+			val deleteEdgeStatement by lazy { connection.prepareStatement("DELETE FROM edges;") }
+
+			while (tables.next()) {
+				val tableName = tables.getString("TABLE_NAME")
+				println(tableName)
+
+				if (tableName == "graphs") {
+					deleteGraphStatement.execute()
+				} else if (tableName == "vertices") {
+					deleteVertexStatement.execute()
+				} else if (tableName == "edges") {
+					deleteEdgeStatement.execute()
+				}
+			}
+
+			connection.close()
+			logger.info { "Clearing connection is closed." }
+		}
 	}
 
 	companion object {
