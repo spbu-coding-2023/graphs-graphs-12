@@ -56,20 +56,8 @@ class GraphPageViewModel {
 			"Cycles",
 			{ graphViewModel, input -> graphViewModel.parseCyclesSearchAlgorithm(input.first()) },
 			{ algButton ->
-				var vertex by remember { mutableStateOf("") }
-				OutlinedTextField(
-					value = vertex,
-					onValueChange = { vertex = it },
-					label = { Text("Vertex") },
-					singleLine = true,
-					textStyle = JetTheme.typography.mini,
-					colors = TextFieldDefaults.textFieldColors(
-						focusedIndicatorColor = JetTheme.colors.secondaryText,
-						focusedLabelColor = JetTheme.colors.secondaryText,
-						cursorColor = JetTheme.colors.tintColor
-					),
-					modifier = Modifier.padding(4.dp)
-				)
+				val vertex = remember { mutableStateOf("") }
+				OutlinedTextFieldVertex(vertex, "Vertex")
 				TextButton(
 					colors = ButtonDefaults.buttonColors(
 						backgroundColor = JetTheme.colors.tertiaryBackground,
@@ -80,12 +68,12 @@ class GraphPageViewModel {
 					onClick = {
 						if (graphViewModel!!.graph.containsVertex(
 								VertexID.vertexIDFromString(
-									vertex,
+									vertex.value,
 									graphViewModel!!.vertexType
 								)
 							)
 						) {
-							algButton.inputs.value = listOf(vertex)
+							algButton.inputs.value = listOf(vertex.value)
 							algButton.isRun.value = true
 						}
 					}
@@ -259,3 +247,46 @@ class GraphPageViewModel {
 		)
 	}
 }
+
+@Composable
+fun OutlinedTextFieldVertex(vertex: MutableState<String>, message: String) {
+	OutlinedTextField(
+		value = vertex.value,
+		onValueChange = { vertex.value = it },
+		label = { Text(message) },
+		singleLine = true,
+		textStyle = JetTheme.typography.mini,
+		colors = TextFieldDefaults.textFieldColors(
+			focusedIndicatorColor = JetTheme.colors.secondaryText,
+			focusedLabelColor = JetTheme.colors.secondaryText,
+			cursorColor = JetTheme.colors.tintColor
+		),
+		modifier = Modifier.padding(4.dp)
+	)
+}
+
+//@Composable
+//fun TextButtonVertex(graphViewModel: GraphViewModel, vertex: String, algButton) {
+//	TextButton(
+//		colors = ButtonDefaults.buttonColors(
+//			backgroundColor = JetTheme.colors.tertiaryBackground,
+//			contentColor = JetTheme.colors.secondaryText,
+//			disabledContentColor = JetTheme.colors.secondaryText,
+//			disabledBackgroundColor = JetTheme.colors.tertiaryBackground
+//		),
+//		onClick = {
+//			if (graphViewModel.graph.containsVertex(
+//					VertexID.vertexIDFromString(
+//						vertex.value,
+//						graphViewModel!!.vertexType
+//					)
+//				)
+//			) {
+//				algButton.inputs.value = listOf(vertex.value)
+//				algButton.isRun.value = true
+//			}
+//		}
+//	) {
+//		Text("Run it!")
+//	}
+//}

@@ -30,14 +30,14 @@ class ForceDirectedPlacementStrategy(
 			width,
 			height,
 			null,
-			10000, // recommend 10000 // test 750
+			7000, // recommend 10000 // test 750
 			1.0, // attraction
-			200.0, // repulsion: recommend 10
+			1000.0, // repulsion: recommend 10
 			1000.0, // repulsion overlapping: recommend 100
-			1.0, // gravity: recommend 5
+			2.0, // gravity: recommend 5
 			1, // the weight effects: 0 / 1 / 2
-			0.1, // recommend 0.1 // test 0.01 // test 0.002
-			10.0, // recommend 10
+			6.0, // recommend 0.1 // test 0.01 // test 0.002
+			20.0, // recommend 10
 			1.0, // recommend 1
 			0.999
 		)
@@ -53,11 +53,11 @@ class ForceDirectedPlacementStrategy(
 			vertex,
 			2,
 			1.0,
-			200.0,
-			300.0,
+			100.0,
+			100.0,
 			0.0,
 			0,
-			0.0005, // test 0.001
+			0.00005, // test 0.001
 			10.0,
 			1.0,
 			0.999
@@ -102,8 +102,8 @@ class ForceDirectedPlacementStrategy(
 
 			viewModel.vertices.forEach { vertexSourceViewModel ->
 				val length = sqrt(vertexSourceViewModel.xPos.value.toDouble().pow(2) + vertexSourceViewModel.yPos.value.toDouble().pow(2))
-				val forceGrav = kGrav * (vertexSourceViewModel.degree + 1) * length
-//				val forceGrav = kGrav * (vertexSourceViewModel.degree + 1)
+//				val forceGrav = kGrav * (vertexSourceViewModel.degree + 1) * length
+				val forceGrav = kGrav * (vertexSourceViewModel.degree + 1)
 
 				tableForce[vertexSourceViewModel] = mutableListOf(forceGrav, forceGrav)
 
@@ -122,8 +122,8 @@ class ForceDirectedPlacementStrategy(
 					}
 //					val forceRepul = kRepul * (vertexSourceViewModel.degree + 1) * (vertexTargetViewModel.degree + 1) / (inaccuracy + distance)
 
-					checkAndAddFirst(tableForce[vertexSourceViewModel], - forceRepul * difX)
-					checkAndAddSecond(tableForce[vertexSourceViewModel], - forceRepul * difY)
+					checkAndAddFirst(tableForce[vertexSourceViewModel],  - forceRepul * difX)
+					checkAndAddSecond(tableForce[vertexSourceViewModel],  - forceRepul * difY)
 				}
 			}
 

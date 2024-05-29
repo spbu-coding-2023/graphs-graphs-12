@@ -127,6 +127,7 @@ fun TextButtonAlgorithm(
 	val coroutineScope = rememberCoroutineScope()
 	val expanded = mutableStateOf(false)
 	val dropContext = algButton.dropDownMenuContext
+
 	TextButton(
 		modifier = modifier,
 		onClick = {
@@ -138,6 +139,7 @@ fun TextButtonAlgorithm(
 		)
 	) {
 		Text(algButton.label, color = JetTheme.colors.secondaryText, style = JetTheme.typography.mini)
+
 		if (dropContext != null) {
 			Box {
 				DropdownMenu(
@@ -147,9 +149,7 @@ fun TextButtonAlgorithm(
 					expanded = expanded.value,
 					onDismissRequest = { expanded.value = false },
 					content = {
-						Column(
-							horizontalAlignment = Alignment.CenterHorizontally
-						) {
+						Column(horizontalAlignment = Alignment.CenterHorizontally) {
 							dropContext(algButton)
 						}
 					}

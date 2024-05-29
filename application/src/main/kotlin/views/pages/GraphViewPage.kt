@@ -9,8 +9,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.AspectRatio
-import androidx.compose.material.icons.outlined.Timeline
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +27,7 @@ import utils.VertexIDType
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
 import viewmodels.pages.GraphPageViewModel
-import views.graphs.GraphView
+import views.graphs.GraphViewTest
 
 @Composable
 fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
@@ -62,8 +60,8 @@ fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
 			.clip(JetTheme.shapes.cornerStyle)
 			.background(JetTheme.colors.secondaryBackground, JetTheme.shapes.cornerStyle)
 		) {
-			GraphView(graphViewModel, idVerticesInfo, centerBox = Offset(maxWidth.value, maxHeight.value), changeCenter)
-//			GraphViewTest(graphViewModel, idVerticesInfo, Offset(maxWidth.value, maxHeight.value), changeCenter)
+//			GraphView(graphViewModel, idVerticesInfo, centerBox = Offset(maxWidth.value, maxHeight.value), changeCenter)
+			GraphViewTest(graphViewModel, idVerticesInfo, centerBox = Offset(maxWidth.value, maxHeight.value), changeCenter)
 
 			IconResetGraph(graphViewModel, changeCenter, modifierButtons, Modifier.padding(paddingCustom).align(Alignment.TopEnd))
 			Box(Modifier.fillMaxSize()) {
@@ -111,6 +109,19 @@ fun ColumnInfoGraph(
 	modifierBox: Modifier,
 	modifierButtons: Modifier
 ) {
+	val isShownWeigh = remember { mutableStateOf(false) }
+	LaunchedEffect(isShownWeigh.value) {
+		graphViewModel.edges.forEach {
+			it.visibility = isShownWeigh.value
+		}
+	}
+	val isShownId = remember { mutableStateOf(true) }
+	LaunchedEffect(isShownId.value) {
+		graphViewModel.vertices.forEach {
+			it.visibility = isShownId.value
+		}
+	}
+
 	Column(
 		modifier = modifierBox.padding(paddingCustom),
 		verticalArrangement = Arrangement.spacedBy(paddingCustom)
@@ -134,7 +145,7 @@ fun ColumnInfoGraph(
 				.clip(JetTheme.shapes.cornerStyle)
 				.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle)
 		) {
-			showAddItem(graphViewModel)
+			showAddItem(graphViewModel, isShownWeigh, isShownId)
 		}
 
 		AnimatedVisibility(
@@ -150,33 +161,27 @@ fun ColumnInfoGraph(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun showAddItem(graphViewModel: GraphViewModel) {
+fun showAddItem(graphViewModel: GraphViewModel, isShownWeigh: MutableState<Boolean>, isShownId: MutableState<Boolean>) {
 	val idFastAdd = remember { mutableIntStateOf(graphViewModel.vertices.size + 1) }
 
 	val statePager = rememberPagerState { 2 }
 
-	var isShownWeigh by remember { mutableStateOf(false) }
-	LaunchedEffect(isShownWeigh) {
-		graphViewModel.edges.forEach {
-			it.visibility = isShownWeigh
-		}
-	}
-	var isShownId by remember { mutableStateOf(true) }
-	LaunchedEffect(isShownId) {
-		graphViewModel.vertices.forEach {
-			it.visibility = isShownId
-		}
-	}
-
 	val addingVertex = {
-		graphViewModel.addVertex(VertexID(checkAndGet(graphViewModel, idFastAdd), graphViewModel.vertexType))
+		val idNew = VertexID(checkAndGet(graphViewModel, idFastAdd), graphViewModel.vertexType)
+		graphViewModel.addVertex(idNew)
+
+		graphViewModel.vertices.find { it.id == idNew }!!.visibility = isShownId.value
 	}
 	val addingEdge = {
-		val vertexSource = VertexID(checkAndGet(graphViewModel, idFastAdd), graphViewModel.vertexType)
-		graphViewModel.addVertex(vertexSource)
-		val vertexTarget = VertexID(checkAndGet(graphViewModel, idFastAdd), graphViewModel.vertexType)
-		graphViewModel.addVertex(vertexTarget)
-		graphViewModel.addEdge(vertexSource, vertexTarget, 1.0)
+		val idSourceNew = VertexID(checkAndGet(graphViewModel, idFastAdd), graphViewModel.vertexType)
+		graphViewModel.addVertex(idSourceNew)
+		val idTargetNew = VertexID(checkAndGet(graphViewModel, idFastAdd), graphViewModel.vertexType)
+		graphViewModel.addVertex(idTargetNew)
+		graphViewModel.addEdge(idSourceNew, idTargetNew, 1.0)
+
+		graphViewModel.vertices.find { it.id == idSourceNew }!!.visibility = isShownId.value
+		graphViewModel.vertices.find { it.id == idTargetNew }!!.visibility = isShownId.value
+		graphViewModel.edges.find { it.edge == WeightedEdge(idSourceNew, idTargetNew, 1.0) }!!.visibility = isShownWeigh.value
 	}
 
 	Row(
@@ -230,8 +235,8 @@ fun showAddItem(graphViewModel: GraphViewModel) {
 						Box(Modifier.fillMaxWidth()) {
 							Text("Show weight", fontSize = fontSizeText)
 							Checkbox(
-								checked = isShownWeigh,
-								onCheckedChange = { isShownWeigh = !isShownWeigh },
+								checked = isShownWeigh.value,
+								onCheckedChange = { isShownWeigh.value = !isShownWeigh.value },
 								modifier = modifierCheckbox.align(Alignment.CenterEnd),
 								colors = colorCheckbox
 							)
@@ -241,8 +246,8 @@ fun showAddItem(graphViewModel: GraphViewModel) {
 					Box(Modifier.fillMaxWidth()) {
 						Text("Show id", fontSize = fontSizeText)
 						Checkbox(
-							checked = isShownId,
-							onCheckedChange = { isShownId = !isShownId },
+							checked = isShownId.value,
+							onCheckedChange = { isShownId.value = !isShownId.value },
 							modifier = modifierCheckbox.align(Alignment.CenterEnd),
 							colors = colorCheckbox
 						)
@@ -261,7 +266,7 @@ fun showAddItem(graphViewModel: GraphViewModel) {
 
 		Column(Modifier
 			.weight(1f)
-			.height(150.dp)
+			.height(145.dp)
 		) { // todo(size!!!)
 			HorizontalPager( // todo(how to fix double show pagers?)
 				modifier = Modifier
@@ -272,8 +277,8 @@ fun showAddItem(graphViewModel: GraphViewModel) {
 				userScrollEnabled = true
 			) { index ->
 				when (index) {
-					0 -> showMenuVertex(graphViewModel)
-					1 -> showMenuEdge(graphViewModel)
+					0 -> showMenuVertex(graphViewModel, isShownId.value)
+					1 -> showMenuEdge(graphViewModel, isShownId.value, isShownWeigh.value)
 				}
 			}
 		}
@@ -298,7 +303,7 @@ fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<Ve
 	}
 
 	val removingVertexSource: () -> Unit = {
-		graphViewModel.removeVertex(idVerticesInfo.value!!.id) // todo(!!)
+		graphViewModel.removeVertex(idVerticesInfo.value!!.id)
 		idVerticesInfo.value = null
 	}
 	val removingVertexTarget: (WeightedEdge<VertexID>) -> Unit = {
@@ -314,7 +319,16 @@ fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<Ve
 		"Vertex: ${it.idTarget.valueToString()}"
 	}
 	val stringEdge: (WeightedEdge<VertexID>) -> String = {
-		"Edge: ${it.idSource.valueToString()} -> ${it.idTarget.valueToString()}"
+		"Edge: ${it.idSource.valueToString()} -> ${it.idTarget.valueToString()}" +
+			if (!graphViewModel.isUnweighted) {
+				if (it.weight.rem(1) == 0.0) {
+					", weight: ${it.weight.toInt()}"
+				} else {
+					", weight: ${it.weight}"
+				}
+			} else {
+				""
+			}
 	}
 
 	Row(
@@ -324,12 +338,10 @@ fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<Ve
 			.background(JetTheme.colors.primaryBackground, RoundedCornerShape(10.dp)),
 		horizontalArrangement = Arrangement.spacedBy(paddingCustom)
 	) {
-		val modifierText = Modifier.padding(paddingCustom)
-
 		Column(Modifier.weight(1f)) {
-			if (idVerticesInfo.value != null) { // todo(test)
-				Text("Vertex: ${idVerticesInfo.value!!.id.valueToString()}", modifier = modifierText) // todo(!!)
-				Text("Count edges: ${graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id).size}", modifier = modifierText)
+			if (idVerticesInfo.value != null) {
+				Text("Vertex: ${idVerticesInfo.value!!.id.valueToString()}")
+				Text("Count edges: ${graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id).size}")
 				ButtonCustom(removingVertexSource, "Delete", Modifier)
 			}
 		}
@@ -350,14 +362,18 @@ fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<Ve
 	}
 }
 
-
 @Composable
-fun showMenuVertex(graphViewModel: GraphViewModel) {
+fun showMenuVertex(graphViewModel: GraphViewModel, isShownId: Boolean) {
 	val idVertex = remember { mutableStateOf("") }
 
 	val creationVertex = {
 		if (idVertex.value != "") {
-			graphViewModel.addVertex(VertexID(idVertex.value, graphViewModel.vertexType))
+			if (graphViewModel.vertexType == VertexIDType.INT_TYPE && idVertex.value.all { it.isDigit() }) {
+				val id = VertexID(idVertex.value, graphViewModel.vertexType)
+				graphViewModel.addVertex(id)
+
+				graphViewModel.vertices.find { it.id == id }!!.visibility = isShownId
+			}
 		}
 	}
 
@@ -381,7 +397,7 @@ fun showMenuVertex(graphViewModel: GraphViewModel) {
 }
 
 @Composable
-fun showMenuEdge(graphViewModel: GraphViewModel) {
+fun showMenuEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWeigh: Boolean) {
 	val idVertexSource = remember { mutableStateOf("") }
 	val idVertexTarget = remember { mutableStateOf("") }
 	val weight = remember { mutableStateOf("") }
@@ -389,11 +405,16 @@ fun showMenuEdge(graphViewModel: GraphViewModel) {
 	val creationEdge = {
 		if (idVertexSource.value != "" && idVertexTarget.value != "" && idVertexSource.value != idVertexTarget.value
 			&& weight.value.toDoubleOrNull() != null) {
-			graphViewModel.addEdge(
-				VertexID(idVertexSource.value, graphViewModel.vertexType),
-				VertexID(idVertexTarget.value, graphViewModel.vertexType),
-				weight.value.toDouble()
-			)
+			if (graphViewModel.vertexType == VertexIDType.INT_TYPE && idVertexSource.value.all { it.isDigit() }
+				&& idVertexTarget.value.all { it.isDigit() }) {
+				val idSource = VertexID(idVertexSource.value, graphViewModel.vertexType)
+				val idTarget = VertexID(idVertexTarget.value, graphViewModel.vertexType)
+				graphViewModel.addEdge(idSource, idTarget, weight.value.toDouble())
+
+				graphViewModel.vertices.find { it.id == idSource }!!.visibility = isShownId
+				graphViewModel.vertices.find { it.id == idTarget }!!.visibility = isShownId
+				graphViewModel.edges.find { it.edge == WeightedEdge(idSource, idTarget, 1.0) }!!.visibility = isShownWeigh
+			}
 		}
 	}
 
@@ -418,7 +439,7 @@ fun showMenuEdge(graphViewModel: GraphViewModel) {
 
 @Composable
 fun BoxAddItem(text: String, count: Int, action: () -> Unit) {
-	Box(modifier = Modifier
+	Box(Modifier
 		.fillMaxWidth()
 		.clip(JetTheme.shapes.cornerStyle)
 		.background(whiteCustom, JetTheme.shapes.cornerStyle)
@@ -453,13 +474,18 @@ fun ColumnBoxEditItem(
 	modifierRow: Modifier
 ) {
 	Column(modifierRow
-		.heightIn(0.dp, 180.dp)
+		.heightIn(100.dp, 180.dp)
 		.clip(JetTheme.shapes.cornerStyle)
 		.background(whiteCustom, JetTheme.shapes.cornerStyle)
 		.verticalScroll(rememberScrollState())
 	) {
 		if (setEdges.isEmpty()) {
-			Text(message, Modifier.padding(paddingCustom))
+			Box(Modifier
+				.fillMaxWidth()
+				.height(100.dp)
+			) {
+				Text(message, Modifier.align(Alignment.Center))
+			}
 		}
 		setEdges.forEach {
 			BoxEditItem(it, action, string)
@@ -474,14 +500,18 @@ fun BoxEditItem(
 	string: (WeightedEdge<VertexID>) -> String
 ) {
 	Box(Modifier.fillMaxWidth()) {
-		Text(string(edge), Modifier.padding(paddingCustom).align(Alignment.CenterStart))
+		Text(
+			text = string(edge),
+			modifier = Modifier
+				.padding(15.dp)
+				.align(Alignment.CenterStart)
+		)
 		IconButton(
 			onClick = { action(edge) },
 			enabled = true,
 			modifier = Modifier
 				.width(sizeBottom)
-				.padding(paddingCustom)
-				.align(Alignment.TopEnd),
+				.align(Alignment.CenterEnd),
 			content = {
 				Icon(
 					imageVector = Icons.Default.Delete,
