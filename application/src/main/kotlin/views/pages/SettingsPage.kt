@@ -198,7 +198,6 @@ fun SettingsPage(
 						0 -> currentStyle.value = JetStyle.Black
 						1 -> currentStyle.value = JetStyle.Blue
 						2 -> currentStyle.value = JetStyle.Orange
-//                        3 -> currentStyle.value = JetSize.Big
 						else -> throw NotImplementedError("No valid value for this $it")
 					}
 				}

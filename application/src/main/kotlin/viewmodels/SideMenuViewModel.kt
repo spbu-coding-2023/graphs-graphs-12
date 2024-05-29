@@ -115,7 +115,6 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 				graphPageViewModel.save()
 			}
 		)
-		sideMenuModel.addSeparator()
 		sideMenuModel.addTabs(
 			TabItem("Settings", Icons.Filled.Settings, Icons.Outlined.Settings, isSelectablePage = true),
 		)

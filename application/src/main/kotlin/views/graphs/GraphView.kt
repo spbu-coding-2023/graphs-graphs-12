@@ -118,61 +118,59 @@ fun GraphView(
 					color = vertexViewModel.color
 				)
 			}
-			if (vertexViewModel.visibility) {
-				IconButton(
-					onClick = {
-						if (isKeyboardPressed) {
+			IconButton(
+				onClick = {
+					if (isKeyboardPressed) {
+						if (idVerticesInfo.value != null) {
+							val vertexSource = idVerticesInfo.value!!
+							idVerticesInfo.value = null
+							graphViewModel.addEdge(vertexSource.id, vertexViewModel.id)
+							idVerticesInfo.value = vertexSource
+						}
+						isKeyboardPressed = !isKeyboardPressed
+					} else {
+						if (idVerticesInfo.value != vertexViewModel) {
 							if (idVerticesInfo.value != null) {
-								val vertexSource = idVerticesInfo.value!!
-								idVerticesInfo.value = null
-								graphViewModel.addEdge(vertexSource.id, vertexViewModel.id)
-								idVerticesInfo.value = vertexSource
-							}
-							isKeyboardPressed = !isKeyboardPressed
-						} else {
-							if (idVerticesInfo.value != vertexViewModel) {
-								if (idVerticesInfo.value != null) {
-									idVerticesInfo.value!!.color = colorVerticesStart
-								}
-								idVerticesInfo.value = vertexViewModel
-								idVerticesInfo.value!!.color = whiteCustom
-							} else {
 								idVerticesInfo.value!!.color = colorVerticesStart
-								idVerticesInfo.value = null
 							}
-						}
-					},
-					modifier = Modifier
-						.size(vertexViewModel.radius * zoomAnimated * 2, vertexViewModel.radius * zoomAnimated * 2)
-						.offset(
-							center.x.dp + (vertexViewModel.xPos - center.x.dp) * zoomAnimated - vertexViewModel.radius * zoomAnimated,
-							center.y.dp + (vertexViewModel.yPos - center.y.dp) * zoomAnimated - vertexViewModel.radius * zoomAnimated
-						)
-						.pointerInput(vertexViewModel) {
-							detectDragGestures { change, dragAmount ->
-								change.consume()
-								vertexViewModel.onDrag(dragAmount)
-								coroutinePlace.launch {
-									ForceDirectedPlacementStrategy(graphViewModel).placeWithoutVertex(
-										windowSizeStart.second.toDouble(),
-										windowSizeStart.second.toDouble(),
-										vertexViewModel
-									)
-								}
-							}
-						}
-						.onPreviewKeyEvent {
-//							isKeyboardPressed = it.key == Key.CtrlLeft || it.key == Key.CtrlRight || it.isCtrlPressed
-							isKeyboardPressed = it.isShiftPressed
-							false
-						},
-					content = {
-						if ((vertexViewModel.radius * zoomAnimated * 2).value > 22) {
-							Text(text = vertexViewModel.label, maxLines = 1)
+							idVerticesInfo.value = vertexViewModel
+							idVerticesInfo.value!!.color = whiteCustom
+						} else {
+							idVerticesInfo.value!!.color = colorVerticesStart
+							idVerticesInfo.value = null
 						}
 					}
-				)
-			}
+				},
+				modifier = Modifier
+					.size(vertexViewModel.radius * zoomAnimated * 2, vertexViewModel.radius * zoomAnimated * 2)
+					.offset(
+						center.x.dp + (vertexViewModel.xPos - center.x.dp) * zoomAnimated - vertexViewModel.radius * zoomAnimated,
+						center.y.dp + (vertexViewModel.yPos - center.y.dp) * zoomAnimated - vertexViewModel.radius * zoomAnimated
+					)
+					.pointerInput(vertexViewModel) {
+						detectDragGestures { change, dragAmount ->
+							change.consume()
+							vertexViewModel.onDrag(dragAmount)
+							coroutinePlace.launch {
+								ForceDirectedPlacementStrategy(graphViewModel).placeWithoutVertex(
+									windowSizeStart.second.toDouble(),
+									windowSizeStart.second.toDouble(),
+									vertexViewModel
+								)
+							}
+						}
+					}
+					.onPreviewKeyEvent {
+//						isKeyboardPressed = it.key == Key.CtrlLeft || it.key == Key.CtrlRight || it.isCtrlPressed
+						isKeyboardPressed = it.isShiftPressed
+						false
+					},
+				content = {
+					if (vertexViewModel.visibility && (vertexViewModel.radius * zoomAnimated * 2).value > 22) {
+						Text(text = vertexViewModel.label, maxLines = 1)
+					}
+				}
+			)
 		}
 	}
 }

@@ -59,7 +59,7 @@ fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
 				.fillMaxSize()
 				.padding(paddingCustom)
 				.clip(JetTheme.shapes.cornerStyle)
-				.background(JetTheme.colors.secondaryBackground, JetTheme.shapes.cornerStyle)
+				.background(Color(175, 218, 252), JetTheme.shapes.cornerStyle)
 		) {
 			GraphView(graphViewModel, idVerticesInfo, Offset(maxWidth.value, maxHeight.value), changeCenter)
 
@@ -195,8 +195,9 @@ fun showAddItem(graphViewModel: GraphViewModel, isShownWeigh: MutableState<Boole
 
 		graphViewModel.vertices.find { it.id == idSourceNew }!!.visibility = isShownId.value
 		graphViewModel.vertices.find { it.id == idTargetNew }!!.visibility = isShownId.value
-		graphViewModel.edges.find { it.edge == WeightedEdge(idSourceNew, idTargetNew, 1.0) }!!.visibility =
-			isShownWeigh.value
+		graphViewModel.edges.find {
+			it.edge == WeightedEdge(idSourceNew, idTargetNew, 1.0)
+		}!!.visibility = isShownWeigh.value
 	}
 
 	Row(
@@ -208,7 +209,9 @@ fun showAddItem(graphViewModel: GraphViewModel, isShownWeigh: MutableState<Boole
 		horizontalArrangement = Arrangement.spacedBy(paddingCustom)
 	) {
 		Column(
-			modifier = Modifier.weight(1f).padding(paddingCustom),
+			modifier = Modifier
+				.weight(1f)
+				.height(145.dp),
 			verticalArrangement = Arrangement.spacedBy(paddingCustom)
 		) {
 			val fontSizeText = 14.sp
@@ -220,7 +223,7 @@ fun showAddItem(graphViewModel: GraphViewModel, isShownWeigh: MutableState<Boole
 				maxLines = 1,
 				color = JetTheme.colors.secondaryText
 			)
-			Row(horizontalArrangement = Arrangement.spacedBy(paddingCustom)) {
+			Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
 				Column(
 					modifier = Modifier.weight(1f),
 					verticalArrangement = Arrangement.spacedBy(paddingCustom)
@@ -388,7 +391,9 @@ fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<Ve
 		horizontalArrangement = Arrangement.spacedBy(paddingCustom)
 	) {
 		Column(
-			modifier = Modifier.weight(1f).padding(paddingCustom),
+			modifier = Modifier
+				.weight(1f)
+				.padding(paddingCustom),
 			verticalArrangement = Arrangement.spacedBy(paddingCustom)
 		) {
 			if (idVerticesInfo.value != null) {
@@ -396,15 +401,13 @@ fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<Ve
 					"Vertex: ${idVerticesInfo.value!!.id.valueToString()}",
 					color = JetTheme.colors.secondaryText,
 					style = JetTheme.typography.mini,
-					maxLines = 1,
-					modifier = Modifier.padding(1.dp)
+					maxLines = 1
 				)
 				Text(
 					"Count edges: ${graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id).size}",
 					color = JetTheme.colors.secondaryText,
 					style = JetTheme.typography.mini,
 					maxLines = 1,
-					modifier = Modifier.padding(1.dp)
 				)
 				ButtonCustom(removingVertexSource, "Delete", Modifier)
 			}
@@ -499,8 +502,9 @@ fun showMenuEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWeig
 
 				graphViewModel.vertices.find { it.id == idSource }!!.visibility = isShownId
 				graphViewModel.vertices.find { it.id == idTarget }!!.visibility = isShownId
-				graphViewModel.edges.find { it.edge == WeightedEdge(idSource, idTarget, 1.0) }!!.visibility =
-					isShownWeigh
+				graphViewModel.edges.find {
+					it.edge == WeightedEdge(idSource, idTarget, 1.0)
+				}!!.visibility = isShownWeigh
 			}
 		} else {
 			if (weight.value.toDoubleOrNull() != null) {
@@ -510,30 +514,12 @@ fun showMenuEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWeig
 					graphViewModel.vertices.find { it.id == idSource }!!.visibility = isShownId
 					graphViewModel.vertices.find { it.id == idTarget }!!.visibility = isShownId
 					graphViewModel.edges.find {
-						it.edge == WeightedEdge(
-							idSource,
-							idTarget,
-							weight.value.toDouble()
-						)
+						it.edge == WeightedEdge(idSource, idTarget, weight.value.toDouble())
 					}!!.visibility = isShownWeigh
 					statusWeight = false
 				}
 			} else statusWeight = true
 		}
-
-//		if (idVertexSource.value != "" && idVertexTarget.value != "" && idVertexSource.value != idVertexTarget.value
-//			&& weight.value.toDoubleOrNull() != null) {
-//			if (graphViewModel.vertexType == VertexIDType.INT_TYPE && idVertexSource.value.all { it.isDigit() }
-//				&& idVertexTarget.value.all { it.isDigit() }) {
-//				val idSource = VertexID(idVertexSource.value, graphViewModel.vertexType)
-//				val idTarget = VertexID(idVertexTarget.value, graphViewModel.vertexType)
-//				graphViewModel.addEdge(idSource, idTarget, weight.value.toDouble())
-//
-//				graphViewModel.vertices.find { it.id == idSource }!!.visibility = isShownId
-//				graphViewModel.vertices.find { it.id == idTarget }!!.visibility = isShownId
-//				graphViewModel.edges.find { it.edge == WeightedEdge(idSource, idTarget, 1.0) }!!.visibility = isShownWeigh
-//			}
-//		}
 	}
 
 	Column {
@@ -563,17 +549,19 @@ fun BoxAddItem(text: String, count: Int, action: () -> Unit) {
 			.clip(JetTheme.shapes.cornerStyle)
 			.background(whiteCustom, JetTheme.shapes.cornerStyle)
 	) {
-		Text(text, style = JetTheme.typography.mini, modifier = Modifier.padding(15.dp).align(Alignment.CenterStart))
-		Row(
-			Modifier
-				.padding(paddingCustom)
-				.align(Alignment.TopEnd)
-		) {
+		Text(
+			text,
+			style = JetTheme.typography.mini,
+			modifier = Modifier
+				.padding(15.dp)
+				.align(Alignment.CenterStart)
+		)
+		Row(Modifier.align(Alignment.TopEnd)) {
 			Text("$count", style = JetTheme.typography.mini, modifier = Modifier.padding(15.dp))
 			IconButton(
 				onClick = action,
 				enabled = true,
-				modifier = Modifier.width(50.dp),
+				modifier = Modifier.width(sizeBottom),
 				content = {
 					Icon(
 						imageVector = Icons.Default.Add,
