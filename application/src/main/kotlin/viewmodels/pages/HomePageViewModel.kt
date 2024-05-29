@@ -16,6 +16,7 @@ import utils.GraphSavingType
 import utils.VertexIDType
 import viewmodels.SideMenuViewModel
 import viewmodels.graphs.GraphViewModel
+import java.io.File
 
 class HomePageViewModel(
 	val indexSelectedPage: MutableState<Int>,
@@ -27,7 +28,7 @@ class HomePageViewModel(
 	val tasks: List<ListWidgetItem>
 		get() = _tasks.toList()
 
-	private val _previouslyLoadedGraph = sortedSetOf<GraphInfo>()
+	private val _previouslyLoadedGraph = mutableSetOf<GraphInfo>()
 	val previouslyLoadedGraph: List<GraphInfo>
 		get() = _previouslyLoadedGraph.sorted()
 	private val _isOpenDialogOfCreatingNewGraph = mutableStateOf(false)
@@ -122,5 +123,17 @@ class HomePageViewModel(
 		} else {
 			graphPage.graphViewModel = null
 		}
+	}
+
+	fun loadGraphInfo(savingType: GraphSavingType, path: String) {
+		val graphView = graphPage.graphViewModel ?: return
+		val file = File(path)
+		_previouslyLoadedGraph.add(
+			GraphInfo(
+				graphView.graph.label,
+				file.parent,
+				savingType,
+			)
+		)
 	}
 }

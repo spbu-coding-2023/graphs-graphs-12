@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import models.VertexID
 import models.utils.AlgorithmButton
 import themes.JetTheme
+import utils.PageType
 import utils.representation.*
 import viewmodels.graphs.GraphViewModel
 import windowSizeStart
@@ -26,6 +27,7 @@ class GraphPageViewModel(val indexSelectedPage: MutableState<Int>) {
 		get() = _graph.value
 		set(newModel) {
 			_graph.value = newModel
+			if (newModel == null) indexSelectedPage.value = PageType.HOME_PAGE.ordinal
 			updateGraphRepresentation()
 		}
 	val algorithms = setOf<AlgorithmButton>(

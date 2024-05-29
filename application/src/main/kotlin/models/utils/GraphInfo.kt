@@ -29,7 +29,23 @@ class GraphInfo(
 		return previouslyOpenDateTime.compareTo(other.previouslyOpenDateTime)
 	}
 
+
+
 	override fun toString(): String {
 		return "GraphInfo(name = $mainText, folder = $folderPath, previouslyOpenDateTime = $previouslyOpenDateTime)"
+	}
+
+	override fun equals(other: Any?): Boolean {
+		if (this === other) return true
+		if (javaClass != other?.javaClass) return false
+
+		other as GraphInfo
+
+		if (mainText != other.mainText) return false
+		return true
+	}
+
+	override fun hashCode(): Int {
+		return mainText.hashCode()
 	}
 }

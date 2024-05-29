@@ -156,7 +156,10 @@ fun LoadNewGraphDialog(viewModel: LoadNewGraphDialogViewModel) {
 								}
 								coroutineScope.launch {
 									isLoad = viewModel.settings.loadGraphFromNEO4J(viewModel.homePageViewModel.graphPage)
-									if (isLoad) viewModel.homePageViewModel.isOpenDialogOfLoadingNewGraph = false
+									if (isLoad) {
+										viewModel.homePageViewModel.loadGraphInfo(GraphSavingType.NEO4J_DB,"")
+										viewModel.homePageViewModel.isOpenDialogOfLoadingNewGraph = false
+									}
 								}
 							}
 							GraphSavingType.LOCAL_FILE -> {
@@ -165,7 +168,13 @@ fun LoadNewGraphDialog(viewModel: LoadNewGraphDialogViewModel) {
 										viewModel.homePageViewModel.graphPage,
 										viewModel.loadFile.value
 									)
-									if (isLoad) viewModel.homePageViewModel.isOpenDialogOfLoadingNewGraph = false
+									if (isLoad) {
+										viewModel.homePageViewModel.loadGraphInfo(
+											GraphSavingType.LOCAL_FILE,
+											viewModel.loadFile.value
+										)
+										viewModel.homePageViewModel.isOpenDialogOfLoadingNewGraph = false
+									}
 								}
 							}
 							else -> println("Unsupportec type: ${viewModel.selectedLoadType}")
