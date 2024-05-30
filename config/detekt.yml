@@ -51,13 +51,13 @@ comments:
 complexity:
   active: true
   LabeledExpression:
-    active: true
+    active: false
   LargeClass:
     active: true
     threshold: 750
   LongMethod:
     active: true
-    threshold: 80
+    threshold: 140
   NamedArguments:
     active: true
     threshold: 3
@@ -76,6 +76,9 @@ complexity:
     active: false
   CyclomaticComplexMethod:
     threshold: 18
+  LongParameterList:
+    active: true
+    functionThreshold: 10
 
 exceptions:
   active: true
@@ -97,7 +100,7 @@ naming:
     classPattern: '([A-Z][a-z]*)+'
   EnumNaming:
     active: true
-    enumEntryPattern: '([A-Z][a-z]*)+'
+    enumEntryPattern: '([A-Z][a-z]*_)+'
   LambdaParameterNaming:
     active: true
     parameterPattern: '[a-z][A-Za-z0-9]*|_'
@@ -106,6 +109,12 @@ naming:
   PackageNaming:
     active: true
     packagePattern: '[a-z]+([\_\.][a-z][A-Za-z0-9]*)*'
+  FunctionNaming:
+    active: true
+    functionPattern: '[a-zA-Z][a-zA-Z0-9]*'
+  TopLevelPropertyNaming:
+    active: true
+    constantPattern: '[A-Z][A-Za-z0-9_]*'
 
 performance:
   active: true
@@ -216,6 +225,9 @@ style:
     allowNonStandardGrouping: false
   MagicNumber:
     active: false
+  UnusedPrivateMember:
+    active: true
+    ignoreAnnotated: [ 'Preview' ]
 
 formatting:
   active: true

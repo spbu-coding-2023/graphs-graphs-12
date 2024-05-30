@@ -10,7 +10,7 @@ import graphs_lab.core.edges.Edge
  * @property isDirected indicates whether the graph is directed or not
  * @property isAutoAddVertex specifies whether new vertices should be automatically added when adding edges
  */
-class UnweightedGraph<I>(
+open class UnweightedGraph<I>(
 	id: String,
 	isDirected: Boolean = false,
 	isAutoAddVertex: Boolean = false
@@ -22,7 +22,7 @@ class UnweightedGraph<I>(
 	 * @param idSource the identifier of the source vertex
 	 * @param idTarget the identifier of the target vertex
 	 */
-	fun addEdge(idSource: I, idTarget: I) = addEdge(
+	open fun addEdge(idSource: I, idTarget: I) = addEdge(
 		Edge(idSource, idTarget)
 	)
 
