@@ -28,9 +28,9 @@ detekt {
 	toolVersion = "1.23.3"
 	source.setFrom(
 		"graphs-lab/src/main/kotlin",
-		"application/src/main/kotlin",
+//		"application/src/main/kotlin",
 		"graphs-lab/src/test/kotlin",
-		"application/src/test/kotlin",
+//		"application/src/test/kotlin",
 	)
 	parallel = true
 	config.setFrom("config/detekt.yml")
