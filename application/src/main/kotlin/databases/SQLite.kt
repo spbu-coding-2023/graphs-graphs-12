@@ -11,14 +11,9 @@ import java.sql.*
 
 private val logger = KotlinLogging.logger { }
 
-class SqliteRepository(private val labelGraph: String) {
-
-	init {
-		logger.info { "Connected to database: $labelGraph." }
-	}
-
+class SqliteRepository {
 	fun writeDb(graphViewModel: GraphViewModel) {
-		val connection = DriverManager.getConnection("$DB_DRIVER:$labelGraph.db")
+		val connection = DriverManager.getConnection("$DB_DRIVER:${graphViewModel.graph.label}.db")
 			?: throw SQLException("Cannot connect to database.")
 
 		createDb(connection)
@@ -141,14 +136,14 @@ class SqliteRepository(private val labelGraph: String) {
 		}
 	}
 
-	fun loadGraph(labelGraph: String): GraphViewModel? {
+	fun loadGraph(pathToDB: String): GraphViewModel? {
 		var graphViewModel: GraphViewModel? = null
 
 		var resultGraphs: ResultSet? = null
 		var resultVertices: ResultSet? = null
 		var resultEdges: ResultSet? = null
 
-		DriverManager.getConnection("$DB_DRIVER:$labelGraph.db").use { connection ->
+		DriverManager.getConnection("$DB_DRIVER:$pathToDB.db").use { connection ->
 			val metaData = connection.metaData
 			val tables = metaData.getTables(null, null, "%", null)
 
@@ -237,9 +232,9 @@ class SqliteRepository(private val labelGraph: String) {
 					it.degree = vertex.degree
 				}
 
-				logger.info { "Loaded $labelGraph graph." }
+				logger.info { "Loaded $pathToDB graph." }
 			} catch (exception: Exception) {
-				logger.error(exception) { "Cannot load $labelGraph graph." }
+				logger.error(exception) { "Cannot load $pathToDB graph." }
 			} finally {
 				connection.close()
 			}
@@ -248,8 +243,8 @@ class SqliteRepository(private val labelGraph: String) {
 		return graphViewModel
 	}
 
-	fun clear(labelGraph: String) {
-		DriverManager.getConnection("$DB_DRIVER:$labelGraph.db").use { connection ->
+	fun clear(pathToDB: String) {
+		DriverManager.getConnection("$DB_DRIVER:$pathToDB.db").use { connection ->
 			val metaData = connection.metaData
 			val tables = metaData.getTables(null, null, "%", null)
 
