@@ -23,9 +23,14 @@ import androidx.compose.ui.unit.Dp
 import themes.*
 import viewmodels.pages.SettingsPageViewModel
 
+data class MenuItemModel(
+	val title: String,
+	val currentIndex: Int = 0,
+	val values: List<String>
+)
+
 @Composable
 fun SettingsPage(
-	viewModel: SettingsPageViewModel,
 	isDarkMode: MutableState<Boolean>,
 	currentFontSize: MutableState<JetSize>,
 	currentStyle: MutableState<JetStyle>,
@@ -181,23 +186,26 @@ fun SettingsPage(
 					title = "Style",
 					currentIndex = when (currentStyle.value) {
 						JetStyle.Black -> 0
-						JetStyle.Blue -> 1
-						JetStyle.Orange -> 2
-						JetStyle.Purple -> TODO()
-						JetStyle.Red -> TODO()
-						JetStyle.Green -> TODO()
+						JetStyle.White -> 1
+						JetStyle.Purple -> 2
+						JetStyle.Orange -> 3
+						JetStyle.Pink -> 4
 					},
 					values = listOf(
 						"Black",
-						"Blue",
+						"White",
+						"Purple",
 						"Orange",
+						"Pink"
 					)
 				),
 				onItemSelected = {
 					when (it) {
 						0 -> currentStyle.value = JetStyle.Black
-						1 -> currentStyle.value = JetStyle.Blue
-						2 -> currentStyle.value = JetStyle.Orange
+						1 -> currentStyle.value = JetStyle.White
+						2 -> currentStyle.value = JetStyle.Purple
+						3 -> currentStyle.value = JetStyle.Orange
+						4 -> currentStyle.value = JetStyle.Pink
 						else -> throw NotImplementedError("No valid value for this $it")
 					}
 				}
@@ -206,12 +214,6 @@ fun SettingsPage(
 		}
 	}
 }
-
-data class MenuItemModel(
-	val title: String,
-	val currentIndex: Int = 0,
-	val values: List<String>
-)
 
 @Composable
 internal fun MenuItem(

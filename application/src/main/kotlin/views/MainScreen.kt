@@ -64,7 +64,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
 						viewModel.sideMenuViewModel.changeVisibility("Representation", true)
 						viewModel.sideMenuViewModel.changeVisibility("Save", true)
 						SettingsPage(
-							viewModel.settingsPageViewModel, isDarkMode,
+							isDarkMode,
 							currentFontSize,
 							currentStyle,
 							currentCornersStyle,
