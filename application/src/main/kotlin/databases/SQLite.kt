@@ -14,6 +14,8 @@ private val logger = KotlinLogging.logger { }
 
 class SqliteRepository {
 	fun writeDb(graphViewModel: GraphViewModel, folderPath: String) {
+		clear(graphViewModel.graph.label)
+
 		val connection = DriverManager.getConnection(
 			"$DB_DRIVER:${File(folderPath, "${graphViewModel.graph.label}.db").absolutePath}"
 		) ?: throw SQLException("Cannot connect to database.")
@@ -32,7 +34,7 @@ class SqliteRepository {
 			try {
 				statement.execute(
 					"CREATE TABLE if not exists graphs(" +
-						"name text PRIMARY KEY, " +
+						"name text, " +
 						"type string, " +
 						"isWeighted int, " +
 						"isDirected int, " +
@@ -41,7 +43,7 @@ class SqliteRepository {
 				)
 				statement.execute(
 					"CREATE TABLE if not exists vertices(" +
-						"id text PRIMARY KEY, " +
+						"id text, " +
 						"xPos real, " +
 						"yPos real, " +
 						"color int, " +
@@ -245,7 +247,7 @@ class SqliteRepository {
 		return graphViewModel
 	}
 
-	fun clear(pathToDB: String) {
+	private fun clear(pathToDB: String) {
 		DriverManager.getConnection("$DB_DRIVER:$pathToDB.db").use { connection ->
 			val metaData = connection.metaData
 			val tables = metaData.getTables(null, null, "%", null)
@@ -256,7 +258,6 @@ class SqliteRepository {
 
 			while (tables.next()) {
 				val tableName = tables.getString("TABLE_NAME")
-				println(tableName)
 
 				if (tableName == "graphs") {
 					deleteGraphStatement.execute()

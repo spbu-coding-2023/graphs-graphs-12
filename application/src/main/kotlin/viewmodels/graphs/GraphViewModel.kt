@@ -81,8 +81,10 @@ class GraphViewModel(
 				_edges.remove(it.key)
 				if (it.key.idSource == id) {
 					it.value.target.degree--
+					if (!graph.isDirected) it.value.source.degree--
 				} else {
 					it.value.source.degree--
+					if (!graph.isDirected) it.value.target.degree--
 				}
 			}
 		}
@@ -145,7 +147,7 @@ class GraphViewModel(
 
 	fun removeEdge(idSource: VertexID, idTarget: VertexID) {
 		_vertices[idSource]!!.degree--
-		_vertices[idTarget]!!.degree--
+		if (!graph.isDirected) _vertices[idTarget]!!.degree--
 		_edges.remove(WeightedEdge(idSource, idTarget, 1.0))
 		if (!graph.isDirected) _edges.remove(WeightedEdge(idTarget, idSource, 1.0))
 		graph.removeEdge(idSource, idTarget)
