@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -319,7 +320,7 @@ fun showAddItem(graphViewModel: GraphViewModel, isShownWeigh: MutableState<Boole
 				.weight(1f)
 				.height(145.dp)
 		) {
-			HorizontalPager(
+			VerticalPager(
 				modifier = Modifier
 					.fillMaxSize()
 					.clip(JetTheme.shapes.cornerStyle)
@@ -467,9 +468,11 @@ fun showMenuVertex(graphViewModel: GraphViewModel, isShownId: Boolean) {
 			ButtonCustom(creationVertex, "Create", Modifier.padding(paddingCustom))
 		}
 		Icon(
-			imageVector = Icons.Default.ArrowRight,
+			imageVector = Icons.Default.ArrowDownward,
 			contentDescription = "Show the menu edge",
-			modifier = Modifier.align(Alignment.BottomEnd)
+			modifier = Modifier
+				.padding(paddingCustom)
+				.align(Alignment.BottomEnd)
 		)
 	}
 }
