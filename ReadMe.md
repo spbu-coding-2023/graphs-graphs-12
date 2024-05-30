@@ -8,33 +8,33 @@
 <h1 align="center">Graph Visualizer</h1>
 
 ## Description
-The `Graph Visualizer` program provides a GUI for exploring graphs using appropriate algorithms. 
+The `Graph Visualizer` provides a graphical user interface for visualizing graphs, analyzing them using a variety of algorithms, and saving the results.
 
 ## Provided algorithms
-* Basic algorithms
-  - [ ] graph layouts on the plane
-  - [ ] highlighting key vertices
-  - [ ] search for communities
-* Classical algorithms
-  - [ ] isolation of strongly connected components (directed graph)
-  - [ ] finding bridges (undirected graph)
-  - [ ] finding cycles for a given vertex
-  - [ ] constructing a minimum spanning tree (undirected graph)
-  - [ ] finding the shortest path between a pair of vertices using Dijkstra's algorithm
-  - [ ] finding the shortest path between a pair of vertices using the Ford-Bellman algorithm
+### Basic algorithms
+  - [x] [ForceAtlas2](https://medialab.sciencespo.fr/publications/Jacomy_Heymann_Venturini-Force_Atlas2.pdf) - to lay out a graph on a plane
+  - [x] [LeaderRank](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0021202) - to highlight key vertices
+  - [x] [Louvain clustering method](https://en.wikipedia.org/wiki/Louvain_method) - to find communities
+### Classical algorithms
+  - [x] [Tarjan's strongly connected components](https://www.geeksforgeeks.org/tarjan-algorithm-find-strongly-connected-components/)
+  - [x] [Tarjan's bridge-finding](https://en.wikipedia.org/wiki/Bridge_(graph_theory))
+  - [x] [Finding cycles for a given vertex](https://neerc.ifmo.ru/wiki/index.php?title=Использование_обхода_в_глубину_для_поиска_цикла)
+  - [x] [Kruskal's algorithm](https://en.wikipedia.org/wiki/Kruskal%27s_algorithm)
+  - [x] [Prim's algorithm](https://en.wikipedia.org/wiki/Prim%27s_algorithm)
+  - [x] [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
+  - [x] [Bellman-Ford algorithm](https://ru.wikipedia.org/wiki/Алгоритм_Беллмана_—_Форда)
 
 ## Saving graphs
-* reading and saving a graph at file in `csv` or `json` format
-* reading and saving a graph at SQLite DB
-* reading and saving a graph at Neo4j DB
+The application provides tools for saving and loading graphs:
+* file in `JSON` format
+* `SQLite DB`
+* `Neo4j DB`
 
 ## Getting started
 To run building application execute command:
 ```bash
-./gradlew build
+./gradlew run
 ```
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Authors
 

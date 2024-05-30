@@ -8,12 +8,12 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 class TestWeightedGraph {
-	private val GRAPH_LABEL = "weighted-graph"
-	private lateinit var graph: WeightedGraph<Int, Int>
+	private val graphLabel = "weighted-graph"
+	private lateinit var graph: WeightedGraph<Int>
 
 	@BeforeEach
 	fun setUp() {
-		graph = WeightedGraph(GRAPH_LABEL)
+		graph = WeightedGraph(graphLabel)
 	}
 
 	@Test
@@ -21,18 +21,18 @@ class TestWeightedGraph {
 	fun testAddInvalidEdgeGraph() {
 		Assertions.assertThrows(
 			AssertionError::class.java
-		) { fillGraphEdges(graph, listOf(Triple(1, 2, 1))) }
+		) { fillGraphEdges(graph, listOf(Triple(1, 2, 1.0))) }
 		graph.addVertex(1)
 		Assertions.assertThrows(
 			AssertionError::class.java
-		) { fillGraphEdges(graph, listOf(Triple(1, 2, -1))) }
+		) { fillGraphEdges(graph, listOf(Triple(1, 2, -1.0))) }
 	}
 
 	@Test
 	@DisplayName("empty graph to string method")
 	fun testEmptyGraphToString() {
 		Assertions.assertEquals(
-			"${graph.javaClass.name}(label = $GRAPH_LABEL, vertices = [], edges = [])",
+			"${graph.javaClass.name}(label = $graphLabel, vertices = [], edges = [])",
 			graph.toString()
 		)
 	}
@@ -44,15 +44,14 @@ class TestWeightedGraph {
 		fillGraphEdges(
 			graph,
 			listOf(
-				Triple(1, 1, -1),
-				Triple(2, 3, 5),
+				Triple(1, 1, -1.0),
+				Triple(2, 3, 5.0),
 			)
 		)
-		val edgesView = "[{1, 1, -1}, {2, 3, 5}, {3, 2, 5}]"
+		val edgesView = "[{1, 1, -1.0}, {2, 3, 5.0}, {3, 2, 5.0}]"
 		Assertions.assertEquals(
-			"${graph.javaClass.name}(label = $GRAPH_LABEL, vertices = [1, 2, 3, 4, 5], edges = $edgesView)",
+			"${graph.javaClass.name}(label = $graphLabel, vertices = [1, 2, 3, 4, 5], edges = $edgesView)",
 			graph.toString()
 		)
 	}
-
 }

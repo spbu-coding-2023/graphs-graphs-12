@@ -68,6 +68,11 @@ def parse_args(args: list[str]) -> argparse.Namespace:
 
     return parser.parse_args(args)
 
+def set_as_even_number(number: int):
+    if (number % 2 == 0):
+        return number
+    return number + 1
+
 
 def read_csv(namespace: argparse.Namespace) -> typing.Optional[dict]:
     table = []
@@ -106,8 +111,8 @@ def read_csv(namespace: argparse.Namespace) -> typing.Optional[dict]:
                 table.append(row_info)
     return {
         "table": table,
-        "max_packages_name_length": max_packages_name_length,
-        "max_classes_name_length": max_classes_name_length
+        "max_packages_name_length": set_as_even_number(max_packages_name_length),
+        "max_classes_name_length": set_as_even_number(max_classes_name_length)
     }
 
 

@@ -3,7 +3,6 @@ package graphs_lab.core.graphs
 import graphs_lab.core.edges.Edge
 import graphs_lab.core.Vertex
 
-
 /**
  * Provides an abstract representation of a graph structure.
  *
@@ -71,7 +70,7 @@ abstract class Graph<I, E : Edge<I>>(
 	}
 
 	/**
-	 * Аinds all edges coming from a vertex with the ID
+	 * Аinds all edges coming from a vertex with the ID.
 	 *
 	 * @param id the identifier of the source vertex
 	 * @return set if edges by type [E], if vertex is not contained in the graph return empty set
@@ -147,10 +146,10 @@ abstract class Graph<I, E : Edge<I>>(
 	 * @throws AssertionError if graph is not at auto add vertex mode and vertex with [id] not contains in graph
 	 */
 	private fun assertContainsVertex(id: I) {
-		if (!isAutoAddVertex && !containsVertex(id)) throw AssertionError(
+		assert(isAutoAddVertex || containsVertex(id)) {
 			"Graph $label is not auto added. Trying add edge with vertex $id that is not in it"
-		)
-		else addVertex(id)
+		}
+		addVertex(id)
 	}
 
 	/**
@@ -183,5 +182,4 @@ abstract class Graph<I, E : Edge<I>>(
 	 * @return the edge with its source and target vertices swapped
 	 */
 	protected abstract fun reverseEdge(edge: E): E
-
 }

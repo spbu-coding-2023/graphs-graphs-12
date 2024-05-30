@@ -97,5 +97,4 @@ class TestEdge {
 		hashCode = 31 * hashCode + idTarget.hashCode()
 		Assertions.assertEquals(hashCode, edge.hashCode())
 	}
-
 }
