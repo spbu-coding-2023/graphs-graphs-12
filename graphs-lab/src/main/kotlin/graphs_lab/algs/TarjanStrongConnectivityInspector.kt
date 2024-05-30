@@ -12,7 +12,6 @@ import kotlin.math.min
  * Tarjan's strongly connected components algorithm is an algorithm in graph theory
  * for finding the strongly connected components (SCCs) of a directed graph.
  *
- * <p>
  * @references https://www.geeksforgeeks.org/tarjan-algorithm-find-strongly-connected-components/
  *
  * @param I the type of the vertex identifiers in the graph
