@@ -11,10 +11,10 @@ import graphs_lab.core.edges.Edge
  * @property isAutoAddVertex specifies whether new vertices should be automatically added when adding edges
  */
 open class UnweightedGraph<I>(
-	id: String,
+	label: String,
 	isDirected: Boolean = false,
 	isAutoAddVertex: Boolean = false
-) : Graph<I, Edge<I>>(id, isDirected, isAutoAddVertex) {
+) : Graph<I, Edge<I>>(label, isDirected, isAutoAddVertex) {
 
 	/**
 	 * Adds an unweighted edge between the vertices with the specified ids to the graph.

@@ -31,7 +31,7 @@ class TestDijkstraAlgorithm {
 		val graphDijkstra = DijkstraAlgorithm(graph)
 		Assertions.assertThrows(IllegalArgumentException::class.java) { graphDijkstra.getPath('1', '3') }
 
-		Assertions.assertEquals(graphDijkstra.getTable('1'), mutableMapOf('1' to Pair(null, 0.0), '2' to Pair('1', 3.0)))
+		Assertions.assertEquals(graphDijkstra.getTable('1'), mapOf('1' to Pair(null, 0.0), '2' to Pair('1', 3.0)))
 		Assertions.assertThrows(IllegalArgumentException::class.java) { graphDijkstra.getPath('1', '3') }
 		Assertions.assertThrows(IllegalArgumentException::class.java) { graphDijkstra.getWeightPath('1', '3') }
 	}
@@ -69,7 +69,7 @@ class TestDijkstraAlgorithm {
 				'3' to Pair(null, Double.POSITIVE_INFINITY)
 			)
 		)
-		Assertions.assertEquals(graphDijkstra.getPath('1', '2'), mutableListOf('1', '2'))
+		Assertions.assertEquals(graphDijkstra.getPath('1', '2'), listOf('1', '2'))
 		Assertions.assertEquals(graphDijkstra.getWeightPath('1', '2'), 3.0)
 	}
 
@@ -89,7 +89,7 @@ class TestDijkstraAlgorithm {
 				'3' to Pair(null, Double.POSITIVE_INFINITY)
 			)
 		)
-		Assertions.assertEquals(graphDijkstra.getPath('1', '2'), mutableListOf('1', '2'))
+		Assertions.assertEquals(graphDijkstra.getPath('1', '2'), listOf('1', '2'))
 		Assertions.assertEquals(graphDijkstra.getWeightPath('1', '2'), 3.0)
 
 		Assertions.assertEquals(
@@ -127,7 +127,7 @@ class TestDijkstraAlgorithm {
 				'F' to Pair('B', 11.0)
 			)
 		)
-		Assertions.assertEquals(graphDijkstra.getPath('A', 'E'), mutableListOf('A', 'D', 'E'))
+		Assertions.assertEquals(graphDijkstra.getPath('A', 'E'), listOf('A', 'D', 'E'))
 		Assertions.assertEquals(graphDijkstra.getWeightPath('A', 'E'), 7.0)
 	}
 
@@ -155,7 +155,7 @@ class TestDijkstraAlgorithm {
 				'F' to Pair('B', 8.0)
 			)
 		)
-		Assertions.assertEquals(graphDijkstra.getPath('A', 'F'), mutableListOf('A', 'B', 'F'))
+		Assertions.assertEquals(graphDijkstra.getPath('A', 'F'), listOf('A', 'B', 'F'))
 		Assertions.assertEquals(graphDijkstra.getWeightPath('A', 'F'), 8.0)
 
 		Assertions.assertEquals(
@@ -169,7 +169,7 @@ class TestDijkstraAlgorithm {
 				'F' to Pair('C', 11.0)
 			)
 		)
-		Assertions.assertEquals(graphDijkstra.getPath('C', 'D'), mutableListOf('C', 'E', 'D'))
+		Assertions.assertEquals(graphDijkstra.getPath('C', 'D'), listOf('C', 'E', 'D'))
 		Assertions.assertEquals(graphDijkstra.getWeightPath('C', 'D'), 5.0)
 	}
 
@@ -200,13 +200,13 @@ class TestDijkstraAlgorithm {
 				'L' to Pair('C', 6.0)
 			)
 		)
-		Assertions.assertEquals(graphDijkstra.getPath('A', 'E'), mutableListOf('A', 'C', 'E'))
+		Assertions.assertEquals(graphDijkstra.getPath('A', 'E'), listOf('A', 'C', 'E'))
 		Assertions.assertEquals(graphDijkstra.getWeightPath('A', 'E'), 7.0)
 
 		Assertions.assertEquals(graphDijkstra.getPath('A', 'G'), null)
 		Assertions.assertEquals(graphDijkstra.getWeightPath('A', 'G'), Double.POSITIVE_INFINITY)
 
-		Assertions.assertEquals(graphDijkstra.getPath('F', 'G'), mutableListOf('F', 'G'))
+		Assertions.assertEquals(graphDijkstra.getPath('F', 'G'), listOf('F', 'G'))
 		Assertions.assertEquals(graphDijkstra.getPath('F', 'K'), null)
 
 		Assertions.assertEquals(graphDijkstra.getWeightPath('B', 'F'), Double.POSITIVE_INFINITY)

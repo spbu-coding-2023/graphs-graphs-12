@@ -12,10 +12,10 @@ import graphs_lab.core.edges.WeightedEdge
  * @property isAutoAddVertex specifies whether new vertices should be automatically added when adding edges
  */
 open class WeightedGraph<I>(
-	id: String,
+	label: String,
 	isDirected: Boolean = false,
 	isAutoAddVertex: Boolean = false
-) : Graph<I, WeightedEdge<I>>(id, isDirected, isAutoAddVertex) {
+) : Graph<I, WeightedEdge<I>>(label, isDirected, isAutoAddVertex) {
 
 	/**
 	 * Adds a weighted edge between the vertices with the specified ids and the specified weight to the graph.
