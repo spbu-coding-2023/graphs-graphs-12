@@ -49,7 +49,7 @@ object JetTheme {
 }
 
 enum class JetStyle {
-	Black, Blue, Orange, Purple, Red, Green
+	Black, White, Purple, Orange, Pink
 }
 
 enum class JetSize {

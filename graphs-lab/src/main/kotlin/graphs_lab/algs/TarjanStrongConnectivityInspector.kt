@@ -12,7 +12,6 @@ import kotlin.math.min
  * Tarjan's strongly connected components algorithm is an algorithm in graph theory
  * for finding the strongly connected components (SCCs) of a directed graph.
  *
- * <p>
  * @references https://www.geeksforgeeks.org/tarjan-algorithm-find-strongly-connected-components/
  *
  * @param I the type of the vertex identifiers in the graph
@@ -43,7 +42,7 @@ class TarjanStrongConnectivityInspector<I, E : Edge<I>>(val graph: Graph<I, E>) 
 	 * @return a map where keys - the index of each strongly connected component,
 	 * and values - sets of vertices belonging to each component
 	 */
-	fun stronglyConnectedComponents(): MutableMap<Int, MutableSet<I>> {
+	fun stronglyConnectedComponents(): Map<Int, Set<I>> {
 		// Mark all the vertices as not visited
 		graph.idVertices.forEach { discoveryTime[it] = -1 }
 		graph.idVertices.forEach { lowLink[it] = -1 }

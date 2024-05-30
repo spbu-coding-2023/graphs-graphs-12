@@ -3,7 +3,7 @@ package themes
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-val whiteCustom = Color(254, 249, 231) // todo(replace)
+val whiteCustom = Color(254, 249, 231)
 val colorVerticesStart = Color.Gray
 val colorEdgesStart = Color.Black
 
@@ -33,18 +33,34 @@ val blackDarkPalette = baseDarkPalette.copy(
 	tintColor = Color.Black
 )
 
-val blueLightPalette = baseLightPalette.copy(
-	tintColor = Color(8,37,103)
+val whiteLightPalette = baseLightPalette.copy(
+	tintColor = whiteCustom
 )
 
-val blueDarkPalette = baseDarkPalette.copy(
-	tintColor = Color(8,37,103)
+val whiteDarkPalette = baseDarkPalette.copy(
+	tintColor = whiteCustom
+)
+
+val purpleLightPalette = baseLightPalette.copy(
+	tintColor = Color(83, 55, 122)
+)
+
+val purpleDarkPalette = baseDarkPalette.copy(
+	tintColor = Color(83, 55, 122)
 )
 
 val orangeLightPalette = baseLightPalette.copy(
-	tintColor = Color(255,76,43)
+	tintColor = Color(255,176,46)
 )
 
 val orangeDarkPalette = baseDarkPalette.copy(
-	tintColor = Color(255,76,43)
+	tintColor = Color(255,176,46)
+)
+
+val pinkLightPalette = baseLightPalette.copy(
+	tintColor = Color(255,20,147)
+)
+
+val pinkDarkPalette = baseDarkPalette.copy(
+	tintColor = Color(255,20,147)
 )

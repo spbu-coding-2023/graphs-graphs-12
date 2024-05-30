@@ -151,7 +151,7 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 
 	fun save() {
 		val graph = _graph.value
-		if (graph != null) settings.saveGraph(this, dbType, File(dbPath).parent)
+		if (graph != null) settings.saveGraph(this, dbType, if (dbPath == "") "" else File(dbPath).parent)
 	}
 }
 

@@ -24,22 +24,20 @@ fun MainTheme(
 		true -> {
 			when (style) {
 				JetStyle.Black -> blackDarkPalette
-				JetStyle.Blue -> blueDarkPalette
+				JetStyle.White -> whiteDarkPalette
+				JetStyle.Purple -> purpleDarkPalette
 				JetStyle.Orange -> orangeDarkPalette
-				JetStyle.Purple -> TODO()
-				JetStyle.Red -> TODO()
-				JetStyle.Green -> TODO()
+				JetStyle.Pink -> pinkDarkPalette
 			}
 		}
 
 		false -> {
 			when (style) {
 				JetStyle.Black -> blackLightPalette
-				JetStyle.Blue -> blueLightPalette
+				JetStyle.White -> whiteLightPalette
+				JetStyle.Purple -> purpleLightPalette
 				JetStyle.Orange -> orangeLightPalette
-				JetStyle.Purple -> TODO()
-				JetStyle.Red -> TODO()
-				JetStyle.Green -> TODO()
+				JetStyle.Pink -> pinkLightPalette
 			}
 		}
 	}

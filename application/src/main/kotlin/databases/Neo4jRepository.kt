@@ -158,6 +158,7 @@ class Neo4jRepository : Closeable {
 				val vertex = vertexMap[it.id] ?: return@forEach
 				it.xPos = vertex.x.value.dp
 				it.yPos = vertex.y.value.dp
+				it.radius = vertex.radius
 				it.color = vertex.color
 				it.degree = vertex.degree
 			}
