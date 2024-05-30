@@ -131,7 +131,6 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 		),
 	)
 	val mapRepresentationModes: Map<String, (GraphPageViewModel) -> Unit> = mapOf(
-		"Central" to { graphPageViewModel -> graphPageViewModel.representationStrategy = AllCenterPlacementStrategy() },
 		"Random" to { graphPageViewModel -> graphPageViewModel.representationStrategy = RandomPlacementStrategy() },
 		"Circular" to { graphPageViewModel -> graphPageViewModel.representationStrategy = CircularPlacementStrategy() },
 		"Force-directed" to { graphPageViewModel ->
