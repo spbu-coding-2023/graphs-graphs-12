@@ -435,15 +435,24 @@ fun showMenuVertex(graphViewModel: GraphViewModel, isShownId: Boolean) {
 	var statusIdVertex by remember { mutableStateOf(false) }
 
 	val creationVertex = {
-		if (idVertex.value != "") {
-			if (graphViewModel.vertexType == VertexIDType.INT_TYPE && idVertex.value.all { it.isDigit() }) {
-				val id = VertexID(idVertex.value, graphViewModel.vertexType)
-				graphViewModel.addVertex(id)
+		var id: VertexID? = null
 
-				graphViewModel.vertices.find { it.id == id }!!.visibility = isShownId
+		if (idVertex.value != "") {
+			if (graphViewModel.vertexType == VertexIDType.STRING_TYPE) {
+				id = VertexID(idVertex.value, graphViewModel.vertexType)
 				statusIdVertex = false
-			} else statusIdVertex = true
+			} else {
+				if (idVertex.value.all { it.isDigit() } ) {
+					id = VertexID(idVertex.value, graphViewModel.vertexType)
+					statusIdVertex = false
+				} else statusIdVertex = true
+			}
 		} else statusIdVertex = true
+
+		if (id != null) {
+			graphViewModel.addVertex(id)
+			graphViewModel.vertices.find { it.id == id }!!.visibility = isShownId
+		}
 	}
 
 	Box(Modifier.fillMaxSize()) {
@@ -479,21 +488,27 @@ fun showMenuEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWeig
 		var idTarget: VertexID? = null
 
 		if (idVertexSource.value != "") {
-			if (graphViewModel.vertexType == VertexIDType.INT_TYPE) {
-				if (idVertexSource.value.all { it.isDigit() }) {
+			if (graphViewModel.vertexType == VertexIDType.STRING_TYPE) {
+				idSource = VertexID(idVertexSource.value, graphViewModel.vertexType)
+				statusIdVertexSource = false
+			} else {
+				if (idVertexSource.value.all { it.isDigit() } ) {
 					idSource = VertexID(idVertexSource.value, graphViewModel.vertexType)
 					statusIdVertexSource = false
 				} else statusIdVertexSource = true
-			} else idSource = VertexID(idVertexSource.value, graphViewModel.vertexType)
+			}
 		} else statusIdVertexSource = true
 
 		if (idVertexTarget.value != "" && idVertexTarget.value != idVertexSource.value) {
-			if (graphViewModel.vertexType == VertexIDType.INT_TYPE) {
-				if (idVertexTarget.value.all { it.isDigit() }) {
+			if (graphViewModel.vertexType == VertexIDType.STRING_TYPE) {
+				idTarget = VertexID(idVertexTarget.value, graphViewModel.vertexType)
+				statusIdVertexTarget = false
+			} else {
+				if (idVertexTarget.value.all { it.isDigit() } ) {
 					idTarget = VertexID(idVertexTarget.value, graphViewModel.vertexType)
 					statusIdVertexTarget = false
 				} else statusIdVertexTarget = true
-			} else idTarget = VertexID(idVertexTarget.value, graphViewModel.vertexType)
+			}
 		} else statusIdVertexTarget = true
 
 		if (graphViewModel.isUnweighted) {
