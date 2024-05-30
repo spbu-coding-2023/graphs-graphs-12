@@ -7,14 +7,16 @@ import models.VertexID
 import mu.KotlinLogging
 import utils.VertexIDType
 import viewmodels.graphs.GraphViewModel
+import java.io.File
 import java.sql.*
 
 private val logger = KotlinLogging.logger { }
 
 class SqliteRepository {
-	fun writeDb(graphViewModel: GraphViewModel) {
-		val connection = DriverManager.getConnection("$DB_DRIVER:${graphViewModel.graph.label}.db")
-			?: throw SQLException("Cannot connect to database.")
+	fun writeDb(graphViewModel: GraphViewModel, folderPath: String) {
+		val connection = DriverManager.getConnection(
+			"$DB_DRIVER:${File(folderPath, "${graphViewModel.graph.label}.db").absolutePath}"
+		) ?: throw SQLException("Cannot connect to database.")
 
 		createDb(connection)
 		addGraph(graphViewModel, connection)
@@ -143,7 +145,7 @@ class SqliteRepository {
 		var resultVertices: ResultSet? = null
 		var resultEdges: ResultSet? = null
 
-		DriverManager.getConnection("$DB_DRIVER:$pathToDB.db").use { connection ->
+		DriverManager.getConnection("$DB_DRIVER:$pathToDB").use { connection ->
 			val metaData = connection.metaData
 			val tables = metaData.getTables(null, null, "%", null)
 

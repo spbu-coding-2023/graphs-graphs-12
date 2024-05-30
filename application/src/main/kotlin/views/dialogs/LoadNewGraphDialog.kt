@@ -177,7 +177,21 @@ fun LoadNewGraphDialog(viewModel: LoadNewGraphDialogViewModel) {
 									}
 								}
 							}
-							else -> println("Unsupportec type: ${viewModel.selectedLoadType}")
+							GraphSavingType.SQLITE_DB -> {
+								coroutineScope.launch {
+									isLoad = viewModel.settings.loadGraphFromSQLite(
+										viewModel.homePageViewModel.graphPage,
+										viewModel.loadFile.value
+									)
+									if (isLoad) {
+										viewModel.homePageViewModel.loadGraphInfo(
+											GraphSavingType.SQLITE_DB,
+											viewModel.loadFile.value
+										)
+										viewModel.homePageViewModel.isOpenDialogOfLoadingNewGraph = false
+									}
+								}
+							}
 						}
 					}
 				) {

@@ -2,6 +2,7 @@ package models
 
 import databases.GraphJSONDatabase
 import databases.Neo4jRepository
+import databases.SqliteRepository
 import models.utils.GraphInfo
 import org.neo4j.driver.exceptions.ServiceUnavailableException
 import utils.GraphSavingType
@@ -11,8 +12,9 @@ import viewmodels.pages.GraphPageViewModel
 import java.io.File
 
 class SettingsModel {
-	val jsonDB = GraphJSONDatabase()
-	val neo4jDB = Neo4jRepository()
+	private val jsonDB = GraphJSONDatabase()
+	private val neo4jDB = Neo4jRepository()
+	private val sqliteDB = SqliteRepository()
 	var isNeo4jConnected = false
 	val graphNameRegEx = Regex("[a-zA-Z][a-zA-Z0-9_-]*")
 
@@ -33,7 +35,6 @@ class SettingsModel {
 		savingType: GraphSavingType,
 		folderPath: String
 	): GraphInfo? {
-		println("Save: $savingType $folderPath")
 		val graphViewModel = graphPageViewModel.graphViewModel ?: return null
 		when (savingType) {
 			GraphSavingType.LOCAL_FILE -> saveGraphByJSON(graphViewModel, folderPath)
@@ -41,31 +42,55 @@ class SettingsModel {
 				if (!isNeo4jConnected) return null
 				saveGraphByNeo4j(graphPageViewModel)
 			}
-			else -> {
-				println("Unsupported saving type: ${savingType.label}")
-				return null
-			}
+			GraphSavingType.SQLITE_DB -> saveGraphBySQLite(graphViewModel, folderPath)
 		}
 		return GraphInfo(
 			graphViewModel.graph.label,
 			folderPath,
 			savingType,
 			onClick = { name, folder, saveType ->
+				val path = File(folder, name).absolutePath
 				when (saveType) {
 					GraphSavingType.LOCAL_FILE -> {
-						loadGraphFromJSON(graphPageViewModel, File(folder, name).absolutePath)
+						loadGraphFromJSON(graphPageViewModel, path)
 						graphPageViewModel.dbType = saveType
-						graphPageViewModel.dbPath = File(folder, name).absolutePath
+						graphPageViewModel.dbPath = path
 					}
 					GraphSavingType.NEO4J_DB -> {
 						loadGraphFromNEO4J(graphPageViewModel)
 						graphPageViewModel.dbType = saveType
 						graphPageViewModel.dbPath = ""
 					}
-					else -> println("Unsupported saving type: ${savingType.label}")
+					GraphSavingType.SQLITE_DB -> {
+						loadGraphFromSQLite(graphPageViewModel, path)
+						graphPageViewModel.dbType = saveType
+						graphPageViewModel.dbPath = path
+					}
 				}
 			}
 		)
+	}
+
+	fun loadGraphFromSQLite(graphPageViewModel: GraphPageViewModel, path: String): Boolean {
+		try {
+			val graphViewModel = sqliteDB.loadGraph(path)
+			graphPageViewModel.graphViewModel = graphViewModel
+			graphPageViewModel.indexSelectedPage.value = PageType.GRAPH_VIEW_PAGE.ordinal
+			graphPageViewModel.dbType = GraphSavingType.SQLITE_DB
+			graphPageViewModel.dbPath = path
+		} catch (ex: Exception) {
+			println("Load JSON error: ${ex.message}")
+			return false
+		}
+		return true
+	}
+
+	fun saveGraphBySQLite(graphViewModel: GraphViewModel, folderPath: String) {
+		try {
+			sqliteDB.writeDb(graphViewModel, folderPath)
+		} catch (ex: Exception) {
+			println("Save SQLite error: ${ex.message}")
+		}
 	}
 
 	fun loadGraphFromNEO4J(graphPageViewModel: GraphPageViewModel): Boolean {
@@ -111,7 +136,7 @@ class SettingsModel {
 	}
 
 	private fun saveGraphByJSON(graphViewModel: GraphViewModel, folderPath: String) {
-		val file = File(folderPath, graphViewModel.graph.label)
+		val file = File(folderPath, "${graphViewModel.graph.label}.json")
 		try {
 			jsonDB.save(file, graphViewModel)
 		} catch (ex: Exception) {

@@ -108,7 +108,11 @@ class HomePageViewModel(
 							graphPageViewModel.dbType = saveType
 							graphPageViewModel.dbPath = ""
 						}
-						else -> println("Unsupported saving type: ${savingType.label}")
+						GraphSavingType.SQLITE_DB -> {
+							settings.loadGraphFromSQLite(graphPageViewModel, path)
+							graphPageViewModel.dbType = saveType
+							graphPageViewModel.dbPath = path
+						}
 					}
 				}
 			)
