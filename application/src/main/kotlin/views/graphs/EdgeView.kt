@@ -37,7 +37,7 @@ fun EdgeView(edgeViewModel: EdgeViewModel, center: Offset, zoomAnimated: Float, 
 
 		if (graphViewModel.graph.isDirected) {
 			val angle = Math.PI / 10
-			val lengthArrow = 20f
+			val lengthArrow = 20f * zoomAnimated
 			val radius = edgeViewModel.target.radius * zoomAnimated
 
 			val vectorSEX = endX - startX

@@ -47,7 +47,11 @@ fun GraphView(
 		.clip(JetTheme.shapes.cornerStyle)
 		.pointerInput(Unit) {
 			detectDragGestures(PointerMatcher.Primary) {
-				center += it * (1 / zoom)
+				if (1 / zoom >= 1) {
+					center += it * (1 / zoom)
+				} else {
+					center -= it * (1 / zoom)
+				}
 			}
 		}
 		.onPointerEvent(PointerEventType.Scroll) {
