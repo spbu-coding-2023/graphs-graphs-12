@@ -15,15 +15,7 @@ import viewmodels.graphs.GraphViewModel
 import viewmodels.pages.GraphPageViewModel
 import java.io.Closeable
 
-data class VertexData(
-	val x: Dp,
-	val y: Dp,
-	val radius: Dp,
-	val color: Color,
-	val degree: Int
-)
-
-class Neo4jRepository() : Closeable {
+class Neo4jRepository : Closeable {
 	private lateinit var driver: Driver
 	private lateinit var session: Session
 
