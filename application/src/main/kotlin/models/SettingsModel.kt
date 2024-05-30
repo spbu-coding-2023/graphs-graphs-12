@@ -99,7 +99,8 @@ class SettingsModel {
 			return false
 		}
 		try {
-			neo4jDB.writeData(graphPageViewModel)
+			neo4jDB.readData(graphPageViewModel)
+			graphPageViewModel.indexSelectedPage.value = PageType.GRAPH_VIEW_PAGE.ordinal
 			graphPageViewModel.dbType = GraphSavingType.NEO4J_DB
 			graphPageViewModel.dbPath = ""
 		} catch (ex: Exception) {

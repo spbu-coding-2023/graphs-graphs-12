@@ -94,7 +94,7 @@ class HomePageViewModel(
 		_previouslyLoadedGraph.add(
 			GraphInfo(
 				graphView.graph.label,
-				file.parent,
+				if (path == "") "" else file.parent,
 				savingType,
 				onClick = { name, folder, saveType ->
 					when (saveType) {
