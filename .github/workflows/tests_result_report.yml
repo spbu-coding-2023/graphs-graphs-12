@@ -1,0 +1,26 @@
+name: Test Result Report
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ main, develop ]
+
+
+jobs:
+  tests:
+    name: Load tests results
+    runs-on: ubuntu-latest
+    permissions: write-all
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build and test
+        run: ./gradlew test
+        continue-on-error: true
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: ./graphs-lab/build/test-results/**/*.xml

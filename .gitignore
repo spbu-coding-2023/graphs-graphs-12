@@ -1,0 +1,16 @@
+### Gradle console-app generated template
+# Ignore Gradle project-specific cache directory
+.gradle/
+
+# Ignore Gradle build output directory
+*build/
+
+### VSCode Template
+.vscode/
+
+### IntelliJ IDEA Template
+.idea/
+*.iml
+
+### Apple MacOS folder attributes
+*.DS_Store
