@@ -23,6 +23,8 @@ fun <I, E : Edge<I>> louvainClusteringMethod(graph: Graph<I, E>): Pair<SetPartit
 
 /**
  * Louvain clustering method implementation with custom partition.
+ * If graph not contains edges than or sum of its weight is `0.0`
+ * than result of method will be [Double.NaN] and [partition] is not changed.
  *
  * See more: [Wiki](https://en.wikipedia.org/wiki/Louvain_method).
  *
@@ -34,6 +36,7 @@ fun <I, E : Edge<I>> louvainClusteringMethod(graph: Graph<I, E>): Pair<SetPartit
  */
 fun <I, E : Edge<I>> louvainClusteringMethod(graph: Graph<I, E>, partition: SetPartition<I>): Double {
 	val modularityEvaluator = GraphModularityEvaluator(graph)
+	if (doubleEquality(modularityEvaluator.module, 0.0)) return Double.NaN
 	var modularity = modularityEvaluator.evaluateModularity(partition)
 	val minModularityChange = 0.03
 	while (true) {

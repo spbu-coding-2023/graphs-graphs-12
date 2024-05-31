@@ -17,7 +17,7 @@ import graphs_lab.core.graphs.Graph
 class GraphModularityEvaluator<I, E : Edge<I>>(graph: Graph<I, E>) {
 	private val adjacencyMatrix = WeightedAdjacencyMatrix(graph)
 	private val verticesNesting = mutableMapOf<I, Double>()
-	private val module: Double = adjacencyMatrix.totalWeight / 2
+	val module: Double = adjacencyMatrix.totalWeight / 2
 
 	/**
 	 * Evaluate modularity for graph partition.
