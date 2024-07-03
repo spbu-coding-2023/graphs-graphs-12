@@ -48,18 +48,16 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 		AlgorithmButton(
 			"Strongly Connected Component",
 			{ graphViewModel, _ ->
-				if (graphViewModel.graph.isDirected) {
-					graphViewModel.parseTarjanStrongConnectivityAlgorithm()
-				}
-			}
+				graphViewModel.parseTarjanStrongConnectivityAlgorithm()
+			},
+			directionalRequirement = true
 		),
 		AlgorithmButton(
 			"Bridges",
 			{ graphViewModel, _ ->
-				if (!graphViewModel.graph.isDirected) {
-					graphViewModel.parseTarjanBridgeFinding()
-				}
-			}
+				graphViewModel.parseTarjanBridgeFinding()
+			},
+			nonDirectionalRequirement = true
 		),
 		AlgorithmButton(
 			"Cycles",
@@ -102,18 +100,16 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 		AlgorithmButton(
 			"Minimum Spanning Tree (Kruskal)",
 			{ graphViewModel, _ ->
-				if (!graphViewModel.graph.isDirected) {
-					graphViewModel.parseKruskalAlgorithm()
-				}
-			}
+				graphViewModel.parseKruskalAlgorithm()
+			},
+			nonDirectionalRequirement = true
 		),
 		AlgorithmButton(
 			"Minimum Spanning Tree (Prim)",
 			{ graphViewModel, _ ->
-				if (!graphViewModel.graph.isDirected) {
-					graphViewModel.parsePrimAlgorithm()
-				}
-			}
+				graphViewModel.parsePrimAlgorithm()
+			},
+			nonDirectionalRequirement = true
 		),
 		AlgorithmButton(
 			"Shortest Path (Bellman)",

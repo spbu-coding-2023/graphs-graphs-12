@@ -11,7 +11,9 @@ data class AlgorithmButton(
 	val onRun: (GraphViewModel, List<VertexID>) -> Unit,
 	val dropDownMenuContext: @Composable ((AlgorithmButton) -> Unit)? = null,
 	val isRun: MutableState<Boolean> = mutableStateOf(false),
-	val inputs: MutableState<List<String>> = mutableStateOf(listOf())
+	val inputs: MutableState<List<String>> = mutableStateOf(listOf()),
+	val directionalRequirement: Boolean = false,
+	val nonDirectionalRequirement: Boolean = false
 ) {
 	override fun toString(): String {
 		return "AlgorithmButton(label='$label')"
