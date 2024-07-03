@@ -91,12 +91,12 @@ class TestLeaderRank {
 		 * C
 		 */
 		graph.addEdge('A', 'B', 5.0)
-		graph.addEdge('A', 'C', 2.0)
+		graph.addEdge('A', 'C', -2.0)
 		graph.addEdge('C', 'B', 52.0)
 
 		val result = Array(4) { DoubleArray(4) { 0.0 } }
 		result[0][1] = 5.0
-		result[0][2] = 2.0
+		result[2][0] = 2.0
 		result[2][1] = 52.0
 		for (i in 0..2) {
 			result[i][3] = 1.0
