@@ -3,10 +3,41 @@ package graphs_lab.algs
 import graphs_lab.core.graphs.UnweightedGraph
 import graphs_lab.algs.assistants.LeaderRankAssistant
 import graphs_lab.core.graphs.WeightedGraph
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 class TestLeaderRank {
+
+	@Test
+	@DisplayName("unweighted graph without edges")
+	fun testUnweightedGraphWithoutEdges() {
+		val graph = UnweightedGraph<Char>("1", isDirected = true, isAutoAddVertex = false)
+		graph.addVertex('A')
+		graph.addVertex('B')
+		graph.addVertex('C')
+
+		val result = mutableMapOf('A' to 1.0, 'B' to 1.0, 'C' to 1.0)
+
+		val assistant = LeaderRank(graph)
+		val scores = assistant.getVerticesScores()
+		Assertions.assertEquals(scores, result)
+	}
+
+	@Test
+	@DisplayName("weighted graph without edges")
+	fun testWeightedGraphWithoutEdges() {
+		val graph = WeightedGraph<Char>("1", isDirected = true, isAutoAddVertex = false)
+		graph.addVertex('A')
+		graph.addVertex('B')
+		graph.addVertex('C')
+
+		val result = mutableMapOf('A' to 1.0, 'B' to 1.0, 'C' to 1.0)
+
+		val assistant = LeaderRank(graph)
+		val scores = assistant.getVerticesScores()
+		Assertions.assertEquals(scores, result)
+	}
 
 	@Test
 	@DisplayName("vertex indexing")
