@@ -12,6 +12,8 @@
 The `Graph Visualizer` provides a graphical user interface for visualizing graphs, analyzing them using a variety of
 algorithms, and saving the results.
 
+<img alt="GraphViewPage" src="graphs-lab/src/main/resources/GraphViewPage.png" width="1000" align="center">
+
 ## Provided algorithms
 
 ### Basic algorithms
