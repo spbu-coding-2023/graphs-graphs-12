@@ -3,7 +3,6 @@ package views.pages
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,6 +28,7 @@ import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
 import viewmodels.pages.GraphPageViewModel
 import views.graphs.GraphView
+import views.graphs.colorChangeFlag
 
 @Composable
 fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
@@ -90,6 +90,8 @@ fun IconResetGraph(
 	Column(modifierBox) {
 		IconButton(
 			onClick = {
+				colorChangeFlag.value = true
+
 				graphViewModel.vertices.forEach {
 					it.radius = radiusVerticesStart
 					it.color = colorVerticesStart
@@ -443,7 +445,7 @@ fun showMenuVertex(graphViewModel: GraphViewModel, isShownId: Boolean) {
 				id = VertexID(idVertex.value, graphViewModel.vertexType)
 				statusIdVertex = false
 			} else {
-				if (idVertex.value.all { it.isDigit() } ) {
+				if (idVertex.value.all { it.isDigit() }) {
 					id = VertexID(idVertex.value, graphViewModel.vertexType)
 					statusIdVertex = false
 				} else statusIdVertex = true
@@ -495,7 +497,7 @@ fun showMenuEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWeig
 				idSource = VertexID(idVertexSource.value, graphViewModel.vertexType)
 				statusIdVertexSource = false
 			} else {
-				if (idVertexSource.value.all { it.isDigit() } ) {
+				if (idVertexSource.value.all { it.isDigit() }) {
 					idSource = VertexID(idVertexSource.value, graphViewModel.vertexType)
 					statusIdVertexSource = false
 				} else statusIdVertexSource = true
@@ -507,7 +509,7 @@ fun showMenuEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWeig
 				idTarget = VertexID(idVertexTarget.value, graphViewModel.vertexType)
 				statusIdVertexTarget = false
 			} else {
-				if (idVertexTarget.value.all { it.isDigit() } ) {
+				if (idVertexTarget.value.all { it.isDigit() }) {
 					idTarget = VertexID(idVertexTarget.value, graphViewModel.vertexType)
 					statusIdVertexTarget = false
 				} else statusIdVertexTarget = true
@@ -675,7 +677,7 @@ fun TextFieldItem(string: MutableState<String>, status: Boolean, label: String, 
 		isError = status,
 		colors = TextFieldDefaults.textFieldColors(
 			focusedIndicatorColor = Color.Black,
-			focusedLabelColor = Color.Black	,
+			focusedLabelColor = Color.Black,
 			cursorColor = JetTheme.colors.tintColor,
 			errorIndicatorColor = Color(176, 0, 0) // Red
 		)

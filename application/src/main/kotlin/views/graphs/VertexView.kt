@@ -8,8 +8,10 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.isShiftPressed
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.pointer.pointerInput
@@ -22,6 +24,9 @@ import utils.representation.ForceDirectedPlacementStrategy
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
 import windowSizeStart
+
+private var curVertexColor: Color = colorVerticesStart
+internal val colorChangeFlag: MutableState<Boolean> = mutableStateOf(false)
 
 @Composable
 fun VertexView(
@@ -45,6 +50,10 @@ fun VertexView(
 	}
 	IconButton(
 		onClick = {
+			if (idVerticesInfo.value == null) {
+				curVertexColor = vertexViewModel.color
+			}
+
 			if (isKeyboardPressed.value) {
 				if (idVerticesInfo.value != null) {
 					val vertexSource = idVerticesInfo.value!!
@@ -55,13 +64,18 @@ fun VertexView(
 				isKeyboardPressed.value = !isKeyboardPressed.value
 			} else {
 				if (idVerticesInfo.value != vertexViewModel) {
-					if (idVerticesInfo.value != null) {
-						idVerticesInfo.value!!.color = colorVerticesStart
+					if (idVerticesInfo.value != null && !colorChangeFlag.value) {
+						idVerticesInfo.value!!.color = curVertexColor
 					}
+					colorChangeFlag.value = false
 					idVerticesInfo.value = vertexViewModel
+					curVertexColor = vertexViewModel.color
 					idVerticesInfo.value!!.color = whiteCustom
 				} else {
-					idVerticesInfo.value!!.color = colorVerticesStart
+					if (!colorChangeFlag.value) {
+						idVerticesInfo.value!!.color = curVertexColor
+					}
+					colorChangeFlag.value = false
 					idVerticesInfo.value = null
 				}
 			}

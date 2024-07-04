@@ -1,6 +1,5 @@
 package viewmodels.graphs
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
@@ -12,6 +11,7 @@ import graphs_lab.core.graphs.WeightedGraph
 import models.VertexID
 import themes.radiusVerticesStart
 import utils.VertexIDType
+import views.graphs.colorChangeFlag
 import windowSizeStart
 import kotlin.random.Random
 
@@ -258,7 +258,7 @@ class GraphViewModel(
 			val idTarget = it.idTarget
 			graph.vertexEdges(idSource).forEach { edge ->
 				if (edge.idTarget == idTarget) {
-					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.color = Color(176,0,0) // Red
+					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.color = Color(176, 0, 0) // Red
 					_edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)]!!.width = 4f
 				}
 			}
@@ -278,12 +278,13 @@ class GraphViewModel(
 
 	fun parseLouvainClustering() {
 		val resultAlgo = louvainClusteringMethod(graph)
+		colorChangeFlag.value = true
 		var color: Color
 
-		resultAlgo.first.getPartition().forEach{ cluster ->
+		resultAlgo.first.getPartition().forEach { cluster ->
 			color = Color(Random.nextInt(64, 223), Random.nextInt(64, 223), Random.nextInt(64, 223))
 			cluster.forEach { id ->
-				_vertices[id]!!.color  = color
+				_vertices[id]!!.color = color
 			}
 		}
 	}
