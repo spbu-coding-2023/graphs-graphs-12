@@ -6,16 +6,14 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import themes.JetTheme
 import themes.paddingCustom
 import themes.sizeBottom
-import utils.ListWidget
+import utils.LazyListWidget
 import utils.StaticListWidget
 import viewmodels.dialogs.CreateNewGraphDialogViewModel
 import viewmodels.dialogs.LoadNewGraphDialogViewModel
@@ -32,7 +30,7 @@ fun HomePage(viewModel: HomePageViewModel) {
 		.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle)
 
 	Row {
-		ListWidget(
+		LazyListWidget(
 			modifier = modifierColumn.weight(1f),
 			listItems = viewModel.previouslyLoadedGraph,
 			itemWidth = 0.75f,

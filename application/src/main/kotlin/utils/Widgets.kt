@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import models.VertexID
@@ -26,20 +25,20 @@ import themes.JetTheme
 import themes.sizeBottom
 import viewmodels.graphs.GraphViewModel
 import viewmodels.pages.GraphPageViewModel
-import kotlin.streams.toList
 
 /**
  * [Composable] Widget of List with elements, which implements [ListWidgetItem].
  *
- * @param modifier to change [ListWidget] implementation
+ * @param modifier to change [LazyListWidget] implementation
  * @param listItems elements to List representation
  * @param textStyle style of main text
+ * @param itemWidth width of item in [LazyListWidget]
  * @param dropDownMenuContext [Composable] dropdown menu context for list element, if its `null` menu will not visible
- * @param headlineContext [Composable] elements of header of [ListWidget]
+ * @param headlineContext [Composable] elements of header of [LazyListWidget]
  */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ListWidget(
+fun LazyListWidget(
 	modifier: Modifier = Modifier,
 	listItems: List<ListWidgetItem> = listOf(),
 	textStyle: TextStyle = JetTheme.typography.toolbar,
@@ -120,6 +119,15 @@ fun ListWidget(
 	}
 }
 
+/**
+ * [Composable] Widget of List with elements, which implements [StaticListWidget].
+ *
+ * @param modifier to change [StaticListWidget] implementation
+ * @param listItems elements to List representation
+ * @param textStyle style of main text
+ * @param itemWidth width of item in [StaticListWidget]
+ * @param headlineContext [Composable] elements of header of [StaticListWidget]
+ */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun StaticListWidget(
@@ -191,7 +199,7 @@ fun StaticListWidget(
  * @param onItemClick lambda method to run it if item choose, if its `null` method not calling
  * @param modifier to change [ComboBox] implementation
  * @param textAlign alignment of text on widgets
- * @param textFontSize size of text font
+ * @param textStyle style of main text
  */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -272,7 +280,7 @@ fun <T> ComboBox(
  * @param onClick lambda method to run it if item choose
  * @param modifier to change [CustomRadioButton] implementation
  * @param textAlign alignment of text on widgets
- * @param textFontSize size of text font
+ * @param textStyle style of main text
  * @param verticalAlignment alignment of widgets replacement
  * @param reversed set representation mode: `(x) <text>` or `<text> (x)`, based `(x) <text>`
  */
@@ -325,8 +333,15 @@ fun CustomRadioButton(
 	}
 }
 
+/**
+ * [Composable] function to display an algorithm button with dropdown menu.
+ *
+ * @param graphViewModel the [GraphViewModel] instance to interact with the graph.
+ * @param algButton the [AlgorithmButton] instance to be displayed.
+ * @param modifier the [Modifier] to apply to this layout node.
+ */
 @Composable
-fun TextButtonAlgorithm(
+fun AlgorithmTextButton(
 	graphViewModel: GraphViewModel?,
 	algButton: AlgorithmButton,
 	modifier: Modifier = Modifier
@@ -382,19 +397,26 @@ fun TextButtonAlgorithm(
 	)
 }
 
+/**
+ * [Composable] function to display a button with a specific action.
+ *
+ * @param graphPageViewModel the [GraphPageViewModel] instance to interact with the graph page.
+ * @param actionEntry a [Map.Entry] containing the action label and its corresponding function.
+ * @param modifier the [Modifier] to apply to this layout node.
+ */
 @Composable
-fun TextButtonRepresentation(
+fun ActionTextButton(
 	graphPageViewModel: GraphPageViewModel,
-	entry: Map.Entry<String, (GraphPageViewModel) -> Unit>,
+	actionEntry: Map.Entry<String, (GraphPageViewModel) -> Unit>,
 	modifier: Modifier
 ) {
 	TextButton(
-		onClick = { entry.value(graphPageViewModel) },
+		onClick = { actionEntry.value(graphPageViewModel) },
 		modifier = modifier,
 		colors = ButtonDefaults.buttonColors(
 			backgroundColor = Color.Transparent
 		)
 	) {
-		Text(entry.key, color = JetTheme.colors.secondaryText, style = JetTheme.typography.mini)
+		Text(actionEntry.key, color = JetTheme.colors.secondaryText, style = JetTheme.typography.mini)
 	}
 }

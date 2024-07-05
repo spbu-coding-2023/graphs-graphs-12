@@ -14,12 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import models.SideMenuModel
-import models.utils.AlgorithmButton
 import models.utils.TabItem
 import themes.JetTheme
 import utils.PageType
-import utils.TextButtonAlgorithm
-import utils.TextButtonRepresentation
+import utils.AlgorithmTextButton
+import utils.ActionTextButton
 import viewmodels.pages.GraphPageViewModel
 
 class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
@@ -63,14 +62,14 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 						graphPageViewModel.algorithms.forEach { algorithmButton ->
 							if (graphPageViewModel.graphViewModel?.graph?.isDirected == true) {
 								if (!algorithmButton.nonDirectionalRequirement) {
-									TextButtonAlgorithm(
+									AlgorithmTextButton(
 										graphPageViewModel.graphViewModel, algorithmButton,
 										Modifier.fillMaxWidth()
 									)
 								}
 							} else {
 								if (!algorithmButton.directionalRequirement) {
-									TextButtonAlgorithm(
+									AlgorithmTextButton(
 										graphPageViewModel.graphViewModel,
 										algorithmButton,
 										Modifier.fillMaxWidth()
@@ -100,7 +99,7 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 							.background(JetTheme.colors.tertiaryBackground)
 					) {
 						graphPageViewModel.mapRepresentationModes.forEach {
-							TextButtonRepresentation(graphPageViewModel, it, Modifier.fillMaxWidth())
+							ActionTextButton(graphPageViewModel, it, Modifier.fillMaxWidth())
 							Divider(
 								thickness = 0.5.dp,
 								color = JetTheme.colors.primaryBackground
