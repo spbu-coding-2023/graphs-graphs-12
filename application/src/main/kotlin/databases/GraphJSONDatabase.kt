@@ -18,7 +18,7 @@ import java.io.BufferedWriter
  * Graph json database.
  * Its simple implementation of [FileDatabase] for [GraphViewModel] object to `load`/`save`.
  */
-class GraphJSONDatabase : FileDatabase<GraphViewModel>() {
+class GraphJSONDatabase : FileDatabase<GraphViewModel>(".json") {
 	override fun load(reader: BufferedReader): GraphViewModel {
 		val graphJSONObject = JSONObject(JSONTokener(reader))
 		val isUnweightedGraph = graphJSONObject.getBoolean("is-unweighted")
