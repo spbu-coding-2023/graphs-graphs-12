@@ -13,7 +13,16 @@ import java.sql.*
 
 private val logger = KotlinLogging.logger { }
 
+/**
+ * A class responsible for writing and loading graphs to/from a SQLite database.
+ */
 class SqliteRepository {
+	/**
+	 * Writes the given graph to a SQLite database in the specified folder path.
+	 *
+	 * @param graphViewModel The graph to be written to the database.
+	 * @param folderPath The path to the folder where the database will be created.
+	 */
 	fun writeDb(graphViewModel: GraphViewModel, folderPath: String) {
 		val realPath = File(folderPath, "${graphViewModel.graph.label}.db").absolutePath
 		clear(graphViewModel.graph.label)
@@ -31,6 +40,12 @@ class SqliteRepository {
 		logger.info { "Connection closed." }
 	}
 
+	/**
+	 * Loads a graph from a SQLite database located at the specified path.
+	 *
+	 * @param pathToDB The path to the SQLite database file.
+	 * @return The loaded graph, or null if the graph could not be loaded.
+	 */
 	private fun createDb(connection: Connection) {
 		connection.createStatement().also { statement ->
 			try {
@@ -69,6 +84,14 @@ class SqliteRepository {
 		}
 	}
 
+	/**
+	 * Adds a graph to the SQLite database.
+	 *
+	 * @param graphViewModel The graph view model containing the graph to be added.
+	 * @param connection The database connection to use for adding the graph.
+	 *
+	 * @throws Exception If an error occurs while adding the graph to the database.
+	 */
 	private fun addGraph(graphViewModel: GraphViewModel, connection: Connection) {
 		val addGraphStatement by lazy {
 			connection.prepareStatement(
@@ -93,6 +116,14 @@ class SqliteRepository {
 		}
 	}
 
+	/**
+	 * Adds vertices from the given graph view model to the SQLite database.
+	 *
+	 * @param graphViewModel The graph view model containing the vertices to be added.
+	 * @param connection The database connection to use for adding the vertices.
+	 *
+	 * @throws Exception If an error occurs while adding the vertices to the database.
+	 */
 	private fun addVertices(graphViewModel: GraphViewModel, connection: Connection) {
 		val addVertexStatement by lazy {
 			connection.prepareStatement(
@@ -119,6 +150,14 @@ class SqliteRepository {
 		}
 	}
 
+	/**
+	 * Adds edges from the given graph view model to the SQLite database.
+	 *
+	 * @param graphViewModel The graph view model containing the edges to be added.
+	 * @param connection The database connection to use for adding the edges.
+	 *
+	 * @throws Exception If an error occurs while adding the edges to the database.
+	 */
 	private fun addEdges(graphViewModel: GraphViewModel, connection: Connection) {
 		val addEdgeStatement by lazy {
 			connection.prepareStatement(
@@ -142,6 +181,14 @@ class SqliteRepository {
 		}
 	}
 
+	/**
+	 * Loads a graph from a SQLite database located at the specified path.
+	 *
+	 * @param pathToDB The path to the SQLite database file.
+	 * @return The loaded graph, or null if the graph could not be loaded.
+	 *
+	 * @throws Exception If an error occurs while loading the graph from the database.
+	 */
 	fun loadGraph(pathToDB: String): GraphViewModel? {
 		val realPath = if (pathToDB.endsWith(".db")) pathToDB else "$pathToDB.db"
 		var graphViewModel: GraphViewModel? = null
@@ -250,6 +297,13 @@ class SqliteRepository {
 		return graphViewModel
 	}
 
+	/**
+	 * Clears the SQLite database by deleting all tables.
+	 *
+	 * @param pathToDB The path to the SQLite database file.
+	 *
+	 * @throws SQLException If an error occurs while connecting to the database or executing the deletion statements.
+	 */
 	private fun clear(pathToDB: String) {
 		DriverManager.getConnection("$DB_DRIVER:$pathToDB.db").use { connection ->
 			val metaData = connection.metaData
