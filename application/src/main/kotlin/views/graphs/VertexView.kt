@@ -20,7 +20,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import themes.colorVerticesStart
 import themes.whiteCustom
-import utils.representation.ForceDirectedPlacementStrategy
+import utils.placement_strategy.ForceDirectedPlacementStrategy
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
 import windowSizeStart

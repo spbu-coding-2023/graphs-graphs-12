@@ -12,7 +12,7 @@ import models.utils.AlgorithmButton
 import themes.JetTheme
 import utils.GraphSavingType
 import utils.PageType
-import utils.representation.*
+import utils.placement_strategy.*
 import viewmodels.graphs.GraphViewModel
 import windowSizeStart
 import java.io.File

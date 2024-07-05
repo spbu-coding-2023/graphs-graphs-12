@@ -1,4 +1,4 @@
-package utils.representation
+package utils.placement_strategy
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -7,8 +7,10 @@ import viewmodels.graphs.VertexViewModel
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
-import kotlin.random.Random
 
+/**
+ * A class that implements the [RepresentationStrategy] interface and places vertices in a circular pattern.
+ */
 class CircularPlacementStrategy : RepresentationStrategy {
 	override fun place(width: Double, height: Double, vertices: Collection<VertexViewModel>) {
 		if (vertices.isEmpty()) {
@@ -35,6 +37,13 @@ class CircularPlacementStrategy : RepresentationStrategy {
 			}
 	}
 
+	/**
+	 * Rotates a point around a pivot point by the given angle.
+	 *
+	 * @param pivot The pivot point around which the point will be rotated.
+	 * @param angle The angle in radians by which the point will be rotated.
+	 * @return The rotated point.
+	 */
 	private fun Pair<Double, Double>.rotate(pivot: Pair<Double, Double>, angle: Double): Pair<Double, Double> {
 		val sin = sin(angle)
 		val cos = cos(angle)

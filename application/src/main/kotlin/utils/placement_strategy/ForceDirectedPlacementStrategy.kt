@@ -1,4 +1,4 @@
-package utils.representation
+package utils.placement_strategy
 
 import androidx.compose.ui.unit.dp
 import themes.radiusVerticesStart
