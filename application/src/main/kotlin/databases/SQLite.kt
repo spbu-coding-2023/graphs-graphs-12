@@ -1,6 +1,7 @@
 package databases
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import graphs_lab.core.graphs.WeightedGraph
 import models.VertexID
@@ -104,7 +105,7 @@ class SqliteRepository {
 				addVertexStatement.setString(1, vertexViewModel.id.valueToString())
 				addVertexStatement.setFloat(2, vertexViewModel.xPos.value)
 				addVertexStatement.setFloat(3, vertexViewModel.yPos.value)
-				addVertexStatement.setLong(4, vertexViewModel.color.value.toLong())
+				addVertexStatement.setLong(4, vertexViewModel.color.toArgb().toLong())
 				addVertexStatement.setFloat(5, vertexViewModel.radius.value)
 				addVertexStatement.setInt(6, vertexViewModel.degree)
 
@@ -221,7 +222,6 @@ class SqliteRepository {
 					graphViewModel!!.addVertex(VertexID.vertexIDFromString(id, typeId))
 					vertexMap[VertexID.vertexIDFromString(id, typeId)] = VertexData(xPos.dp, yPos.dp, radius.dp, Color(color), degree)
 				}
-
 				while (resultEdges!!.next()) {
 					val idSource = resultEdges!!.getString(1)
 					val idTarget = resultEdges!!.getString(2)
@@ -235,6 +235,7 @@ class SqliteRepository {
 					it.xPos = vertex.x.value.dp
 					it.yPos = vertex.y.value.dp
 					it.color = vertex.color
+					it.radius = vertex.radius
 					it.degree = vertex.degree
 				}
 
