@@ -376,6 +376,10 @@ fun TextButtonAlgorithm(
 			algButton.isRun.value = false
 		}
 	}
+	Divider(
+		thickness = 0.5.dp,
+		color = JetTheme.colors.primaryBackground
+	)
 }
 
 @Composable

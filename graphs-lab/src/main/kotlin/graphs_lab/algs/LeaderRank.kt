@@ -24,6 +24,7 @@ open class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	protected var countOfVertices = 0
 	protected val indexedVertices = mutableMapOf<I, Int>()
 	protected var graphMatrix: Array<DoubleArray> = Array(countOfVertices) { DoubleArray(countOfVertices) }
+	private var zeroEdgesFlag: Boolean = true
 
 	/**
 	 * Get the score of each vertex in the graph.
@@ -31,11 +32,17 @@ open class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 	 * @return a map where keys - the id of vertex, values - the score of this vertex
 	 */
 	fun getVerticesScores(): Map<I, Double> {
+		val result = mutableMapOf<I, Double>()
+		graph.idVertices.forEach { id ->
+			result[id] = 1.0
+		}
+
 		countOfVertices = graph.size + 1 // add ground vertex
 		graphMatrix = Array(countOfVertices) { DoubleArray(countOfVertices) { 0.0 } }
 
 		vertexIndexing()
 		createGraphMatrix()
+		if (zeroEdgesFlag) return result
 
 		val auxiliaryMatrix = Array(countOfVertices) { DoubleArray(countOfVertices) { 0.0 } }
 		var sum: Double
@@ -71,7 +78,6 @@ open class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 			scoringMatrix[i][0] += scoringMatrix[countOfVertices - 1][0] / (countOfVertices - 1)
 		}
 
-		val result = mutableMapOf<I, Double>()
 		var index = 0
 		graph.idVertices.forEach {
 			result[it] = scoringMatrix[index][0]
@@ -98,6 +104,7 @@ open class LeaderRank<I, E : Edge<I>>(val graph: Graph<I, E>) {
 		var weight: Double
 		graph.idVertices.forEach { vertex ->
 			graph.vertexEdges(vertex).forEach { edge ->
+				zeroEdgesFlag = false
 				weight = getEdgeWeight(edge, 1.0)
 				if (weight >= 0) {
 					graphMatrix[indexedVertices[edge.idSource]!!][indexedVertices[edge.idTarget]!!] = weight

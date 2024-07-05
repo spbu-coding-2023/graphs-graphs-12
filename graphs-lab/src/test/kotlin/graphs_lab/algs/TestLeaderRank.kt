@@ -3,10 +3,41 @@ package graphs_lab.algs
 import graphs_lab.core.graphs.UnweightedGraph
 import graphs_lab.algs.assistants.LeaderRankAssistant
 import graphs_lab.core.graphs.WeightedGraph
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 class TestLeaderRank {
+
+	@Test
+	@DisplayName("unweighted graph without edges")
+	fun testUnweightedGraphWithoutEdges() {
+		val graph = UnweightedGraph<Char>("1", isDirected = true, isAutoAddVertex = false)
+		graph.addVertex('A')
+		graph.addVertex('B')
+		graph.addVertex('C')
+
+		val result = mutableMapOf('A' to 1.0, 'B' to 1.0, 'C' to 1.0)
+
+		val assistant = LeaderRank(graph)
+		val scores = assistant.getVerticesScores()
+		Assertions.assertEquals(scores, result)
+	}
+
+	@Test
+	@DisplayName("weighted graph without edges")
+	fun testWeightedGraphWithoutEdges() {
+		val graph = WeightedGraph<Char>("1", isDirected = true, isAutoAddVertex = false)
+		graph.addVertex('A')
+		graph.addVertex('B')
+		graph.addVertex('C')
+
+		val result = mutableMapOf('A' to 1.0, 'B' to 1.0, 'C' to 1.0)
+
+		val assistant = LeaderRank(graph)
+		val scores = assistant.getVerticesScores()
+		Assertions.assertEquals(scores, result)
+	}
 
 	@Test
 	@DisplayName("vertex indexing")
@@ -60,12 +91,12 @@ class TestLeaderRank {
 		 * C
 		 */
 		graph.addEdge('A', 'B', 5.0)
-		graph.addEdge('A', 'C', 2.0)
+		graph.addEdge('A', 'C', -2.0)
 		graph.addEdge('C', 'B', 52.0)
 
 		val result = Array(4) { DoubleArray(4) { 0.0 } }
 		result[0][1] = 5.0
-		result[0][2] = 2.0
+		result[2][0] = 2.0
 		result[2][1] = 52.0
 		for (i in 0..2) {
 			result[i][3] = 1.0
