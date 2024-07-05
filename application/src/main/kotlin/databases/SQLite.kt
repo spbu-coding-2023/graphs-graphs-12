@@ -14,10 +14,11 @@ private val logger = KotlinLogging.logger { }
 
 class SqliteRepository {
 	fun writeDb(graphViewModel: GraphViewModel, folderPath: String) {
+		val realPath = File(folderPath, "${graphViewModel.graph.label}.db").absolutePath
 		clear(graphViewModel.graph.label)
 
 		val connection = DriverManager.getConnection(
-			"$DB_DRIVER:${File(folderPath, "${graphViewModel.graph.label}.db").absolutePath}"
+			"$DB_DRIVER:$realPath"
 		) ?: throw SQLException("Cannot connect to database.")
 
 		createDb(connection)
@@ -141,13 +142,14 @@ class SqliteRepository {
 	}
 
 	fun loadGraph(pathToDB: String): GraphViewModel? {
+		val realPath = if (pathToDB.endsWith(".db")) pathToDB else "$pathToDB.db"
 		var graphViewModel: GraphViewModel? = null
 
 		var resultGraphs: ResultSet? = null
 		var resultVertices: ResultSet? = null
 		var resultEdges: ResultSet? = null
 
-		DriverManager.getConnection("$DB_DRIVER:$pathToDB").use { connection ->
+		DriverManager.getConnection("$DB_DRIVER:$realPath").use { connection ->
 			val metaData = connection.metaData
 			val tables = metaData.getTables(null, null, "%", null)
 
@@ -238,7 +240,7 @@ class SqliteRepository {
 
 				logger.info { "Loaded $pathToDB graph." }
 			} catch (exception: Exception) {
-				logger.error(exception) { "Cannot load $pathToDB graph." }
+				logger.error(exception) { "Cannot load $realPath graph." }
 			} finally {
 				connection.close()
 			}
