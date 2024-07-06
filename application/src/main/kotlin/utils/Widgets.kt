@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import models.VertexID
-import models.utils.AlgorithmButton
+import models.utils.AlgorithmModel
 import models.utils.ListWidgetItem
 import themes.JetTheme
 import themes.sizeBottom
@@ -337,13 +337,13 @@ fun CustomRadioButton(
  * [Composable] function to display an algorithm button with dropdown menu.
  *
  * @param graphViewModel the [GraphViewModel] instance to interact with the graph.
- * @param algButton the [AlgorithmButton] instance to be displayed.
+ * @param algButton the [AlgorithmModel] instance to be displayed.
  * @param modifier the [Modifier] to apply to this layout node.
  */
 @Composable
 fun AlgorithmTextButton(
 	graphViewModel: GraphViewModel?,
-	algButton: AlgorithmButton,
+	algButton: AlgorithmModel,
 	modifier: Modifier = Modifier
 ) {
 	val coroutineScope = rememberCoroutineScope()

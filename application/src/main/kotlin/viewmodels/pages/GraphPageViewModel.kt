@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import models.SettingsModel
 import models.VertexID
-import models.utils.AlgorithmButton
+import models.utils.AlgorithmModel
 import themes.JetTheme
 import utils.GraphSavingType
 import utils.PageType
@@ -36,30 +36,30 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 			if (newModel == null) indexSelectedPage.value = PageType.HOME_PAGE.ordinal
 			updateGraphRepresentation()
 		}
-	val algorithms = setOf<AlgorithmButton>(
-		AlgorithmButton(
+	val algorithms = setOf<AlgorithmModel>(
+		AlgorithmModel(
 			"Key Vertices",
 			{ graphViewModel, _ -> graphViewModel.parseLeaderRank() },
 		),
-		AlgorithmButton(
+		AlgorithmModel(
 			"Clusters",
 			{ graphViewModel, _ -> graphViewModel.parseLouvainClustering() }
 		),
-		AlgorithmButton(
+		AlgorithmModel(
 			"Strongly Connected Component",
 			{ graphViewModel, _ ->
 				graphViewModel.parseTarjanStrongConnectivityAlgorithm()
 			},
 			directionalRequirement = true
 		),
-		AlgorithmButton(
+		AlgorithmModel(
 			"Bridges",
 			{ graphViewModel, _ ->
 				graphViewModel.parseTarjanBridgeFinding()
 			},
 			nonDirectionalRequirement = true
 		),
-		AlgorithmButton(
+		AlgorithmModel(
 			"Cycles",
 			{ graphViewModel, input -> graphViewModel.parseCyclesSearchAlgorithm(input.first()) },
 			{ algButton ->
@@ -97,28 +97,28 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 				}
 			}
 		),
-		AlgorithmButton(
+		AlgorithmModel(
 			"Minimum Spanning Tree (Kruskal)",
 			{ graphViewModel, _ ->
 				graphViewModel.parseKruskalAlgorithm()
 			},
 			nonDirectionalRequirement = true
 		),
-		AlgorithmButton(
+		AlgorithmModel(
 			"Minimum Spanning Tree (Prim)",
 			{ graphViewModel, _ ->
 				graphViewModel.parsePrimAlgorithm()
 			},
 			nonDirectionalRequirement = true
 		),
-		AlgorithmButton(
+		AlgorithmModel(
 			"Shortest Path (Bellman)",
 			{ graphViewModel, input -> graphViewModel.parseBellmanFordAlgorithm(input.first(), input.last()) },
 			{ algButton ->
 				dropDownMenuForSP(graphViewModel, algButton)
 			}
 		),
-		AlgorithmButton(
+		AlgorithmModel(
 			"Shortest Path (Dijkstra)",
 			{ graphViewModel, input -> graphViewModel.parseDijkstraAlgorithm(input.first(), input.last()) },
 			{ algButton ->
@@ -174,7 +174,7 @@ private fun colorsForTextButton(): ButtonColors {
 @Composable
 private fun dropDownMenuForSP(
 	graphViewModel: GraphViewModel?,
-	algButton: AlgorithmButton,
+	algButton: AlgorithmModel,
 ) {
 	var source by remember { mutableStateOf("") }
 	var target by remember { mutableStateOf("") }
