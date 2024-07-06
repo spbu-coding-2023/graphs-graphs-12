@@ -116,15 +116,16 @@ class GraphViewModel(
 	 *
 	 * @param id the id of the vertex to be removed
 	 */
-	fun addEdge(idSource: VertexID, idTarget: VertexID, weight: Double = 1.0) { // todo(fix?!)
+	fun addEdge(idSource: VertexID, idTarget: VertexID, weight: Double = 1.0) {
 		graph.addEdge(idSource, idTarget, weight)
 		val sourceViewModel = _vertices.getOrPut(idSource) {
+			// TODO(Create a dependency on the actual size of the program window, and not on the starting size)
 			VertexViewModel(
 				idSource,
 				Random.nextInt(
 					radiusVerticesStart.value.toInt(),
 					windowSizeStart.second.toInt() - radiusVerticesStart.value.toInt()
-				).dp,  // todo(change 1000 to height)
+				).dp,
 				Random.nextInt(
 					radiusVerticesStart.value.toInt(),
 					windowSizeStart.second.toInt() - radiusVerticesStart.value.toInt()

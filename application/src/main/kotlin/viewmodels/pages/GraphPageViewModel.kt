@@ -160,7 +160,7 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 	 */
 	private fun updateGraphRepresentation() {
 		// TODO(run it by coroutine scope)
-		// TODO(change values of `width` and `height`)
+		// TODO(Create a dependency on the actual size of the program window, and not on the starting size)
 		val model = _graph.value ?: return
 		representationStrategy.place(
 			windowSizeStart.first.toDouble(),

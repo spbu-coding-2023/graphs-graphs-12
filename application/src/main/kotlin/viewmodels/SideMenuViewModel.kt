@@ -62,7 +62,7 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 						"Algorithms",
 						style = JetTheme.typography.toolbar,
 						color = JetTheme.colors.secondaryText
-					) // todo(hide out of layout and add modifier)
+					)
 					Column(
 						modifier = Modifier
 							.padding(4.dp)
@@ -101,7 +101,7 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 						"Representation",
 						style = JetTheme.typography.toolbar,
 						color = JetTheme.colors.secondaryText
-					) // todo(hide out of layout and add modifier)
+					)
 					Column(
 						modifier = Modifier
 							.padding(4.dp)

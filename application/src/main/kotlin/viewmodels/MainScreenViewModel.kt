@@ -1,5 +1,6 @@
 package viewmodels
 
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import models.SettingsModel
 import viewmodels.pages.GraphPageViewModel
@@ -18,7 +19,7 @@ import viewmodels.pages.SettingsPageViewModel
  * @property homePageViewModel the view model for the home screen
  */
 class MainScreenViewModel(settings: SettingsModel) {
-	val indexSelectedPage = mutableStateOf(0) // TODO(change to mutableIntState)
+	val indexSelectedPage = mutableIntStateOf(0)
 	val settingsPageViewModel = SettingsPageViewModel(settings)
 	val graphPageViewModel = GraphPageViewModel(settings, indexSelectedPage)
 	val sideMenuViewModel = SideMenuViewModel(graphPageViewModel)
