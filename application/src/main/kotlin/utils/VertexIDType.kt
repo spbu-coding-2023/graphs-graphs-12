@@ -6,7 +6,7 @@ package utils
  * __Important:__ It's needed to valid execution of application and using on graphs objects.
  *
  * @property title simple string of name element
- * @constructor Create Vertex ID type with custom label
+ * @constructor create Vertex ID type with custom label
  */
 enum class VertexIDType(val title: String) {
 	INT_TYPE(Int::class.simpleName.toString()),

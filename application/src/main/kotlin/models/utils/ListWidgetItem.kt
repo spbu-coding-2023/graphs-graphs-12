@@ -11,7 +11,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
  * @property icon the icon to be displayed in the list item. Optional, defaults to null
  * @property isHidden a flag indicating whether the list item should be hidden. Defaults to false
  * @property alignment the alignment of the list item's content. Defaults to [Alignment.CenterStart]
- * @property onClick a lambda function to be executed when the list item is clicked. Defaults to printing a message with the main text
+ * @property onClick a lambda function to be executed when the list item is clicked.
+ * 						Defaults to printing a message with the main text
  */
 open class ListWidgetItem(
 	val mainText: String,

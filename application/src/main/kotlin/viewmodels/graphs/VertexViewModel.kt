@@ -79,7 +79,7 @@ class VertexViewModel(
 	 *
 	 * This function updates the x and y positions of the vertex based on the drag offset.
 	 *
-	 * @param offset The offset of the drag event. The offset contains the change in position
+	 * @param offset the offset of the drag event. The offset contains the change in position
 	 * 					since the last drag event. The x and y properties of the offset represent
 	 * 					the change in x and y coordinates, respectively
 	 *

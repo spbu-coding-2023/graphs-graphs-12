@@ -171,7 +171,7 @@ class SettingsModel {
 	/**
 	 * Saves the graph in Neo4J database.
 	 *
-	 * @param graphPageViewModel the [GraphPageViewModel] containing the graph to be saved.
+	 * @param graphPageViewModel the [GraphPageViewModel] containing the graph to be saved
 	 */
 	private fun saveGraphByNeo4j(graphPageViewModel: GraphPageViewModel) {
 		if (!isNeo4jConnected) {

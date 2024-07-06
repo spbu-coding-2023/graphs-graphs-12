@@ -17,7 +17,7 @@ import viewmodels.MainScreenViewModel
  * MainScreen is the main composable function that represents the main screen of the application.
  * It takes a [viewModel] parameter which is an instance of [MainScreenViewModel].
  *
- * @param viewModel The view model for the main screen.
+ * @param viewModel the view model for the main screen
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -81,6 +81,5 @@ fun MainScreen(viewModel: MainScreenViewModel) {
 				}
 			}
 		}
-
 	}
 }

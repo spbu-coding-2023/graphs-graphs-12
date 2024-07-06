@@ -25,9 +25,9 @@ class Neo4jRepository : Closeable {
 	/**
 	 * Connects to `Neo4j` database using provided URI, username, and password.
 	 *
-	 * @param uri the URI of the Neo4j database.
-	 * @param user the username for authentication.
-	 * @param password the password for authentication.
+	 * @param uri the URI of the Neo4j database
+	 * @param user the username for authentication
+	 * @param password the password for authentication
 	 */
 	fun connect(uri: String, user: String, password: String) {
 		driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password))
@@ -39,7 +39,7 @@ class Neo4jRepository : Closeable {
 	/**
 	 * Writes the graph data from the provided [GraphPageViewModel] to the Neo4j database.
 	 *
-	 * @param graphPageView the GraphPageViewModel containing the graph data to be written.
+	 * @param graphPageView the GraphPageViewModel containing the graph data to be written
 	 */
 	fun writeData(graphPageView: GraphPageViewModel) {
 		clearDB()
@@ -96,7 +96,7 @@ class Neo4jRepository : Closeable {
 	/**
 	 * Reads the graph data from the Neo4j database and populates the provided [GraphPageViewModel].
 	 *
-	 * @param graphPageView the [GraphPageViewModel] to populate with the graph data.
+	 * @param graphPageView the [GraphPageViewModel] to populate with the graph data
 	 */
 	fun readData(graphPageView: GraphPageViewModel) {
 		val vertexMap = mutableMapOf<VertexID, VertexData>()
@@ -204,7 +204,7 @@ class Neo4jRepository : Closeable {
 	 * This method should be called when the Neo4jRepository instance is no longer needed to ensure proper cleanup.
 	 * After calling this method, the Neo4jRepository instance should not be used for any further operations.
 	 *
-	 * @throws Exception If an error occurs while closing the database connection or releasing resources.
+	 * @throws Exception if an error occurs while closing the database connection or releasing resources
 	 */
 	override fun close() {
 		session.close()

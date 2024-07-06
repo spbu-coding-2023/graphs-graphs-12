@@ -144,7 +144,7 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 	 * Returns the page index corresponding to the given tab name.
 	 *
 	 * @param tabName the name of the tab for which the page index is required
-	 * @return the page index corresponding to the given tab name. If the tab name is not found, returns 0.
+	 * @return the page index corresponding to the given tab name. If the tab name is not found, returns 0
 	 */
 	fun pageOfTab(tabName: String): Int {
 		return pagesOfTabsItems.getOrDefault(tabName, 0)
@@ -153,9 +153,9 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 	/**
 	 * Changes the visibility of a tab in the side menu.
 	 *
-	 * @param tabName the name of the tab whose visibility needs to be changed.
+	 * @param tabName the name of the tab whose visibility needs to be changed
 	 * @param isHiddenState a boolean indicating whether the tab should be hidden or visible.
-	 * If true, the tab will be hidden; if false, the tab will be visible.
+	 * 						If true, the tab will be hidden; if false, the tab will be visible
 	 *
 	 *  @see SideMenuModel.changeTabVisibility
 	 */

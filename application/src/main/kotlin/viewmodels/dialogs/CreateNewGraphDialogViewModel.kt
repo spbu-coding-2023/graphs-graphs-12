@@ -32,7 +32,7 @@ class CreateNewGraphDialogViewModel(val homePageViewModel: HomePageViewModel) {
 	 * Checks if the given graph name is valid according to the application's settings.
 	 *
 	 * @param newGraphName the name of the new graph to be checked
-	 * @return true if the graph name is valid, false otherwise
+	 * @return `true` if the graph name is valid, `false` otherwise
 	 *
 	 * @see SettingsModel.graphNameRegEx for the regular expression used to validate the graph name
 	 */

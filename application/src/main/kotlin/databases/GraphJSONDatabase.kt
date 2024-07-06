@@ -78,8 +78,8 @@ class GraphJSONDatabase : FileDatabase<GraphViewModel>(".json") {
 	 * - "target-id": The string representation of the target vertex ID.
 	 * - "weight": The weight of the edge.
 	 *
-	 * @param edges The collection of [EdgeViewModel] objects to be converted.
-	 * @return A JSONArray containing the JSON representations of the [EdgeViewModel] objects.
+	 * @param edges the collection of [EdgeViewModel] objects to be converted
+	 * @return a JSONArray containing the JSON representations of the [EdgeViewModel] objects
 	 */
 	private fun edgesToJSON(edges: Collection<EdgeViewModel>): JSONArray {
 		val edgesJSONObjects = mutableListOf<JSONObject>()
@@ -106,8 +106,8 @@ class GraphJSONDatabase : FileDatabase<GraphViewModel>(".json") {
 	 * - "radius": The radius of the vertex.
 	 * - "degree": The degree of the vertex.
 	 *
-	 * @param vertices The collection of [VertexViewModel] objects to be converted.
-	 * @return A JSONArray containing the JSON representations of the [VertexViewModel] objects.
+	 * @param vertices the collection of [VertexViewModel] objects to be converted
+	 * @return a JSONArray containing the JSON representations of the [VertexViewModel] objects
 	 */
 	private fun verticesToJSON(vertices: Collection<VertexViewModel>): JSONArray {
 		val verticesJSONObjects = mutableListOf<JSONObject>()

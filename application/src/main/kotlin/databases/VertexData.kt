@@ -6,11 +6,11 @@ import androidx.compose.ui.unit.Dp
 /**
  * A data class to hold vertex data during graph loading.
  *
- * @property x The x-coordinate of the vertex.
- * @property y The y-coordinate of the vertex.
- * @property radius The radius of the vertex.
- * @property color The color of the vertex.
- * @property degree The degree of the vertex.
+ * @property x the x-coordinate of the vertex
+ * @property y the y-coordinate of the vertex
+ * @property radius the radius of the vertex
+ * @property color the color of the vertex
+ * @property degree the degree of the vertex
  */
 data class VertexData(
 	val x: Dp,

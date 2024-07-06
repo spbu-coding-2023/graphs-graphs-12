@@ -29,7 +29,7 @@ data class AlgorithmModel(
 	/**
 	 * Overrides the default toString method to provide a string representation of the [AlgorithmModel].
 	 *
-	 * @return A string representation of the [AlgorithmModel] in the format "AlgorithmButton(label='[label]')".
+	 * @return a string representation of the [AlgorithmModel] in the format "AlgorithmButton(label='[label]')"
 	 */
 	override fun toString(): String {
 		return "AlgorithmButton(label='$label')"

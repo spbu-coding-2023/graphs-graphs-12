@@ -5,8 +5,6 @@ import viewmodels.graphs.VertexViewModel
 /**
  * Representation strategy interface to call its implementation.
  * It's needed to create valid placements of graph on plane.
- *
- * @constructor Create empty Representation strategy
  */
 interface RepresentationStrategy {
     /**
