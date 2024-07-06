@@ -20,6 +20,14 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
+/**
+ * This function is responsible for drawing an edge between two nodes in a graph.
+ *
+ * @param edgeViewModel the view model representing the edge to be drawn
+ * @param center the center point of the graph view
+ * @param zoomAnimated the current zoom level of the graph view
+ * @param graphViewModel the view model representing the entire graph
+ */
 @Composable
 fun EdgeView(edgeViewModel: EdgeViewModel, center: Offset, zoomAnimated: Float, graphViewModel: GraphViewModel) {
 	Canvas(Modifier) {

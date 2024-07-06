@@ -15,10 +15,20 @@ import viewmodels.graphs.GraphViewModel
 import viewmodels.pages.GraphPageViewModel
 import java.io.Closeable
 
+/**
+ * [Neo4jRepository] class is responsible for connecting, writing, reading, and clearing data in Neo4j database.
+ */
 class Neo4jRepository : Closeable {
 	private lateinit var driver: Driver
 	private lateinit var session: Session
 
+	/**
+	 * Connects to `Neo4j` database using provided URI, username, and password.
+	 *
+	 * @param uri the URI of the Neo4j database
+	 * @param user the username for authentication
+	 * @param password the password for authentication
+	 */
 	fun connect(uri: String, user: String, password: String) {
 		driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password))
 		driver.verifyConnectivity()
@@ -26,6 +36,11 @@ class Neo4jRepository : Closeable {
 		println("Connected to Neo4j database")
 	}
 
+	/**
+	 * Writes the graph data from the provided [GraphPageViewModel] to the Neo4j database.
+	 *
+	 * @param graphPageView the GraphPageViewModel containing the graph data to be written
+	 */
 	fun writeData(graphPageView: GraphPageViewModel) {
 		clearDB()
 
@@ -78,6 +93,11 @@ class Neo4jRepository : Closeable {
 		println("Graph was saved")
 	}
 
+	/**
+	 * Reads the graph data from the Neo4j database and populates the provided [GraphPageViewModel].
+	 *
+	 * @param graphPageView the [GraphPageViewModel] to populate with the graph data
+	 */
 	fun readData(graphPageView: GraphPageViewModel) {
 		val vertexMap = mutableMapOf<VertexID, VertexData>()
 
@@ -166,6 +186,10 @@ class Neo4jRepository : Closeable {
 		println("Graph was loaded")
 	}
 
+	/**
+	 * Clears all data from the `Neo4j` database.
+	 * This function deletes all vertices and edges from the database.
+	 */
 	fun clearDB() {
 		session.writeTransaction { tx ->
 			tx.run("match (v) - [e] -> () delete v, e")
@@ -174,6 +198,14 @@ class Neo4jRepository : Closeable {
 		}
 	}
 
+	/**
+	 * Closes the Neo4j database connection and frees up any resources held by the driver and session.
+	 *
+	 * This method should be called when the Neo4jRepository instance is no longer needed to ensure proper cleanup.
+	 * After calling this method, the Neo4jRepository instance should not be used for any further operations.
+	 *
+	 * @throws Exception if an error occurs while closing the database connection or releasing resources
+	 */
 	override fun close() {
 		session.close()
 		driver.close()

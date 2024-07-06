@@ -1,4 +1,4 @@
-package utils.representation
+package utils.placement_strategy
 
 import androidx.compose.ui.unit.dp
 import themes.radiusVerticesStart
@@ -18,6 +18,8 @@ import kotlin.math.*
  *
  * @references https://en.wikipedia.org/wiki/Force-directed_graph_drawing
  * @references https://medialab.sciencespo.fr/publications/Jacomy_Heymann_Venturini-Force_Atlas2.pdf
+ *
+ * @property viewModel the [GraphViewModel] to place
  */
 class ForceDirectedPlacementStrategy(
 	private val viewModel: GraphViewModel,

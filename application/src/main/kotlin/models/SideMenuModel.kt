@@ -2,6 +2,13 @@ package models
 
 import models.utils.TabItem
 
+/**
+ * A model representing the side menu in an application.
+ * It manages a list of tabs and their visibility.
+ *
+ * @property tabsItems the list of tabs in the side menu
+ * @property tabsCount the number of tabs in the side menu
+ */
 class SideMenuModel {
 	private val _tabsItems = mutableListOf<List<TabItem>?>()
 	private val tabsIdentifier = mutableMapOf<String, TabItem>()
@@ -10,19 +17,38 @@ class SideMenuModel {
 	val tabsCount: Int
 		get() = _tabsItems.size
 
+	/**
+	 * Add tabs to the tabs list as one group.
+	 *
+	 * @param items the list of tabs to add to the list of tabs
+	 */
 	fun addTabs(items: List<TabItem>) {
 		_tabsItems.add(items)
 		items.forEach { tabsIdentifier[it.title] = it }
 	}
 
+	/**
+	 * Add tabs to the tabs list.
+	 *
+	 * @param items the list of tabs to add to the list of tabs
+	 */
 	fun addTabs(vararg items: TabItem) {
 		addTabs(items.toList())
 	}
 
+	/**
+	 * Adds a separator to the list of tabs.
+	 */
 	fun addSeparator() {
 		_tabsItems.add(null)
 	}
 
+	/**
+     * Changes the visibility of a tab.
+     *
+     * @param tabTitle the title of the tab to change the visibility of
+     * @param isHiddenState the new visibility of the tab
+	 */
 	fun changeTabVisibility(tabTitle: String, isHiddenState: Boolean) {
 		val tabItem = tabsIdentifier[tabTitle] ?: return
 		tabItem.isHidden.value = isHiddenState

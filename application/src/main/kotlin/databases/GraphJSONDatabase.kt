@@ -71,6 +71,16 @@ class GraphJSONDatabase : FileDatabase<GraphViewModel>(".json") {
 		graphJSONObject.write(writer, 1, 0)
 	}
 
+	/**
+	 * Converts a collection of [EdgeViewModel] objects into a JSONArray.
+	 * Each [EdgeViewModel] is represented as a JSONObject with the following properties:
+	 * - "source-id": The string representation of the source vertex ID.
+	 * - "target-id": The string representation of the target vertex ID.
+	 * - "weight": The weight of the edge.
+	 *
+	 * @param edges the collection of [EdgeViewModel] objects to be converted
+	 * @return a JSONArray containing the JSON representations of the [EdgeViewModel] objects
+	 */
 	private fun edgesToJSON(edges: Collection<EdgeViewModel>): JSONArray {
 		val edgesJSONObjects = mutableListOf<JSONObject>()
 		edges.forEach { edge ->
@@ -86,6 +96,19 @@ class GraphJSONDatabase : FileDatabase<GraphViewModel>(".json") {
 		return JSONArray(edgesJSONObjects)
 	}
 
+	/**
+	 * Converts a collection of [VertexViewModel] objects into a JSONArray.
+	 * Each [VertexViewModel] is represented as a JSONObject with the following properties:
+	 * - "id": The string representation of the vertex ID.
+	 * - "xPos": The x-coordinate position of the vertex.
+	 * - "yPos": The y-coordinate position of the vertex.
+	 * - "color": The color of the vertex represented as an integer in ARGB format.
+	 * - "radius": The radius of the vertex.
+	 * - "degree": The degree of the vertex.
+	 *
+	 * @param vertices the collection of [VertexViewModel] objects to be converted
+	 * @return a JSONArray containing the JSON representations of the [VertexViewModel] objects
+	 */
 	private fun verticesToJSON(vertices: Collection<VertexViewModel>): JSONArray {
 		val verticesJSONObjects = mutableListOf<JSONObject>()
 		vertices.forEach { vertex ->

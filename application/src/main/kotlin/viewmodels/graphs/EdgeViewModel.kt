@@ -9,6 +9,18 @@ import models.VertexID
 import themes.colorEdgesStart
 import themes.widthEdgesStart
 
+/**
+ * ViewModel for an edge in a graph.
+ *
+ * @property edge the underlying edge model
+ * @property source the source vertex of the edge
+ * @property target the target vertex of the edge
+ * @param isUnweighted indicates whether the edge is unweighted
+ * @property color the color of the edge. Default is [colorEdgesStart]
+ * @property width the width of the edge. Default is [widthEdgesStart]
+ * @property visibility indicates whether the edge is visible. Default is `false`
+ * @property label the edge's weight. Depends on `isUnweighted` parameter
+ */
 class EdgeViewModel(
 	val edge: WeightedEdge<VertexID>,
 	val source: VertexViewModel,

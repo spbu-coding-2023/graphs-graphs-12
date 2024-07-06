@@ -5,6 +5,17 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.vector.ImageVector
 
+/**
+ * Represents a tab item in a tabbed interface.
+ *
+ * @property title the title of the tab item
+ * @property iconSelected the selected icon of the tab item
+ * @property iconUnselected the unselected icon of the tab item
+ * @property isHidden a mutable state indicating whether the tab item is hidden or not. Default is false
+ * @property isSelectablePage indicates whether the tab item is a selectable page or not. Default is false
+ * @property dropDownMenuContext a composable function that provides a context menu for the tab item. Default is null
+ * @property onItemClick a function that is called when the tab item is clicked. Default is null
+ */
 data class TabItem(
 	val title: String,
 	val iconSelected: ImageVector,
@@ -31,6 +42,10 @@ data class TabItem(
 		return "TabItem(title = '$title', isHidden = ${isHidden.value})"
 	}
 
+	/**
+	 * Returns a function that calls the [onItemClick] function when invoked.
+	 * If [onItemClick] is null, returns null.
+	 */
 	fun onClick(): (() -> (Unit))? {
 		val onItemClick = this.onItemClick ?: return null
 		return { onItemClick(this) }

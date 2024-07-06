@@ -30,6 +30,8 @@ import viewmodels.pages.GraphPageViewModel
 import views.graphs.GraphView
 import views.graphs.colorChangeFlag
 
+// TODO(docs and refactor its)
+
 @Composable
 fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
 	val graphViewModel = graphPageViewModel.graphViewModel

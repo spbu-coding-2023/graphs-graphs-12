@@ -10,6 +10,23 @@ import models.VertexID
 import themes.colorVerticesStart
 import themes.radiusVerticesStart
 
+/**
+ * A ViewModel class representing a vertex in a graph.
+ *
+ * @property id the unique identifier of the vertex
+ * @param x the initial x-coordinate of the vertex
+ * @property xPos the current x-coordinate of the vertex
+ * @param y the initial y-coordinate of the vertex
+ * @property yPos the current y-coordinate of the vertex
+ * @param color the initial color of the vertex
+ * @property color the current color of the vertex
+ * @param radius the initial radius of the vertex
+ * @property radius the current radius of the vertex
+ * @param degree the initial degree of the vertex
+ * @property degree the current degree of the vertex
+ * @param visibility the initial visibility of the vertex
+ * @property visibility the current visibility of the vertex
+ */
 class VertexViewModel(
 	val id: VertexID,
 	x: Dp = 0.dp,
@@ -57,6 +74,17 @@ class VertexViewModel(
 		}
 	val label: String = id.valueToString()
 
+	/**
+	 * Function to handle dragging of the vertex.
+	 *
+	 * This function updates the x and y positions of the vertex based on the drag offset.
+	 *
+	 * @param offset the offset of the drag event. The offset contains the change in position
+	 * 					since the last drag event. The x and y properties of the offset represent
+	 * 					the change in x and y coordinates, respectively
+	 *
+	 * @see Offset
+	 */
 	fun onDrag(offset: Offset) {
 		xPos += offset.x.dp
 		yPos += offset.y.dp
