@@ -21,6 +21,13 @@ import utils.AlgorithmTextButton
 import utils.ActionTextButton
 import viewmodels.pages.GraphPageViewModel
 
+/**
+ * ViewModel for the side menu. Manages the tabs, their visibility, and the pages they correspond to.
+ *
+ * @param graphPageViewModel the ViewModel for the graph page
+ * @property pagesCount the number of pages in the side menu
+ * @property tabsItems the list of tabs in the side menu
+ */
 class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 	private val pagesOfTabsItems = mutableMapOf<String, Int>()
 	val pagesCount: Int
@@ -29,6 +36,9 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 	val tabsItems: List<List<TabItem>?>
 		get() = sideMenuModel.tabsItems
 
+	/**
+	 * Initializes the side menu with tabs and their properties.
+	 */
 	init {
 		sideMenuModel.addTabs(
 			TabItem("Home", Icons.Filled.Home, Icons.Outlined.Home, isSelectablePage = true),
@@ -120,16 +130,35 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 		)
 	}
 
+	/**
+	 * Initializes the map of tab names to their corresponding page indices.
+	 * This map is used to determine which page to display when a tab is selected.
+	 */
 	init {
 		pagesOfTabsItems["Home"] = PageType.HOME_PAGE.ordinal
 		pagesOfTabsItems["GraphView"] = PageType.GRAPH_VIEW_PAGE.ordinal
 		pagesOfTabsItems["Settings"] = PageType.SETTINGS_PAGE.ordinal
 	}
 
+	/**
+	 * Returns the page index corresponding to the given tab name.
+	 *
+	 * @param tabName the name of the tab for which the page index is required
+	 * @return the page index corresponding to the given tab name. If the tab name is not found, returns 0.
+	 */
 	fun pageOfTab(tabName: String): Int {
 		return pagesOfTabsItems.getOrDefault(tabName, 0)
 	}
 
+	/**
+	 * Changes the visibility of a tab in the side menu.
+	 *
+	 * @param tabName the name of the tab whose visibility needs to be changed.
+	 * @param isHiddenState a boolean indicating whether the tab should be hidden or visible.
+	 * If true, the tab will be hidden; if false, the tab will be visible.
+	 *
+	 *  @see SideMenuModel.changeTabVisibility
+	 */
 	fun changeVisibility(tabName: String, isHiddenState: Boolean) {
 		sideMenuModel.changeTabVisibility(tabName, isHiddenState)
 	}

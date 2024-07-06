@@ -15,6 +15,16 @@ import views.graphs.colorChangeFlag
 import windowSizeStart
 import kotlin.random.Random
 
+/**
+ * ViewModel for the Graph. Manages the state of the graph and provides methods for graph operations.
+ *
+ * @property graph the weighted graph to manage
+ * @property vertexType the type of vertices in the graph
+ * @property isUnweighted whether the graph is unweighted
+ * @property vertices the collection of vertices in the graph
+ * @property edges the collection of edges in the graph
+ * @property countEdges the number of edges in the graph
+ */
 class GraphViewModel(
 	val graph: WeightedGraph<VertexID>,
 	val vertexType: VertexIDType,
@@ -52,6 +62,11 @@ class GraphViewModel(
 		}
 	}
 
+	/**
+	 * Adds a vertex to the graph with the given id.
+	 *
+	 * @param id the id of the vertex to be added
+	 */
 	fun addVertex(id: VertexID) {
 		graph.addVertex(id)
 		_vertices.putIfAbsent(
@@ -69,6 +84,11 @@ class GraphViewModel(
 		)
 	}
 
+	/**
+	 * Adds a vertex to the graph using the provided [VertexViewModel].
+	 *
+	 * @param vertex the [VertexViewModel] representing the vertex to be added
+	 */
 	fun addVertex(vertex: VertexViewModel) {
 		graph.addVertex(vertex.id)
 		_vertices.putIfAbsent(vertex.id, vertex)
@@ -91,6 +111,11 @@ class GraphViewModel(
 		graph.removeVertex(id)
 	}
 
+	/**
+	 * Removes a vertex from the graph and updates the edges accordingly.
+	 *
+	 * @param id the id of the vertex to be removed
+	 */
 	fun addEdge(idSource: VertexID, idTarget: VertexID, weight: Double = 1.0) { // todo(fix?!)
 		graph.addEdge(idSource, idTarget, weight)
 		val sourceViewModel = _vertices.getOrPut(idSource) {
@@ -145,6 +170,15 @@ class GraphViewModel(
 		}
 	}
 
+	// TODO(remove !! nullable assertion in all method lower)
+	/**
+	 * Removes an edge from the graph and updates the vertices' degrees accordingly.
+	 *
+	 * @param idSource the id of the source vertex of the edge to be removed
+	 * @param idTarget the id of the target vertex of the edge to be removed
+	 *
+	 * @throws NullPointerException if the edge does not exist in the graph or its vertices
+	 */
 	fun removeEdge(idSource: VertexID, idTarget: VertexID) {
 		_vertices[idSource]!!.degree--
 		if (!graph.isDirected) _vertices[idTarget]!!.degree--
@@ -153,6 +187,16 @@ class GraphViewModel(
 		graph.removeEdge(idSource, idTarget)
 	}
 
+	/**
+	 * Parses and visualizes the shortest path between two vertices using the Dijkstra's algorithm.
+	 *
+	 * @param idSource the id of the source vertex
+	 * @param idTarget the id of the target vertex
+	 *
+	 * @throws NullPointerException if the path contains vertices or edges
+	 *
+	 * @see DijkstraAlgorithm
+	 */
 	fun parseDijkstraAlgorithm(idSource: VertexID, idTarget: VertexID) {
 		val resultAlgo = DijkstraAlgorithm(graph)
 		val path = resultAlgo.getPath(idSource, idTarget) ?: return
@@ -167,6 +211,16 @@ class GraphViewModel(
 		}
 	}
 
+	/**
+	 * Parses and visualizes the shortest path between two vertices using the Bellman-Ford algorithm.
+	 *
+	 * @param idSource the id of the source vertex
+	 * @param idTarget the id of the target vertex
+	 *
+	 * @throws NullPointerException if the path contains vertices or edges
+	 *
+	 * @see BellmanFordShortestPath
+	 */
 	fun parseBellmanFordAlgorithm(idSource: VertexID, idTarget: VertexID) {
 		val resultAlgo = BellmanFordShortestPath(graph)
 		val path = resultAlgo.getPath(idSource, idTarget) ?: return
@@ -181,6 +235,13 @@ class GraphViewModel(
 		}
 	}
 
+	/**
+	 * Parses and visualizes the strongly connected components of the graph using Tarjan's algorithm.
+	 *
+	 * @throws NullPointerException if the graph is null or the components contain vertices
+	 *
+	 * @see TarjanStrongConnectivityInspector
+	 */
 	fun parseTarjanStrongConnectivityAlgorithm() {
 		val resultAlgo = TarjanStrongConnectivityInspector(graph)
 		val components = resultAlgo.stronglyConnectedComponents()
@@ -199,6 +260,15 @@ class GraphViewModel(
 		}
 	}
 
+	/**
+	 * Parses and visualizes the cycles in the graph that include the given vertex using the CyclesSearchAlgorithms.
+	 *
+	 * @param idVertex the id of the vertex to search for cycles
+	 *
+	 * @throws NullPointerException if the graph is null or the cycles contain vertices
+	 *
+	 * @see CyclesSearchAlgorithms
+	 */
 	fun parseCyclesSearchAlgorithm(idVertex: VertexID) {
 		val resultAlgo = CyclesSearchAlgorithms(graph)
 		val cycles = resultAlgo.searchVertexCycles(idVertex)
@@ -217,6 +287,13 @@ class GraphViewModel(
 		}
 	}
 
+	/**
+	 * Parses and visualizes the Minimum Spanning Tree (MST) of the graph using Kruskal's algorithm.
+	 *
+	 * @throws NullPointerException if the graph is null or the MST contains edges
+	 *
+	 * @see MSTAlgorithms.kruskalAlgorithm
+	 */
 	fun parseKruskalAlgorithm() {
 		val resultAlgo = MSTAlgorithms(graph)
 		val mst = resultAlgo.kruskalAlgorithm()
@@ -233,6 +310,13 @@ class GraphViewModel(
 		}
 	}
 
+	/**
+	 * Parses and visualizes the Minimum Spanning Tree (MST) of the graph using Prim's algorithm.
+	 *
+	 * @throws NullPointerException if the graph is null or the MST contains edges
+	 *
+	 * @see MSTAlgorithms.primAlgorithm
+	 */
 	fun parsePrimAlgorithm() {
 		val resultAlgo = MSTAlgorithms(graph)
 		val mst = resultAlgo.primAlgorithm()
@@ -249,6 +333,13 @@ class GraphViewModel(
 		}
 	}
 
+	/**
+	 * Parses and visualizes the bridges in the graph using Tarjan's bridge finding algorithm.
+	 *
+	 * @throws NullPointerException if the graph is null or the bridges contain edges
+	 *
+	 * @see TarjanBridgeFinding
+	 */
 	fun parseTarjanBridgeFinding() {
 		val resultAlgo = TarjanBridgeFinding(graph)
 		val bridges = resultAlgo.getBridges()
@@ -265,6 +356,14 @@ class GraphViewModel(
 		}
 	}
 
+	/**
+	 * Parses and visualizes the scores of vertices using the LeaderRank algorithm.
+	 * The scores are used to adjust the size of the vertices in the graph.
+	 *
+	 * @throws NullPointerException if the graph is null or the scores contain vertices
+	 *
+	 * @see LeaderRank
+	 */
 	fun parseLeaderRank() {
 		val resultAlgo = LeaderRank(graph)
 		val scores = resultAlgo.getVerticesScores()
@@ -276,6 +375,14 @@ class GraphViewModel(
 		}
 	}
 
+	/**
+	 * Parses and visualizes the clusters in the graph using the Louvain Clustering algorithm.
+	 * The clusters are used to adjust the color of the vertices in the graph.
+	 *
+	 * @throws NullPointerException if the graph is null or the clusters contain vertices
+	 *
+	 * @see louvainClusteringMethod
+	 */
 	fun parseLouvainClustering() {
 		val resultAlgo = louvainClusteringMethod(graph)
 		colorChangeFlag.value = true

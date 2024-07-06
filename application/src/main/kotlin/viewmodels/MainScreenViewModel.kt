@@ -13,6 +13,9 @@ import viewmodels.pages.SettingsPageViewModel
  * @param settings the settings model to be used by the view models
  * @property indexSelectedPage the index of the selected page
  * @property settingsPageViewModel the view model for the settings screen
+ * @property graphPageViewModel the view model for the graph screen
+ * @property sideMenuViewModel the view model for the side menu
+ * @property homePageViewModel the view model for the home screen
  */
 class MainScreenViewModel(settings: SettingsModel) {
 	val indexSelectedPage = mutableStateOf(0) // TODO(change to mutableIntState)

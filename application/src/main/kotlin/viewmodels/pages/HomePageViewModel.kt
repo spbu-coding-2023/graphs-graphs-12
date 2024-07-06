@@ -18,6 +18,20 @@ import viewmodels.SideMenuViewModel
 import viewmodels.graphs.GraphViewModel
 import java.io.File
 
+/**
+ * ViewModel for the Home Page.
+ * Manages tasks related to creating and loading graphs.
+ *
+ * @property graphPageViewModel a ViewModel for the Graph Page
+ * @property indexSelectedPage a MutableState to keep track of the selected page index
+ * @property settings a SettingsModel instance for saving and loading graphs
+ * @property sideMenu a SideMenuViewModel instance for managing the side menu
+ * @property graphPage a GraphPageViewModel instance for the Graph Page
+ * @property tasks a List of tasks to be displayed in the side menu
+ * @property previouslyLoadedGraph a set of previously loaded graphs
+ * @property isOpenDialogOfCreatingNewGraph indicate keep track of whether the dialog of creating a new graph is open
+ * @property isOpenDialogOfLoadingNewGraph indicate keep track of whether the dialog of loading a new graph is open
+ */
 class HomePageViewModel(
 	val graphPageViewModel: GraphPageViewModel,
 	val indexSelectedPage: MutableState<Int>,
@@ -45,6 +59,11 @@ class HomePageViewModel(
 			_isOpenDialogOfLoadingNewGraph.value = value
 		}
 
+	/**
+	 * Initializes the tasks list with two ListWidgetItem instances.
+	 * The first item represents the "Create Graph" task, which opens a dialog to create a new graph.
+	 * The second item represents the "Load graph" task, which opens a dialog to load an existing graph.
+	 */
 	init {
 		_tasks.add(
 			ListWidgetItem(
@@ -62,6 +81,16 @@ class HomePageViewModel(
 		)
 	}
 
+	/**
+	 * Function to create a new graph based on the provided parameters.
+	 *
+	 * @param graphName the name of the graph
+	 * @param vertexIDType the type of vertex IDs (e.g., [String], [Int])
+	 * @param isGraphDirected indicates whether the graph is directed or undirected
+	 * @param isGraphWeighted indicates whether the graph is weighted or unweighted
+	 * @param savingType the type of graph saving
+	 * @param saveFolder the folder where the graph will be saved
+	 */
 	fun createGraph(
 		graphName: String,
 		vertexIDType: VertexIDType,
@@ -88,6 +117,13 @@ class HomePageViewModel(
 		}
 	}
 
+	/**
+	 * Function to load graph information from a specified path and saving type.
+	 * This function adds the loaded graph information to the previously loaded graphs list.
+	 *
+	 * @param savingType the type of graph saving
+	 * @param path the path where the graph is located
+	 */
 	fun loadGraphInfo(savingType: GraphSavingType, path: String) {
 		val graphView = graphPage.graphViewModel ?: return
 		val file = File(path)

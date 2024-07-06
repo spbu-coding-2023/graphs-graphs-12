@@ -17,6 +17,18 @@ import viewmodels.graphs.GraphViewModel
 import windowSizeStart
 import java.io.File
 
+/**
+ * ViewModel for the GraphPage. Manages the state of the graph, algorithms, and representation strategies.
+ *
+ * @property settings the SettingsModel instance for saving and loading graph data
+ * @property indexSelectedPage the MutableState of the currently selected page index
+ * @property representationStrategy the MutableState of the current representation strategy
+ * @property dbType the current database type
+ * @property dbPath the current database path
+ * @property graphViewModel the GraphViewModel instance for the current graph
+ * @property algorithms the list of algorithms to be displayed in the side menu
+ * @property mapRepresentationModes the list of map representation modes to be displayed in the side menu
+ */
 class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: MutableState<Int>) {
 	private val _representationStrategy = mutableStateOf<RepresentationStrategy>(RandomPlacementStrategy())
 	private val _graph = mutableStateOf<GraphViewModel?>(null)
@@ -131,9 +143,21 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 		"Circular" to { graphPageViewModel -> graphPageViewModel.representationStrategy = CircularPlacementStrategy() },
 		"Force-directed" to { graphPageViewModel ->
 			graphPageViewModel.representationStrategy = ForceDirectedPlacementStrategy(graphViewModel!!)
-		} // todo(!!)
+		}
 	)
 
+	/**
+	 * Updates the graph representation based on the current strategy.
+	 *
+	 * This function is responsible for repositioning the vertices of the graph based on the selected
+	 * representation strategy. It retrieves the current graph model from the `_graph` state, and if it's not null,
+	 * it calls the `place` method of the `representationStrategy` with the current window size and the vertices
+	 * of the graph model.
+	 *
+	 * @see RepresentationStrategy.place
+	 * @see windowSizeStart
+	 * @see GraphViewModel.vertices
+	 */
 	private fun updateGraphRepresentation() {
 		// TODO(run it by coroutine scope)
 		// TODO(change values of `width` and `height`)
@@ -145,12 +169,32 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 		)
 	}
 
+	/**
+	 * Saves the current graph state to the specified database.
+	 *
+	 * This function retrieves the current graph model from the `_graph` state and checks if it's not null.
+	 * If the graph model is not null, it calls the `saveGraph` method of the `settings` instance, passing
+	 * the current `GraphPageViewModel` instance, the `dbType`, and the parent directory of the `dbPath`.
+	 *
+	 * @throws Exception if an error occurs during the saving process
+	 */
 	fun save() {
 		val graph = _graph.value
 		if (graph != null) settings.saveGraph(this, dbType, if (dbPath == "") "" else File(dbPath).parent)
 	}
 }
 
+// TODO(Move to `colorsForOutlinedTextField` to `colorsForTextButton` and themes/Color.kt)
+
+/**
+ * Creates and returns a [TextFieldColors] instance with custom colors for an outlined text field.
+ *
+ * @return a [TextFieldColors] instance with custom colors
+ *
+ * @see TextFieldDefaults.textFieldColors
+ * @see JetTheme.colors
+ * @see Color
+ */
 @Composable
 private fun colorsForOutlinedTextField(): TextFieldColors {
 	return TextFieldDefaults.textFieldColors(
@@ -161,6 +205,14 @@ private fun colorsForOutlinedTextField(): TextFieldColors {
 	)
 }
 
+/**
+ * Creates and returns a [ButtonColors] instance with custom colors for a text button.
+ *
+ * @return a [ButtonColors] instance with custom colors
+ *
+ * @see ButtonDefaults.buttonColors
+ * @see JetTheme.colors
+ */
 @Composable
 private fun colorsForTextButton(): ButtonColors {
 	return ButtonDefaults.buttonColors(
@@ -171,6 +223,23 @@ private fun colorsForTextButton(): ButtonColors {
 	)
 }
 
+/**
+ * Creates a drop-down menu for entering source and target vertices for shortest path algorithms.
+ *
+ * This function is used to create a user interface for entering the source and target vertices for
+ * shortest path algorithms (Bellman-Ford, Dijkstra) in the GraphPageViewModel. It uses Jetpack Compose
+ * components to create an input form with error handling.
+ *
+ * @param graphViewModel the GraphViewModel instance for the current graph
+ * @param algButton the AlgorithmModel instance representing the selected shortest path algorithm
+ *
+ * @see AlgorithmModel
+ * @see GraphViewModel
+ * @see OutlinedTextField
+ * @see TextButton
+ * @see colorsForOutlinedTextField
+ * @see colorsForTextButton
+ */
 @Composable
 private fun dropDownMenuForSP(
 	graphViewModel: GraphViewModel?,
