@@ -23,6 +23,15 @@ import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
 import kotlin.math.*
 
+/**
+ * This function represents the GraphView composable in Jetpack Compose.
+ * It displays a graph with vertices and edges based on the provided ViewModel.
+ *
+ * @param graphViewModel the ViewModel containing the graph data
+ * @param idVerticesInfo a mutable state to hold the selected vertex's ViewModel
+ * @param centerBox the initial center position of the graph
+ * @param changeCenter a mutable state to indicate if the center position needs to be reset
+ */
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun GraphView(

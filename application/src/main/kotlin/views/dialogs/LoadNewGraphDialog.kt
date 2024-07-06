@@ -21,6 +21,11 @@ import utils.ComboBox
 import utils.GraphSavingType
 import viewmodels.dialogs.LoadNewGraphDialogViewModel
 
+/**
+ * A composable function that represents a dialog window for loading a new graph.
+ *
+ * @param viewModel the view model that holds the state and logic for the dialog
+ */
 @Composable
 fun LoadNewGraphDialog(viewModel: LoadNewGraphDialogViewModel) {
 	val coroutineScope = rememberCoroutineScope()

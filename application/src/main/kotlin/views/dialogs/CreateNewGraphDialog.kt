@@ -26,6 +26,11 @@ import utils.GraphSavingType
 import utils.VertexIDType
 import viewmodels.dialogs.CreateNewGraphDialogViewModel
 
+/**
+ * A composable function that creates a dialog window for creating a new graph.
+ *
+ * @param viewModel the view model for the create new graph dialog
+ */
 @Composable
 fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 	val coroutineScope = rememberCoroutineScope()

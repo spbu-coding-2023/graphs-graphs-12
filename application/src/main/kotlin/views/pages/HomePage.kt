@@ -21,6 +21,13 @@ import viewmodels.pages.HomePageViewModel
 import views.dialogs.CreateNewGraphDialog
 import views.dialogs.LoadNewGraphDialog
 
+/**
+ * This function represents the HomePage composable in the application.
+ * It displays two lists: one for previously loaded graphs and another for tasks.
+ * It also handles the opening of two dialogs: one for creating a new graph and another for loading a new graph.
+ *
+ * @param viewModel the view model for the HomePage. It provides data and functionality for the composable
+ */
 @Composable
 fun HomePage(viewModel: HomePageViewModel) {
 	val modifierColumn = Modifier

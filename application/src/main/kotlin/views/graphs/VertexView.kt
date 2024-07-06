@@ -25,9 +25,21 @@ import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
 import windowSizeStart
 
+// TODO(move its params to SettingsModel)
 private var curVertexColor: Color = colorVerticesStart
 internal val colorChangeFlag: MutableState<Boolean> = mutableStateOf(false)
 
+/**
+ * This function represents a composable view for a vertex in a graph.
+ *
+ * @param vertexViewModel the ViewModel representing the vertex
+ * @param center the center position of the graph
+ * @param zoomAnimated the current zoom level of the graph
+ * @param graphViewModel the ViewModel representing the entire graph
+ * @param idVerticesInfo a mutable state holding the currently selected vertex
+ * @param coroutinePlace a coroutine scope for running placement algorithms
+ * @param isKeyboardPressed a mutable state indicating whether the shift key is pressed
+ */
 @Composable
 fun VertexView(
 	vertexViewModel: VertexViewModel,

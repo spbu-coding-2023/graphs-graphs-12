@@ -23,12 +23,29 @@ import androidx.compose.ui.unit.Dp
 import themes.*
 import viewmodels.pages.SettingsPageViewModel
 
+// TODO(move its to utils package)
+/**
+ * A data class representing a menu item model.
+ *
+ * @param title the title of the menu item
+ * @param currentIndex the index of the currently selected value. Default is 0
+ * @param values a list of possible values for the menu item
+ */
 data class MenuItemModel(
 	val title: String,
 	val currentIndex: Int = 0,
 	val values: List<String>
 )
 
+/**
+ * This is the main composable function for the Settings Page.
+ *
+ * @param isDarkMode a [MutableState] that holds the current dark mode status
+ * @param currentFontSize a [MutableState] that holds the current font size
+ * @param currentStyle a [MutableState] that holds the current style
+ * @param currentCornersStyle a [MutableState] that holds the current corners style
+ * @param currentFontFamily a [MutableState] that holds the current font family
+ */
 @Composable
 fun SettingsPage(
 	isDarkMode: MutableState<Boolean>,
@@ -215,6 +232,14 @@ fun SettingsPage(
 	}
 }
 
+// TODO(change visability to private of all funcs that down of it write)
+
+/**
+ * This is a composable function for a menu item.
+ *
+ * @param model the menu item model
+ * @param onItemSelected a callback function that will be invoked when an item is selected.
+ */
 @Composable
 internal fun MenuItem(
 	model: MenuItemModel,
@@ -277,6 +302,17 @@ internal fun MenuItem(
 
 }
 
+/**
+ * This is a composable function for a theme switcher.
+ *
+ * @param darkTheme a boolean indicating the current dark mode status
+ * @param size the size of the theme switcher
+ * @param iconSize the size of the icons inside the theme switcher
+ * @param padding the padding around the theme switcher
+ * @param shape the shape of the theme switcher
+ * @param animationSpec the animation spec for the theme switcher
+ * @param onClick a callback function that will be invoked when the theme switcher is clicked
+ */
 @Composable
 fun ThemeSwitcher(
 	darkTheme: Boolean,

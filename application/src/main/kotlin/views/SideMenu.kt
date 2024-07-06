@@ -18,6 +18,13 @@ import themes.JetTheme
 import themes.sizeBottom
 import viewmodels.SideMenuViewModel
 
+/**
+ * This function is responsible for rendering the side menu of the application.
+ *
+ * @param statePager the state of the pager component that manages the pages
+ * @param indexSelectedPage the mutable state that holds the index of the currently selected page
+ * @param viewModel the view model that provides data and functionality for the side menu
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SideMenu(statePager: PagerState, indexSelectedPage: MutableState<Int>, viewModel: SideMenuViewModel) {
@@ -27,10 +34,16 @@ fun SideMenu(statePager: PagerState, indexSelectedPage: MutableState<Int>, viewM
 			else SideMenuTabColumn(tabsColumn, statePager, indexSelectedPage, viewModel)
 		}
 	}
-	// TODO(Choose version of side menu: `newVersion` or 'lastVersion')
-//	newVersion(statePager, indexSelectedPage, viewModel)
 }
 
+/**
+ * This function is responsible for rendering a column of tabs within the side menu.
+ *
+ * @param tabsColumn a list of [TabItem] objects representing the tabs to be displayed in the column
+ * @param statePager the [PagerState] object that keeps track of the current page index in the parent composable
+ * @param indexSelectedPage a [MutableState] object that holds the index of the currently selected page
+ * @param viewModel the [SideMenuViewModel] object that provides data and functionality for the side menu
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SideMenuTabColumn(tabsColumn: List<TabItem>, statePager: PagerState, indexSelectedPage: MutableState<Int>, viewModel: SideMenuViewModel) {
@@ -87,52 +100,6 @@ fun SideMenuTabColumn(tabsColumn: List<TabItem>, statePager: PagerState, indexSe
 							}
 						)
 					}
-				}
-			}
-		}
-	}
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun newVersion(statePager: PagerState, indexSelectedPage: MutableState<Int>, viewModel: SideMenuViewModel) {
-	val modifierColumns = Modifier
-		.padding(4.dp)
-		.clip(JetTheme.shapes.cornerStyle)
-		.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle)
-
-	val coroutineScope = rememberCoroutineScope()
-	NavigationRail(header = null) {
-		viewModel.tabsItems.forEach { tabs ->
-			if (tabs == null) Spacer(Modifier.weight(1f))
-			else Column(
-				modifierColumns,
-				Arrangement.spacedBy(10.dp)
-			) {
-				tabs.forEach loop@ { tab ->
-					if (tab.isHidden.value) return@loop // DOC(https://kotlinlang.org/docs/returns.html#return-to-labels)
-					val itemPageIndex = viewModel.pageOfTab(tab.title)
-					val onItemClick = tab.onClick()
-					NavigationRailItem(
-						modifier = Modifier.size(sizeBottom),
-						icon = {
-							Icon(
-								imageVector = if (statePager.currentPage == itemPageIndex) tab.iconSelected else tab.iconUnselected,
-								contentDescription = tab.title,
-								tint = JetTheme.colors.tintColor
-							)
-						},
-						selected = statePager.currentPage == itemPageIndex,
-						onClick = {
-							if (onItemClick != null) onItemClick()
-							if (onItemClick == null || tab.isSelectablePage) {
-								coroutineScope.launch {
-									statePager.scrollToPage(itemPageIndex)
-									indexSelectedPage.value = itemPageIndex
-								}
-							}
-						},
-					)
 				}
 			}
 		}
