@@ -40,9 +40,9 @@ class CircularPlacementStrategy : RepresentationStrategy {
 	/**
 	 * Rotates a point around a pivot point by the given angle.
 	 *
-	 * @param pivot The pivot point around which the point will be rotated.
-	 * @param angle The angle in radians by which the point will be rotated.
-	 * @return The rotated point.
+	 * @param pivot the pivot point around which the point will be rotated
+	 * @param angle the angle in radians by which the point will be rotated
+	 * @return the rotated point
 	 */
 	private fun Pair<Double, Double>.rotate(pivot: Pair<Double, Double>, angle: Double): Pair<Double, Double> {
 		val sin = sin(angle)

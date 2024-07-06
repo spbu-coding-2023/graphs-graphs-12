@@ -336,9 +336,9 @@ fun CustomRadioButton(
 /**
  * [Composable] function to display an algorithm button with dropdown menu.
  *
- * @param graphViewModel the [GraphViewModel] instance to interact with the graph.
- * @param algButton the [AlgorithmModel] instance to be displayed.
- * @param modifier the [Modifier] to apply to this layout node.
+ * @param graphViewModel the [GraphViewModel] instance to interact with the graph
+ * @param algButton the [AlgorithmModel] instance to be displayed
+ * @param modifier the [Modifier] to apply to this layout node
  */
 @Composable
 fun AlgorithmTextButton(
@@ -400,9 +400,9 @@ fun AlgorithmTextButton(
 /**
  * [Composable] function to display a button with a specific action.
  *
- * @param graphPageViewModel the [GraphPageViewModel] instance to interact with the graph page.
- * @param actionEntry a [Map.Entry] containing the action label and its corresponding function.
- * @param modifier the [Modifier] to apply to this layout node.
+ * @param graphPageViewModel the [GraphPageViewModel] instance to interact with the graph page
+ * @param actionEntry a [Map.Entry] containing the action label and its corresponding function
+ * @param modifier the [Modifier] to apply to this layout node
  */
 @Composable
 fun ActionTextButton(
