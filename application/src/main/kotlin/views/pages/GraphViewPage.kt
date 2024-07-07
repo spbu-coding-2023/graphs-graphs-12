@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import graphs_lab.core.edges.WeightedEdge
@@ -30,10 +31,8 @@ import viewmodels.pages.GraphPageViewModel
 import views.graphs.GraphView
 import views.graphs.colorChangeFlag
 
-// TODO(docs and refactor its)
-
 /**
- * This function represents the GraphViewPage composable in the application.
+ * This is a composable function for representing [GraphViewModel].
  *
  * @param graphPageViewModel the view model for the GraphViewPage. It provides data and functionality for the composable
  */
@@ -43,15 +42,15 @@ fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
 
 	val changeCenter = remember { mutableStateOf(false) }
 
-	val isOpenedContextGraph = remember { mutableStateOf(true) }
-	val isOpenedContextEdge = remember { mutableStateOf(false) }
+	val isOpenedMenuGraph = remember { mutableStateOf(true) }
+	val isOpenedMenuVertex = remember { mutableStateOf(false) }
 	val idVerticesInfo = remember { mutableStateOf<VertexViewModel?>(null) }
 	LaunchedEffect(idVerticesInfo.value) {
 		if (idVerticesInfo.value == null) {
-			isOpenedContextEdge.value = false
+			isOpenedMenuVertex.value = false
 		} else {
-			isOpenedContextGraph.value = false
-			isOpenedContextEdge.value = true
+			isOpenedMenuGraph.value = false
+			isOpenedMenuVertex.value = true
 		}
 	}
 
@@ -70,16 +69,15 @@ fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
 				.background(Color(175, 218, 252), JetTheme.shapes.cornerStyle)
 		) {
 			GraphView(graphViewModel, idVerticesInfo, Offset(maxWidth.value, maxHeight.value), changeCenter)
-
-			IconResetGraph(
+			ButtonResetGraphDisplay(
 				graphViewModel,
 				changeCenter,
 				Modifier.padding(paddingCustom).align(Alignment.TopEnd),
 				modifierButtons,
 			)
 			Box(Modifier.fillMaxSize()) {
-				ColumnInfoGraph(
-					graphViewModel, idVerticesInfo, isOpenedContextGraph, isOpenedContextEdge,
+				MenuInteraction(
+					graphViewModel, idVerticesInfo, isOpenedMenuGraph, isOpenedMenuVertex,
 					Modifier.align(Alignment.BottomEnd), modifierButtons
 				)
 			}
@@ -88,67 +86,23 @@ fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
 }
 
 /**
- * This is a composable function for drawing the icon that resets the [GraphViewModel] display.
+ * This is a composable function for interaction with [GraphViewModel] items.
  *
- * @param graphViewModel the graph view model whose display will be reset
- * @param changeCenter the boolean variable that sets [graphViewModel] in center of the monitor if true
- * @param modifierBox the box modifier that contains the reset icon
- * @param modifierButtons the iconButton modifier
+ * @param graphViewModel the graph view model whose info is represented
+ * @param idVerticesInfo the vertex id of [graphViewModel]
+ * @param isOpenedMenuGraph true if [MenuGraph] is opened
+ * @param isOpenedMenuVertex true if [MenuVertex] is opened
+ * @param modifierParent the parent, that contains a button, modifier
+ * @param modifierButton the button modifier
  */
 @Composable
-fun IconResetGraph(
-	graphViewModel: GraphViewModel,
-	changeCenter: MutableState<Boolean>,
-	modifierBox: Modifier,
-	modifierButtons: Modifier
-) {
-	Column(modifierBox) {
-		IconButton(
-			onClick = {
-				colorChangeFlag.value = true
-
-				graphViewModel.vertices.forEach {
-					it.radius = radiusVerticesStart
-					it.color = colorVerticesStart
-					it.visibility = true
-				}
-				graphViewModel.edges.forEach {
-					it.width = widthEdgesStart
-					it.color = colorEdgesStart
-					it.visibility = false
-				}
-				changeCenter.value = true
-			},
-			modifier = modifierButtons.pointerHoverIcon(PointerIcon.Hand),
-			content = {
-				Icon(
-					imageVector = Icons.Default.ResetTv,
-					contentDescription = "Reset the graph",
-					tint = JetTheme.colors.tintColor,
-				)
-			}
-		)
-	}
-}
-
-/**
- * This is a composable function for drawing the column that represents info about the [GraphViewModel].
- *
- * @param graphViewModel the graph view model whose info will be represented
- * @param idVerticesInfo the vertex id whose info will be represented
- * @param isOpenedContextGraph the boolean variable that opens vertices context of the graph if true
- * @param isOpenedContextEdge the boolean variable that opens edges context of the graph if true
- * @param modifierBox the box modifier that contains info about [graphViewModel]
- * @param modifierButtons the iconButton modifier
- */
-@Composable
-fun ColumnInfoGraph(
+fun MenuInteraction(
 	graphViewModel: GraphViewModel,
 	idVerticesInfo: MutableState<VertexViewModel?>,
-	isOpenedContextGraph: MutableState<Boolean>,
-	isOpenedContextEdge: MutableState<Boolean>,
-	modifierBox: Modifier,
-	modifierButtons: Modifier
+	isOpenedMenuGraph: MutableState<Boolean>,
+	isOpenedMenuVertex: MutableState<Boolean>,
+	modifierParent: Modifier,
+	modifierButton: Modifier
 ) {
 	val isShownWeigh = remember { mutableStateOf(false) }
 	LaunchedEffect(isShownWeigh.value) {
@@ -164,67 +118,77 @@ fun ColumnInfoGraph(
 	}
 
 	Column(
-		modifier = modifierBox.padding(paddingCustom).clip(JetTheme.shapes.cornerStyle),
+		modifier = modifierParent.padding(paddingCustom).clip(JetTheme.shapes.cornerStyle),
 		verticalArrangement = Arrangement.spacedBy(paddingCustom)
 	) {
-		IconButton(
-			onClick = { isOpenedContextGraph.value = !isOpenedContextGraph.value },
-			modifier = modifierButtons
-				.align(Alignment.End)
-				.pointerHoverIcon(PointerIcon.Hand),
-			content = {
-				Icon(
-					imageVector = if (isOpenedContextGraph.value) Icons.Default.ArrowDownward else Icons.Default.ArrowUpward,
-					contentDescription = "Show menu interaction",
-					tint = JetTheme.colors.tintColor
-				)
-			}
-		)
+		ButtonOpeningMenuGraph(isOpenedMenuGraph, modifierButton.align(Alignment.End))
 
+		val modifierAnimation = Modifier
+			.clip(JetTheme.shapes.cornerStyle)
+			.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle)
 		AnimatedVisibility(
-			visible = isOpenedContextGraph.value,
-			modifier = Modifier
-				.clip(JetTheme.shapes.cornerStyle)
-				.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle)
+			visible = isOpenedMenuGraph.value,
+			modifier = modifierAnimation
 		) {
-			MenuAddingItem(graphViewModel, isShownId, isShownWeigh)
+			MenuGraph(graphViewModel, isShownId, isShownWeigh)
 		}
-
 		AnimatedVisibility(
-			visible = isOpenedContextEdge.value,
-			modifier = Modifier
-				.clip(JetTheme.shapes.cornerStyle)
-				.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle)
+			visible = isOpenedMenuVertex.value,
+			modifier = modifierAnimation
 		) {
-			MenuEditingItem(graphViewModel, idVerticesInfo)
+			MenuVertex(graphViewModel, idVerticesInfo)
 		}
 	}
 }
 
 /**
- * This is a composable function for drawing menu that adds an item in the [GraphViewModel].
+ * This is a composable function for displaying info about [GraphViewModel] and adding [GraphViewModel] items.
  *
- * @param graphViewModel the graph view model whose info will be represented
- * @param isShownId the boolean variable that shows ids of the graph if true
- * @param isShownWeigh the boolean variable that shows weighs of the graph if true
+ * @param graphViewModel the graph view model whose info is represented
+ * @param isShownId true if ids is shown
+ * @param isShownWeigh true if weighs is shown
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MenuAddingItem(graphViewModel: GraphViewModel, isShownId: MutableState<Boolean>, isShownWeigh: MutableState<Boolean>) {
-	val idFastAdd = remember { mutableIntStateOf(graphViewModel.vertices.size + 1) }
+fun MenuGraph(graphViewModel: GraphViewModel, isShownId: MutableState<Boolean>, isShownWeigh: MutableState<Boolean>) {
+	Row(
+		modifier = Modifier
+			.fillMaxWidth()
+			.padding(paddingCustom)
+			.clip(JetTheme.shapes.cornerStyle)
+			.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle),
+		horizontalArrangement = Arrangement.spacedBy(paddingCustom)
+	) {
+		MenuGraphInfo(graphViewModel, isShownId, isShownWeigh, Modifier.weight(1f).height(145.dp))
+		MenuAddingItemGraph(graphViewModel, isShownId, isShownWeigh, Modifier.weight(1f).height(145.dp))
+	}
+}
 
-	val statePager = rememberPagerState { 2 }
-
+/**
+ * This is a composable function for displaying info about [GraphViewModel] and fast adding [GraphViewModel] items.
+ *
+ * @param graphViewModel the graph view model whose info is represented
+ * @param isShownId true if ids is shown
+ * @param isShownWeigh true if weighs is shown
+ * @param modifierParent the parent, that contains a graph info, modifier
+ */
+@Composable
+fun MenuGraphInfo(
+	graphViewModel: GraphViewModel,
+	isShownId: MutableState<Boolean>,
+	isShownWeigh: MutableState<Boolean>,
+	modifierParent: Modifier
+) {
+	val idFastAdding = remember { mutableIntStateOf(graphViewModel.vertices.size + 1) }
 	val addingVertex = {
-		val idNew = VertexID(checkAndGet(graphViewModel, idFastAdd), graphViewModel.vertexType)
+		val idNew = VertexID(checkAndGet(graphViewModel, idFastAdding), graphViewModel.vertexType)
 		graphViewModel.addVertex(idNew)
 
 		graphViewModel.vertices.find { it.id == idNew }!!.visibility = isShownId.value
 	}
 	val addingEdge = {
-		val idSourceNew = VertexID(checkAndGet(graphViewModel, idFastAdd), graphViewModel.vertexType)
+		val idSourceNew = VertexID(checkAndGet(graphViewModel, idFastAdding), graphViewModel.vertexType)
 		graphViewModel.addVertex(idSourceNew)
-		val idTargetNew = VertexID(checkAndGet(graphViewModel, idFastAdd), graphViewModel.vertexType)
+		val idTargetNew = VertexID(checkAndGet(graphViewModel, idFastAdding), graphViewModel.vertexType)
 		graphViewModel.addVertex(idTargetNew)
 		graphViewModel.addEdge(idSourceNew, idTargetNew, 1.0)
 
@@ -235,246 +199,202 @@ fun MenuAddingItem(graphViewModel: GraphViewModel, isShownId: MutableState<Boole
 		}!!.visibility = isShownWeigh.value
 	}
 
-	Row(
-		modifier = Modifier
-			.fillMaxWidth()
-			.padding(paddingCustom)
-			.clip(JetTheme.shapes.cornerStyle)
-			.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle),
-		horizontalArrangement = Arrangement.spacedBy(paddingCustom)
+	Column(
+		modifier = modifierParent,
+		verticalArrangement = Arrangement.spacedBy(paddingCustom)
 	) {
-		Column(
-			modifier = Modifier
-				.weight(1f)
-				.height(145.dp),
-			verticalArrangement = Arrangement.spacedBy(paddingCustom)
-		) {
-			val fontSizeText = 14.sp
-			val fontWeightText = FontWeight.W200
+		Text(
+			"Graph name: ${graphViewModel.graph.label}",
+			style = JetTheme.typography.toolbar,
+			maxLines = 1,
+			color = JetTheme.colors.secondaryText
+		)
+		Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
+			Column(
+				modifier = Modifier.weight(1f),
+				verticalArrangement = Arrangement.spacedBy(paddingCustom)
+			) {
+				val fontSizeText = 14.sp
 
-			Text(
-				"Graph name: ${graphViewModel.graph.label}",
-				style = JetTheme.typography.toolbar,
-				maxLines = 1,
-				color = JetTheme.colors.secondaryText
-			)
-			Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
-				Column(
-					modifier = Modifier.weight(1f),
-					verticalArrangement = Arrangement.spacedBy(paddingCustom)
-				) {
-					if (graphViewModel.graph.isDirected) {
-						Text(
-							"Directed",
-							fontSize = fontSizeText,
-							fontWeight = fontWeightText,
-							color = JetTheme.colors.secondaryText
-						)
-					} else {
-						Text(
-							"Undirected",
-							fontSize = fontSizeText,
-							fontWeight = fontWeightText,
-							color = JetTheme.colors.secondaryText
-						)
-					}
-					if (!graphViewModel.isUnweighted) {
-						Text(
-							"Weighted",
-							fontSize = fontSizeText,
-							fontWeight = fontWeightText,
-							color = JetTheme.colors.secondaryText
-						)
-					} else {
-						Text(
-							"Unweighted",
-							fontSize = fontSizeText,
-							fontWeight = fontWeightText,
-							color = JetTheme.colors.secondaryText
-						)
-					}
-					if (graphViewModel.vertexType == VertexIDType.INT_TYPE) {
-						Text(
-							"Int type",
-							fontSize = fontSizeText,
-							fontWeight = fontWeightText,
-							color = JetTheme.colors.secondaryText
-						)
-					} else {
-						Text(
-							"String type",
-							fontSize = fontSizeText,
-							fontWeight = fontWeightText,
-							color = JetTheme.colors.secondaryText
-						)
-					}
+				ListGraphProperty(graphViewModel, fontSizeText)
 
-					val modifierCheckbox = Modifier
-						.size(20.dp)
-						.padding(paddingCustom)
-					val colorCheckbox = CheckboxDefaults.colors(Color.Black)
+				val modifierCheckbox = Modifier
+					.size(20.dp)
+					.padding(paddingCustom)
+				val colorCheckbox = CheckboxDefaults.colors(Color.Black)
 
-					Spacer(Modifier.size(paddingCustom))
+				Spacer(Modifier.size(paddingCustom))
 
-					if (!graphViewModel.isUnweighted) {
-						Box(Modifier.fillMaxWidth()) {
-							Text("Show weight", fontSize = fontSizeText, color = JetTheme.colors.secondaryText)
-							Checkbox(
-								checked = isShownWeigh.value,
-								onCheckedChange = { isShownWeigh.value = !isShownWeigh.value },
-								modifier = modifierCheckbox.align(Alignment.CenterEnd),
-								colors = colorCheckbox
-							)
-						}
-					}
-
+				if (!graphViewModel.isUnweighted) {
 					Box(Modifier.fillMaxWidth()) {
-						Text("Show id", fontSize = fontSizeText, color = JetTheme.colors.secondaryText)
+						Text("Show weight", fontSize = fontSizeText, color = JetTheme.colors.secondaryText)
 						Checkbox(
-							checked = isShownId.value,
-							onCheckedChange = { isShownId.value = !isShownId.value },
+							checked = isShownWeigh.value,
+							onCheckedChange = { isShownWeigh.value = !isShownWeigh.value },
 							modifier = modifierCheckbox.align(Alignment.CenterEnd),
 							colors = colorCheckbox
 						)
 					}
 				}
 
-				Column(
-					modifier = Modifier.weight(2f),
-					verticalArrangement = Arrangement.spacedBy(paddingCustom)
-				) {
-					BoxFastAddingItem("Vertices:", graphViewModel.vertices.size, addingVertex)
-					BoxFastAddingItem("Edges:", graphViewModel.countEdges, addingEdge)
+				Box(Modifier.fillMaxWidth()) {
+					Text("Show id", fontSize = fontSizeText, color = JetTheme.colors.secondaryText)
+					Checkbox(
+						checked = isShownId.value,
+						onCheckedChange = { isShownId.value = !isShownId.value },
+						modifier = modifierCheckbox.align(Alignment.CenterEnd),
+						colors = colorCheckbox
+					)
 				}
 			}
-		}
 
-		Column(
-			Modifier
-				.weight(1f)
-				.height(145.dp)
-		) {
-			VerticalPager(
-				modifier = Modifier
-					.fillMaxSize()
-					.clip(JetTheme.shapes.cornerStyle)
-					.background(whiteCustom, JetTheme.shapes.cornerStyle),
-				state = statePager,
-				userScrollEnabled = true
-			) { index ->
-				when (index) {
-					0 -> MenuAddingVertex(graphViewModel, isShownId.value)
-					1 -> MenuAddingEdge(graphViewModel, isShownId.value, isShownWeigh.value)
-				}
+			Column(
+				modifier = Modifier.weight(2f),
+				verticalArrangement = Arrangement.spacedBy(paddingCustom)
+			) {
+				BoxGraphInfoAndFastAddingItem("Vertices:", graphViewModel.vertices.size, addingVertex)
+				BoxGraphInfoAndFastAddingItem("Edges:", graphViewModel.countEdges, addingEdge)
 			}
 		}
 	}
 }
 
 /**
- * This is a composable function for drawing menu that edits an item in the [GraphViewModel].
+ * This is a composable function for displaying [GraphViewModel] properties.
  *
- * @param graphViewModel the graph view model whose info will be represented
- * @param idVerticesInfo the vertex id whose info will be represented
+ * @param graphViewModel the graph view model whose properties is represented
+ * @param fontSizeText the text size
  */
 @Composable
-fun MenuEditingItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<VertexViewModel?>) {
-	var setEdges by remember { mutableStateOf(graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id)) }
+fun ListGraphProperty(graphViewModel: GraphViewModel, fontSizeText: TextUnit) {
+	val fontWeightText = FontWeight.W200
 
-	var isChanged by remember { mutableStateOf(false) }
-	LaunchedEffect(isChanged) {
-		if (idVerticesInfo.value != null) {
-			setEdges = graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id)
-		}
-		isChanged = false
-	}
-	LaunchedEffect(idVerticesInfo.value) {
-		if (idVerticesInfo.value != null) {
-			setEdges = graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id)
-		}
-	}
-
-	val removingVertexSource: () -> Unit = {
-		graphViewModel.removeVertex(idVerticesInfo.value!!.id)
-		idVerticesInfo.value = null
-	}
-	val removingVertexTarget: (WeightedEdge<VertexID>) -> Unit = {
-		graphViewModel.removeVertex(it.idTarget)
-		isChanged = true
-	}
-	val removingEdge: (WeightedEdge<VertexID>) -> Unit = {
-		graphViewModel.removeEdge(it.idSource, it.idTarget)
-		isChanged = true
-	}
-
-	val stringVertex: (WeightedEdge<VertexID>) -> String = {
-		"Vertex: ${it.idTarget.valueToString()}"
-	}
-	val stringEdge: (WeightedEdge<VertexID>) -> String = {
-		"Edge: ${it.idSource.valueToString()} -> ${it.idTarget.valueToString()}" +
-			if (!graphViewModel.isUnweighted) {
-				if (it.weight.rem(1) == 0.0) {
-					", weight: ${it.weight.toInt()}"
-				} else {
-					", weight: ${it.weight}"
-				}
-			} else {
-				""
-			}
-	}
-
-	Row(
-		modifier = Modifier
-			.fillMaxWidth()
-			.padding(paddingCustom)
-			.clip(JetTheme.shapes.cornerStyle)
-			.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle),
-		horizontalArrangement = Arrangement.spacedBy(paddingCustom)
-	) {
-		Column(
-			modifier = Modifier
-				.weight(1f)
-				.padding(paddingCustom),
-			verticalArrangement = Arrangement.spacedBy(paddingCustom)
-		) {
-			if (idVerticesInfo.value != null) {
-				Text(
-					"Vertex: ${idVerticesInfo.value!!.id.valueToString()}",
-					color = JetTheme.colors.secondaryText,
-					style = JetTheme.typography.mini,
-					maxLines = 1
-				)
-				Text(
-					"Count edges: ${graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id).size}",
-					color = JetTheme.colors.secondaryText,
-					style = JetTheme.typography.mini,
-					maxLines = 1,
-				)
-				ButtonCustom(removingVertexSource, "Delete", Modifier)
-			}
-		}
-		ColumnBoxEditingItem(
-			setEdges,
-			removingVertexTarget,
-			"Doesn't have adjacent vertices",
-			stringVertex,
-			Modifier.weight(2f),
+	if (graphViewModel.graph.isDirected) {
+		Text(
+			"Directed",
+			fontSize = fontSizeText,
+			fontWeight = fontWeightText,
+			color = JetTheme.colors.secondaryText
 		)
-		ColumnBoxEditingItem(
-			setEdges,
-			removingEdge,
-			"Doesn't have edges",
-			stringEdge,
-			Modifier.weight(3f)
+	} else {
+		Text(
+			"Undirected",
+			fontSize = fontSizeText,
+			fontWeight = fontWeightText,
+			color = JetTheme.colors.secondaryText
+		)
+	}
+	if (!graphViewModel.isUnweighted) {
+		Text(
+			"Weighted",
+			fontSize = fontSizeText,
+			fontWeight = fontWeightText,
+			color = JetTheme.colors.secondaryText
+		)
+	} else {
+		Text(
+			"Unweighted",
+			fontSize = fontSizeText,
+			fontWeight = fontWeightText,
+			color = JetTheme.colors.secondaryText
+		)
+	}
+	if (graphViewModel.vertexType == VertexIDType.INT_TYPE) {
+		Text(
+			"Int type",
+			fontSize = fontSizeText,
+			fontWeight = fontWeightText,
+			color = JetTheme.colors.secondaryText
+		)
+	} else {
+		Text(
+			"String type",
+			fontSize = fontSizeText,
+			fontWeight = fontWeightText,
+			color = JetTheme.colors.secondaryText
 		)
 	}
 }
 
 /**
- * This is a composable function for drawing menu in MenuAddingItem that adds a vertex in the [GraphViewModel].
+ * This is a composable function for displaying count of items and adding [GraphViewModel] items with idFastAdding.
  *
- * @param graphViewModel the graph view model whose info will be represented
- * @param isShownId the boolean variable that shows ids of the graph if true
+ * @param text "Vertices:" or "Edges:"
+ * @param count count of vertices/edges in the graph view model
+ * @param action adding vertex/edge in the graph view model
+ */
+@Composable
+fun BoxGraphInfoAndFastAddingItem(text: String, count: Int, action: () -> Unit) {
+	Box(
+		Modifier
+			.fillMaxWidth()
+			.clip(JetTheme.shapes.cornerStyle)
+			.background(whiteCustom, JetTheme.shapes.cornerStyle)
+	) {
+		Text(
+			text,
+			style = JetTheme.typography.mini,
+			modifier = Modifier
+				.padding(15.dp)
+				.align(Alignment.CenterStart)
+		)
+		Row(Modifier.align(Alignment.TopEnd)) {
+			Text("$count", style = JetTheme.typography.mini, modifier = Modifier.padding(15.dp))
+			IconButton(
+				onClick = action,
+				enabled = true,
+				modifier = Modifier.width(sizeBottom),
+				content = {
+					Icon(
+						imageVector = Icons.Default.Add,
+						contentDescription = "Add item",
+					)
+				}
+			)
+		}
+	}
+}
+
+/**
+ * This is a composable function for adding a [GraphViewModel] item.
+ *
+ * @param graphViewModel the graph view model whose is represented
+ * @param isShownId true if ids is shown
+ * @param isShownWeigh true if weighs is shown
+ * @param modifierParent the parent, that contains MenuAddingItemGraph, modifier
+ */
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun MenuAddingItemGraph(
+	graphViewModel: GraphViewModel,
+	isShownId: MutableState<Boolean>,
+	isShownWeigh: MutableState<Boolean>,
+	modifierParent: Modifier
+) {
+	val statePager = rememberPagerState { 2 }
+
+	Column(modifierParent) {
+		VerticalPager(
+			modifier = Modifier
+				.fillMaxSize()
+				.clip(JetTheme.shapes.cornerStyle)
+				.background(whiteCustom, JetTheme.shapes.cornerStyle),
+			state = statePager,
+			userScrollEnabled = true
+		) { index ->
+			when (index) {
+				0 -> MenuAddingVertex(graphViewModel, isShownId.value)
+				1 -> MenuAddingEdge(graphViewModel, isShownId.value, isShownWeigh.value)
+			}
+		}
+	}
+}
+
+/**
+ * This is a composable function for adding a [GraphViewModel] vertex.
+ *
+ * @param graphViewModel the graph view model whose vertices is represented
+ * @param isShownId true if ids is shown
  */
 @Composable
 fun MenuAddingVertex(graphViewModel: GraphViewModel, isShownId: Boolean) {
@@ -511,7 +431,7 @@ fun MenuAddingVertex(graphViewModel: GraphViewModel, isShownId: Boolean) {
 				TextFieldItem(idVertex, statusIdVertex, "Vertex", Modifier.weight(1f))
 				Spacer(Modifier.weight(1f))
 			}
-			ButtonCustom(creationVertex, "Create", Modifier.padding(paddingCustom))
+			ButtonAction(creationVertex, "Create", Modifier.padding(paddingCustom))
 		}
 		Icon(
 			imageVector = Icons.Default.ArrowDownward,
@@ -524,11 +444,11 @@ fun MenuAddingVertex(graphViewModel: GraphViewModel, isShownId: Boolean) {
 }
 
 /**
- * This is a composable function for drawing menu in MenuAddingItem that adds an edge in the [GraphViewModel].
+ * This is a composable function for adding a [GraphViewModel] edge.
  *
- * @param graphViewModel the graph view model whose info will be represented
- * @param isShownId the boolean variable that shows ids of the graph if true
- * @param isShownWeigh the boolean variable that shows weighs of the graph if true
+ * @param graphViewModel the graph view model whose edges is represented
+ * @param isShownId true if ids is shown
+ * @param isShownWeigh true if weighs is shown
  */
 @Composable
 fun MenuAddingEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWeigh: Boolean) {
@@ -605,7 +525,7 @@ fun MenuAddingEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWe
 		Row(Modifier.padding(paddingCustom)) {
 			Box(Modifier.weight(1f)) {
 				Spacer(Modifier.fillMaxWidth())
-				ButtonCustom(creationEdge, "Create", Modifier.align(Alignment.CenterStart))
+				ButtonAction(creationEdge, "Create", Modifier.align(Alignment.CenterStart))
 			}
 			if (!graphViewModel.isUnweighted) TextFieldItem(weight, statusWeight, "Weight", Modifier.weight(1f))
 		}
@@ -613,64 +533,123 @@ fun MenuAddingEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWe
 }
 
 /**
- * This is a composable function for drawing box that displays count of items and adds an item in the [GraphViewModel].
+ * This is a composable function for displaying and editing [GraphViewModel] items.
  *
- * @param text "Vertex" or "Edge"
- * @param count count of vertices/edges in the graph
- * @param action adding vertex/edge in the graph
+ * @param graphViewModel the graph view model whose items is represented
+ * @param idVerticesInfo the chosen vertex view model id
  */
 @Composable
-fun BoxFastAddingItem(text: String, count: Int, action: () -> Unit) {
-	Box(
-		Modifier
-			.fillMaxWidth()
-			.clip(JetTheme.shapes.cornerStyle)
-			.background(whiteCustom, JetTheme.shapes.cornerStyle)
-	) {
-		Text(
-			text,
-			style = JetTheme.typography.mini,
-			modifier = Modifier
-				.padding(15.dp)
-				.align(Alignment.CenterStart)
-		)
-		Row(Modifier.align(Alignment.TopEnd)) {
-			Text("$count", style = JetTheme.typography.mini, modifier = Modifier.padding(15.dp))
-			IconButton(
-				onClick = action,
-				enabled = true,
-				modifier = Modifier.width(sizeBottom),
-				content = {
-					Icon(
-						imageVector = Icons.Default.Add,
-						contentDescription = "Add item",
-					)
-				}
-			)
+fun MenuVertex(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<VertexViewModel?>) {
+	var setEdges by remember { mutableStateOf(graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id)) }
+
+	var isChanged by remember { mutableStateOf(false) }
+	LaunchedEffect(isChanged) {
+		if (idVerticesInfo.value != null) {
+			setEdges = graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id)
 		}
+		isChanged = false
+	}
+	LaunchedEffect(idVerticesInfo.value) {
+		if (idVerticesInfo.value != null) {
+			setEdges = graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id)
+		}
+	}
+
+	val removingVertexSource: () -> Unit = {
+		graphViewModel.removeVertex(idVerticesInfo.value!!.id)
+		idVerticesInfo.value = null
+	}
+	val removingVertexTarget: (WeightedEdge<VertexID>) -> Unit = {
+		graphViewModel.removeVertex(it.idTarget)
+		isChanged = true
+	}
+	val removingEdge: (WeightedEdge<VertexID>) -> Unit = {
+		graphViewModel.removeEdge(it.idSource, it.idTarget)
+		isChanged = true
+	}
+
+	val stringVertex: (WeightedEdge<VertexID>) -> String = {
+		"Vertex: ${it.idTarget.valueToString()}"
+	}
+	val stringEdge: (WeightedEdge<VertexID>) -> String = {
+		"Edge: ${it.idSource.valueToString()} -> ${it.idTarget.valueToString()}" +
+			if (!graphViewModel.isUnweighted) {
+				if (it.weight.rem(1) == 0.0) {
+					", weight: ${it.weight.toInt()}"
+				} else {
+					", weight: ${it.weight}"
+				}
+			} else {
+				""
+			}
+	}
+
+	Row(
+		modifier = Modifier
+			.fillMaxWidth()
+			.padding(paddingCustom)
+			.clip(JetTheme.shapes.cornerStyle)
+			.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle),
+		horizontalArrangement = Arrangement.spacedBy(paddingCustom)
+	) {
+		Column(
+			modifier = Modifier
+				.weight(1f)
+				.padding(paddingCustom),
+			verticalArrangement = Arrangement.spacedBy(paddingCustom)
+		) {
+			if (idVerticesInfo.value != null) {
+				Text(
+					"Vertex: ${idVerticesInfo.value!!.id.valueToString()}",
+					color = JetTheme.colors.secondaryText,
+					style = JetTheme.typography.mini,
+					maxLines = 1
+				)
+				Text(
+					"Count edges: ${graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id).size}",
+					color = JetTheme.colors.secondaryText,
+					style = JetTheme.typography.mini,
+					maxLines = 1,
+				)
+				ButtonAction(removingVertexSource, "Delete", Modifier)
+			}
+		}
+		ListEditingItemGraph(
+			setEdges,
+			removingVertexTarget,
+			"Doesn't have adjacent vertices",
+			stringVertex,
+			Modifier.weight(2f),
+		)
+		ListEditingItemGraph(
+			setEdges,
+			removingEdge,
+			"Doesn't have edges",
+			stringEdge,
+			Modifier.weight(3f)
+		)
 	}
 }
 
 /**
- * This is a composable function for drawing column in MenuEditingItem that displays info about the chosen vertex
- * and edits an item in the [GraphViewModel].
+ * This is a composable function for drawing boxes info about the chosen vertex and editing [GraphViewModel] items.
  *
- * @param setEdges the edges set of the chosen vertex
- * @param action removing vertex/edge in the graph
- * @param message label linked vertices in the graph
- * @param string label edges of the chosen vertex in the graph
- * @param modifierRow the row modifier that consists of ColumnBoxEditingItem
+ * @param setEdges the edges set of the chosen vertex view model id
+ * @param action removing vertex/edge in the graph view model
+ * @param message message if the chosen vertex don't have chosen vertex in the graph view model
+ * @param string label linked vertices or edges of the chosen vertex in the graph view model
+ * @param modifierParent the parent, that consists ListEditingItemGraph, modifier
  */
 @Composable
-fun ColumnBoxEditingItem(
+fun ListEditingItemGraph(
 	setEdges: Set<WeightedEdge<VertexID>>,
 	action: (WeightedEdge<VertexID>) -> Unit,
 	message: String,
 	string: (WeightedEdge<VertexID>) -> String,
-	modifierRow: Modifier
+	modifierParent: Modifier
 ) {
 	Column(
-		modifierRow
+		modifierParent
 			.heightIn(100.dp, 180.dp)
 			.clip(JetTheme.shapes.cornerStyle)
 			.background(whiteCustom, JetTheme.shapes.cornerStyle)
@@ -686,20 +665,20 @@ fun ColumnBoxEditingItem(
 			}
 		}
 		setEdges.forEach {
-			BoxEditingItem(it, action, string)
+			BoxEditingItemGraph(it, action, string)
 		}
 	}
 }
 
 /**
- * This is a composable function for drawing box in column in MenuEditingItem that edits an item in the [GraphViewModel].
+ * This is a composable function for displaying info about the chosen vertex and editing [GraphViewModel] items.
  *
- * @param edge an edge in the graph
- * @param action removing vertex/edge in the graph
- * @param string label edges of the chosen vertex in the graph
+ * @param edge an edge view model in the graph view model
+ * @param action removing vertex/edge in the graph view model
+ * @param string label linked vertices or edges of the chosen vertex in the graph view model
  */
 @Composable
-fun BoxEditingItem(
+fun BoxEditingItemGraph(
 	edge: WeightedEdge<VertexID>,
 	action: (WeightedEdge<VertexID>) -> Unit,
 	string: (WeightedEdge<VertexID>) -> String
@@ -729,39 +708,20 @@ fun BoxEditingItem(
 }
 
 /**
- * This is a composable function for drawing custom button in [GraphViewPage].
- *
- * @param action action on items in graph
- * @param message a button message
- * @param modifier the button modifier
- */
-@Composable
-fun ButtonCustom(action: () -> Unit, message: String, modifier: Modifier) {
-	Button(
-		onClick = action,
-		modifier = modifier,
-		shape = JetTheme.shapes.cornerStyle,
-		colors = ButtonDefaults.buttonColors(JetTheme.colors.primaryText)
-	) {
-		Text(message)
-	}
-}
-
-/**
- * This is a composable function for drawing custom text field in [GraphViewPage].
+ * This is a composable function for drawing a text field [GraphViewPage] item.
  *
  * @param string a text field message
- * @param status the boolean variable that shows an error notification if true
+ * @param status true if incorrect input
  * @param label a text field label
- * @param modifier the text field modifier
+ * @param modifierField the text field modifier
  */
 @Composable
-fun TextFieldItem(string: MutableState<String>, status: Boolean, label: String, modifier: Modifier) {
+fun TextFieldItem(string: MutableState<String>, status: Boolean, label: String, modifierField: Modifier) {
 	OutlinedTextField(
 		value = string.value,
 		onValueChange = { string.value = it },
 		label = { Text(label) },
-		modifier = modifier,
+		modifier = modifierField,
 		singleLine = true,
 		textStyle = JetTheme.typography.mini,
 		isError = status,
@@ -775,16 +735,100 @@ fun TextFieldItem(string: MutableState<String>, status: Boolean, label: String, 
 }
 
 /**
+ * This is a composable function for drawing the button that resets the [GraphViewModel] display.
+ *
+ * @param graphViewModel the graph view model whose is represented
+ * @param changeCenter sets [graphViewModel] display in center of the monitor if true
+ * @param modifierParent the parent, that contains the reset button, modifier
+ * @param modifierButton the button modifier
+ */
+@Composable
+fun ButtonResetGraphDisplay(
+	graphViewModel: GraphViewModel,
+	changeCenter: MutableState<Boolean>,
+	modifierParent: Modifier,
+	modifierButton: Modifier
+) {
+	Column(modifierParent) {
+		IconButton(
+			onClick = {
+				colorChangeFlag.value = true
+
+				graphViewModel.vertices.forEach {
+					it.radius = radiusVerticesStart
+					it.color = colorVerticesStart
+					it.visibility = true
+				}
+				graphViewModel.edges.forEach {
+					it.width = widthEdgesStart
+					it.color = colorEdgesStart
+					it.visibility = false
+				}
+				changeCenter.value = true
+			},
+			modifier = modifierButton.pointerHoverIcon(PointerIcon.Hand),
+			content = {
+				Icon(
+					imageVector = Icons.Default.ResetTv,
+					contentDescription = "Reset the graph",
+					tint = JetTheme.colors.tintColor,
+				)
+			}
+		)
+	}
+}
+
+/**
+ * This is a composable function for drawing the button that opens/hides [MenuGraph].
+ *
+ * @param isOpenedMenuGraph true if [MenuGraph] is opened
+ * @param modifierButton the button modifier
+ */
+@Composable
+fun ButtonOpeningMenuGraph(isOpenedMenuGraph: MutableState<Boolean>, modifierButton: Modifier) {
+	IconButton(
+		onClick = { isOpenedMenuGraph.value = !isOpenedMenuGraph.value },
+		modifier = modifierButton.pointerHoverIcon(PointerIcon.Hand),
+		content = {
+			Icon(
+				imageVector = if (isOpenedMenuGraph.value) Icons.Default.ArrowDownward else Icons.Default.ArrowUpward,
+				contentDescription = "Show graph menu",
+				tint = JetTheme.colors.tintColor
+			)
+		}
+	)
+}
+
+/**
+ * This is a composable function for drawing the button that do action.
+ *
+ * @param action action on a [GraphViewModel] item
+ * @param message "Delete" or "Create"
+ * @param modifierButton the button modifier
+ */
+@Composable
+fun ButtonAction(action: () -> Unit, message: String, modifierButton: Modifier) {
+	Button(
+		onClick = action,
+		modifier = modifierButton,
+		shape = JetTheme.shapes.cornerStyle,
+		colors = ButtonDefaults.buttonColors(JetTheme.colors.primaryText)
+	) {
+		Text(message)
+	}
+}
+
+/**
  * This is a function for getting a nearby id that is not contained in the [GraphViewModel].
  *
  * @param graphViewModel the graph view model in which the search is going on
- * @param idFastAdd a last id that is contained in the [graphViewModel]
+ * @param idFastAdding a last id that is contained in the [graphViewModel]
  *
  * @return an id that is not contained in the [graphViewModel]
  */
-fun checkAndGet(graphViewModel: GraphViewModel, idFastAdd: MutableIntState): Int {
-	while (graphViewModel.graph.idVertices.contains(VertexID(idFastAdd.intValue, graphViewModel.vertexType))) {
-		idFastAdd.intValue++
+fun checkAndGet(graphViewModel: GraphViewModel, idFastAdding: MutableIntState): Int {
+	while (graphViewModel.graph.idVertices.contains(VertexID(idFastAdding.intValue, graphViewModel.vertexType))) {
+		idFastAdding.intValue++
 	}
-	return idFastAdd.intValue
+	return idFastAdding.intValue
 }
