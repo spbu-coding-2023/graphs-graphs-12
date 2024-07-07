@@ -32,6 +32,11 @@ import views.graphs.colorChangeFlag
 
 // TODO(docs and refactor its)
 
+/**
+ * This function represents the GraphViewPage composable in the application.
+ *
+ * @param graphPageViewModel the view model for the GraphViewPage. It provides data and functionality for the composable
+ */
 @Composable
 fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
 	val graphViewModel = graphPageViewModel.graphViewModel
@@ -69,8 +74,8 @@ fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
 			IconResetGraph(
 				graphViewModel,
 				changeCenter,
+				Modifier.padding(paddingCustom).align(Alignment.TopEnd),
 				modifierButtons,
-				Modifier.padding(paddingCustom).align(Alignment.TopEnd)
 			)
 			Box(Modifier.fillMaxSize()) {
 				ColumnInfoGraph(
@@ -82,12 +87,20 @@ fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
 	}
 }
 
+/**
+ * This is a composable function for drawing the icon that resets the [GraphViewModel] display.
+ *
+ * @param graphViewModel the graph view model whose display will be reset
+ * @param changeCenter the boolean variable that sets [graphViewModel] in center of the monitor if true
+ * @param modifierBox the box modifier that contains the reset icon
+ * @param modifierButtons the iconButton modifier
+ */
 @Composable
 fun IconResetGraph(
 	graphViewModel: GraphViewModel,
 	changeCenter: MutableState<Boolean>,
-	modifierButtons: Modifier,
-	modifierBox: Modifier
+	modifierBox: Modifier,
+	modifierButtons: Modifier
 ) {
 	Column(modifierBox) {
 		IconButton(
@@ -118,6 +131,16 @@ fun IconResetGraph(
 	}
 }
 
+/**
+ * This is a composable function for drawing the column that represents info about the [GraphViewModel].
+ *
+ * @param graphViewModel the graph view model whose info will be represented
+ * @param idVerticesInfo the vertex id whose info will be represented
+ * @param isOpenedContextGraph the boolean variable that opens vertices context of the graph if true
+ * @param isOpenedContextEdge the boolean variable that opens edges context of the graph if true
+ * @param modifierBox the box modifier that contains info about [graphViewModel]
+ * @param modifierButtons the iconButton modifier
+ */
 @Composable
 fun ColumnInfoGraph(
 	graphViewModel: GraphViewModel,
@@ -152,7 +175,7 @@ fun ColumnInfoGraph(
 			content = {
 				Icon(
 					imageVector = if (isOpenedContextGraph.value) Icons.Default.ArrowDownward else Icons.Default.ArrowUpward,
-					contentDescription = "Show menu",
+					contentDescription = "Show menu interaction",
 					tint = JetTheme.colors.tintColor
 				)
 			}
@@ -164,7 +187,7 @@ fun ColumnInfoGraph(
 				.clip(JetTheme.shapes.cornerStyle)
 				.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle)
 		) {
-			showAddItem(graphViewModel, isShownWeigh, isShownId)
+			MenuAddingItem(graphViewModel, isShownId, isShownWeigh)
 		}
 
 		AnimatedVisibility(
@@ -173,14 +196,21 @@ fun ColumnInfoGraph(
 				.clip(JetTheme.shapes.cornerStyle)
 				.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle)
 		) {
-			showEditItem(graphViewModel, idVerticesInfo)
+			MenuEditingItem(graphViewModel, idVerticesInfo)
 		}
 	}
 }
 
+/**
+ * This is a composable function for drawing menu that adds an item in the [GraphViewModel].
+ *
+ * @param graphViewModel the graph view model whose info will be represented
+ * @param isShownId the boolean variable that shows ids of the graph if true
+ * @param isShownWeigh the boolean variable that shows weighs of the graph if true
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun showAddItem(graphViewModel: GraphViewModel, isShownWeigh: MutableState<Boolean>, isShownId: MutableState<Boolean>) {
+fun MenuAddingItem(graphViewModel: GraphViewModel, isShownId: MutableState<Boolean>, isShownWeigh: MutableState<Boolean>) {
 	val idFastAdd = remember { mutableIntStateOf(graphViewModel.vertices.size + 1) }
 
 	val statePager = rememberPagerState { 2 }
@@ -313,8 +343,8 @@ fun showAddItem(graphViewModel: GraphViewModel, isShownWeigh: MutableState<Boole
 					modifier = Modifier.weight(2f),
 					verticalArrangement = Arrangement.spacedBy(paddingCustom)
 				) {
-					BoxAddItem("Vertices:", graphViewModel.vertices.size, addingVertex)
-					BoxAddItem("Edges:", graphViewModel.countEdges, addingEdge)
+					BoxFastAddingItem("Vertices:", graphViewModel.vertices.size, addingVertex)
+					BoxFastAddingItem("Edges:", graphViewModel.countEdges, addingEdge)
 				}
 			}
 		}
@@ -333,16 +363,22 @@ fun showAddItem(graphViewModel: GraphViewModel, isShownWeigh: MutableState<Boole
 				userScrollEnabled = true
 			) { index ->
 				when (index) {
-					0 -> showMenuVertex(graphViewModel, isShownId.value)
-					1 -> showMenuEdge(graphViewModel, isShownId.value, isShownWeigh.value)
+					0 -> MenuAddingVertex(graphViewModel, isShownId.value)
+					1 -> MenuAddingEdge(graphViewModel, isShownId.value, isShownWeigh.value)
 				}
 			}
 		}
 	}
 }
 
+/**
+ * This is a composable function for drawing menu that edits an item in the [GraphViewModel].
+ *
+ * @param graphViewModel the graph view model whose info will be represented
+ * @param idVerticesInfo the vertex id whose info will be represented
+ */
 @Composable
-fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<VertexViewModel?>) {
+fun MenuEditingItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<VertexViewModel?>) {
 	var setEdges by remember { mutableStateOf(graphViewModel.graph.vertexEdges(idVerticesInfo.value!!.id)) }
 
 	var isChanged by remember { mutableStateOf(false) }
@@ -417,14 +453,14 @@ fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<Ve
 				ButtonCustom(removingVertexSource, "Delete", Modifier)
 			}
 		}
-		ColumnBoxEditItem(
+		ColumnBoxEditingItem(
 			setEdges,
 			removingVertexTarget,
 			"Doesn't have adjacent vertices",
 			stringVertex,
 			Modifier.weight(2f),
 		)
-		ColumnBoxEditItem(
+		ColumnBoxEditingItem(
 			setEdges,
 			removingEdge,
 			"Doesn't have edges",
@@ -434,8 +470,14 @@ fun showEditItem(graphViewModel: GraphViewModel, idVerticesInfo: MutableState<Ve
 	}
 }
 
+/**
+ * This is a composable function for drawing menu in MenuAddingItem that adds a vertex in the [GraphViewModel].
+ *
+ * @param graphViewModel the graph view model whose info will be represented
+ * @param isShownId the boolean variable that shows ids of the graph if true
+ */
 @Composable
-fun showMenuVertex(graphViewModel: GraphViewModel, isShownId: Boolean) {
+fun MenuAddingVertex(graphViewModel: GraphViewModel, isShownId: Boolean) {
 	val idVertex = remember { mutableStateOf("") }
 	var statusIdVertex by remember { mutableStateOf(false) }
 
@@ -481,8 +523,15 @@ fun showMenuVertex(graphViewModel: GraphViewModel, isShownId: Boolean) {
 	}
 }
 
+/**
+ * This is a composable function for drawing menu in MenuAddingItem that adds an edge in the [GraphViewModel].
+ *
+ * @param graphViewModel the graph view model whose info will be represented
+ * @param isShownId the boolean variable that shows ids of the graph if true
+ * @param isShownWeigh the boolean variable that shows weighs of the graph if true
+ */
 @Composable
-fun showMenuEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWeigh: Boolean) {
+fun MenuAddingEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWeigh: Boolean) {
 	val idVertexSource = remember { mutableStateOf("") }
 	val idVertexTarget = remember { mutableStateOf("") }
 	val weight = remember { mutableStateOf("") }
@@ -563,8 +612,15 @@ fun showMenuEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWeig
 	}
 }
 
+/**
+ * This is a composable function for drawing box that displays count of items and adds an item in the [GraphViewModel].
+ *
+ * @param text "Vertex" or "Edge"
+ * @param count count of vertices/edges in the graph
+ * @param action adding vertex/edge in the graph
+ */
 @Composable
-fun BoxAddItem(text: String, count: Int, action: () -> Unit) {
+fun BoxFastAddingItem(text: String, count: Int, action: () -> Unit) {
 	Box(
 		Modifier
 			.fillMaxWidth()
@@ -595,8 +651,18 @@ fun BoxAddItem(text: String, count: Int, action: () -> Unit) {
 	}
 }
 
+/**
+ * This is a composable function for drawing column in MenuEditingItem that displays info about the chosen vertex
+ * and edits an item in the [GraphViewModel].
+ *
+ * @param setEdges the edges set of the chosen vertex
+ * @param action removing vertex/edge in the graph
+ * @param message label linked vertices in the graph
+ * @param string label edges of the chosen vertex in the graph
+ * @param modifierRow the row modifier that consists of ColumnBoxEditingItem
+ */
 @Composable
-fun ColumnBoxEditItem(
+fun ColumnBoxEditingItem(
 	setEdges: Set<WeightedEdge<VertexID>>,
 	action: (WeightedEdge<VertexID>) -> Unit,
 	message: String,
@@ -620,13 +686,20 @@ fun ColumnBoxEditItem(
 			}
 		}
 		setEdges.forEach {
-			BoxEditItem(it, action, string)
+			BoxEditingItem(it, action, string)
 		}
 	}
 }
 
+/**
+ * This is a composable function for drawing box in column in MenuEditingItem that edits an item in the [GraphViewModel].
+ *
+ * @param edge an edge in the graph
+ * @param action removing vertex/edge in the graph
+ * @param string label edges of the chosen vertex in the graph
+ */
 @Composable
-fun BoxEditItem(
+fun BoxEditingItem(
 	edge: WeightedEdge<VertexID>,
 	action: (WeightedEdge<VertexID>) -> Unit,
 	string: (WeightedEdge<VertexID>) -> String
@@ -655,6 +728,13 @@ fun BoxEditItem(
 	}
 }
 
+/**
+ * This is a composable function for drawing custom button in [GraphViewPage].
+ *
+ * @param action action on items in graph
+ * @param message a button message
+ * @param modifier the button modifier
+ */
 @Composable
 fun ButtonCustom(action: () -> Unit, message: String, modifier: Modifier) {
 	Button(
@@ -667,6 +747,14 @@ fun ButtonCustom(action: () -> Unit, message: String, modifier: Modifier) {
 	}
 }
 
+/**
+ * This is a composable function for drawing custom text field in [GraphViewPage].
+ *
+ * @param string a text field message
+ * @param status the boolean variable that shows an error notification if true
+ * @param label a text field label
+ * @param modifier the text field modifier
+ */
 @Composable
 fun TextFieldItem(string: MutableState<String>, status: Boolean, label: String, modifier: Modifier) {
 	OutlinedTextField(
@@ -686,6 +774,14 @@ fun TextFieldItem(string: MutableState<String>, status: Boolean, label: String, 
 	)
 }
 
+/**
+ * This is a function for getting a nearby id that is not contained in the [GraphViewModel].
+ *
+ * @param graphViewModel the graph view model in which the search is going on
+ * @param idFastAdd a last id that is contained in the [graphViewModel]
+ *
+ * @return an id that is not contained in the [graphViewModel]
+ */
 fun checkAndGet(graphViewModel: GraphViewModel, idFastAdd: MutableIntState): Int {
 	while (graphViewModel.graph.idVertices.contains(VertexID(idFastAdd.intValue, graphViewModel.vertexType))) {
 		idFastAdd.intValue++
