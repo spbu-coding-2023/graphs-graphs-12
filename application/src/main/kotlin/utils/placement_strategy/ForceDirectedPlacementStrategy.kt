@@ -7,6 +7,11 @@ import viewmodels.graphs.VertexViewModel
 import kotlin.math.*
 
 /**
+ * Error message of unexpected algorithm behavior.
+ */
+const val standardErrorMessage = "Undefined behaviour: an unfounded vertex."
+
+/**
  * The ForceAtlas2 algorithm.
  *
  * It is the force-directed graph drawing algorithm, which is a class of algorithms for drawing graphs in an
@@ -66,6 +71,7 @@ class ForceDirectedPlacementStrategy(
 		)
 	}
 
+	// TODO(clearing param lists)
 	/**
 	 * Places the [viewModel] vertices but [vertex] on an imaginary canvas with the help of some coefficients.
 	 */
@@ -194,7 +200,7 @@ class ForceDirectedPlacementStrategy(
  * @throws ExceptionInInitializerError if the list is null
  */
 fun checkAndGetFirst(list: MutableList<Double>?): Double {
-	return list?.get(0) ?: throw ExceptionInInitializerError("Undefined behaviour: an unfounded vertex.")
+	return list?.get(0) ?: throw ExceptionInInitializerError(standardErrorMessage)
 }
 
 /**
@@ -206,7 +212,7 @@ fun checkAndGetFirst(list: MutableList<Double>?): Double {
  * @throws ExceptionInInitializerError if the list is null
  */
 fun checkAndGetSecond(list: MutableList<Double>?): Double {
-	return list?.get(1) ?: throw ExceptionInInitializerError("Undefined behaviour: an unfounded vertex.")
+	return list?.get(1) ?: throw ExceptionInInitializerError(standardErrorMessage)
 }
 
 /**
@@ -218,7 +224,7 @@ fun checkAndGetSecond(list: MutableList<Double>?): Double {
  * @throws ExceptionInInitializerError if the list is null
  */
 fun checkAndAddFirst(list: MutableList<Double>?, value: Double) {
-	if (list == null) throw ExceptionInInitializerError("Undefined behaviour: an unfounded vertex.")
+	if (list == null) throw ExceptionInInitializerError(standardErrorMessage)
 	list[0] += value
 }
 
@@ -231,6 +237,6 @@ fun checkAndAddFirst(list: MutableList<Double>?, value: Double) {
  * @throws ExceptionInInitializerError if the list is null
  */
 fun checkAndAddSecond(list: MutableList<Double>?, value: Double) {
-	if (list == null) throw ExceptionInInitializerError("Undefined behaviour: an unfounded vertex.")
+	if (list == null) throw ExceptionInInitializerError(standardErrorMessage)
 	list[1] += value
 }

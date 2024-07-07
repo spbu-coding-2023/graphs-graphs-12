@@ -19,6 +19,7 @@ import themes.JetTheme
 import utils.PageType
 import utils.AlgorithmTextButton
 import utils.ActionTextButton
+import utils.SideMenuTabType
 import viewmodels.pages.GraphPageViewModel
 
 /**
@@ -153,13 +154,13 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 	/**
 	 * Changes the visibility of a tab in the side menu.
 	 *
-	 * @param tabName the name of the tab whose visibility needs to be changed
+	 * @param tabType the type of the tab whose visibility needs to be changed
 	 * @param isHiddenState a boolean indicating whether the tab should be hidden or visible.
 	 * 						If true, the tab will be hidden; if false, the tab will be visible
 	 *
 	 *  @see SideMenuModel.changeTabVisibility
 	 */
-	fun changeVisibility(tabName: String, isHiddenState: Boolean) {
-		sideMenuModel.changeTabVisibility(tabName, isHiddenState)
+	fun changeVisibility(tabType: SideMenuTabType, isHiddenState: Boolean) {
+		sideMenuModel.changeTabVisibility(tabType, isHiddenState)
 	}
 }

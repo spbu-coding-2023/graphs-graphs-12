@@ -132,7 +132,7 @@ fun SettingsPage(
 						2 -> currentFontFamily.value = JetFontFamily.Cursive
 						3 -> currentFontFamily.value = JetFontFamily.Serif
 						4 -> currentFontFamily.value = JetFontFamily.SansSerif
-						else -> throw NotImplementedError("No valid value for this $it")
+						else -> throw NotImplementedError("No valid value for this font family $it")
 					}
 				}
 			)
@@ -161,7 +161,7 @@ fun SettingsPage(
 						0 -> currentFontSize.value = JetSize.Small
 						1 -> currentFontSize.value = JetSize.Medium
 						2 -> currentFontSize.value = JetSize.Big
-						else -> throw NotImplementedError("No valid value for this $it")
+						else -> throw NotImplementedError("No valid value for this change size $it")
 					}
 				}
 			)
@@ -187,7 +187,7 @@ fun SettingsPage(
 					when (it) {
 						0 -> currentCornersStyle.value = JetCorners.Rounded
 						1 -> currentCornersStyle.value = JetCorners.Flat
-						else -> throw NotImplementedError("No valid value for this $it")
+						else -> throw NotImplementedError("No valid value for this corner style $it")
 					}
 				}
 			)
@@ -222,7 +222,7 @@ fun SettingsPage(
 						2 -> currentStyle.value = JetStyle.Purple
 						3 -> currentStyle.value = JetStyle.Orange
 						4 -> currentStyle.value = JetStyle.Pink
-						else -> throw NotImplementedError("No valid value for this $it")
+						else -> throw NotImplementedError("No valid value for this style $it")
 					}
 				}
 			)

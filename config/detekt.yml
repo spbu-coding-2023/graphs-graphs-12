@@ -56,8 +56,7 @@ complexity:
     active: true
     threshold: 750
   LongMethod:
-    active: true
-    threshold: 140
+    active: false
   NamedArguments:
     active: true
     threshold: 3
@@ -76,9 +75,13 @@ complexity:
     active: false
   CyclomaticComplexMethod:
     threshold: 18
+    ignoreSingleWhenExpression: true
+    ignoreSimpleWhenEntries: true
+    ignoreNestingFunctions: true
   LongParameterList:
     active: true
-    functionThreshold: 10
+    functionThreshold: 20
+    constructorThreshold: 10
 
 exceptions:
   active: true

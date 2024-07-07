@@ -20,13 +20,14 @@ import java.io.BufferedWriter
  */
 class GraphJSONDatabase : FileDatabase<GraphViewModel>(".json") {
 	override fun load(reader: BufferedReader): GraphViewModel {
+		val nameColumnParam = "graph-name"
 		val graphJSONObject = JSONObject(JSONTokener(reader))
 		val isUnweightedGraph = graphJSONObject.getBoolean("is-unweighted")
 		val isDirectedGraph = graphJSONObject.getBoolean("is-directed")
 		val graph: WeightedGraph<VertexID> = if (isUnweightedGraph) {
-			WeightedUnweightedGraph(graphJSONObject.getString("graph-name"), isDirectedGraph, isAutoAddVertex = true)
+			WeightedUnweightedGraph(graphJSONObject.getString(nameColumnParam), isDirectedGraph, isAutoAddVertex = true)
 		} else {
-			WeightedGraph(graphJSONObject.getString("graph-name"), isDirectedGraph, isAutoAddVertex = true)
+			WeightedGraph(graphJSONObject.getString(nameColumnParam), isDirectedGraph, isAutoAddVertex = true)
 		}
 		val vertexIDType = VertexIDType.valueOf(graphJSONObject.getString("vertex-id-type"))
 		val graphViewModel = GraphViewModel(graph, vertexIDType, isUnweightedGraph)
