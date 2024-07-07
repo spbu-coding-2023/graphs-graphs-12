@@ -20,8 +20,8 @@ class SqliteRepository {
 	/**
 	 * Writes the given graph to a SQLite database in the specified folder path.
 	 *
-	 * @param graphViewModel The graph to be written to the database
-	 * @param folderPath The path to the folder where the database will be created
+	 * @param graphViewModel the graph to be written to the database
+	 * @param folderPath the path to the folder where the database will be created
 	 */
 	fun writeDb(graphViewModel: GraphViewModel, folderPath: String) {
 		val realPath = File(folderPath, "${graphViewModel.graph.label}.db").absolutePath
@@ -43,8 +43,8 @@ class SqliteRepository {
 	/**
 	 * Loads a graph from a SQLite database located at the specified path.
 	 *
-	 * @param pathToDB The path to the SQLite database file
-	 * @return The loaded graph, or null if the graph could not be loaded
+	 * @param pathToDB the path to the SQLite database file
+	 * @return the loaded graph, or null if the graph could not be loaded
 	 */
 	private fun createDb(connection: Connection) {
 		connection.createStatement().also { statement ->

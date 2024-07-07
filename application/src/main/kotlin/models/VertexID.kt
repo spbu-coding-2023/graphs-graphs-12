@@ -8,7 +8,7 @@ import utils.VertexIDType
  * @property value the value of the VertexID. It can be of type [Int] or [String]
  * @property type the type of the VertexID. It can be either [VertexIDType.INT_TYPE] or [VertexIDType.STRING_TYPE]
  */
-class VertexID(private val value: Any, val type: VertexIDType) {
+data class VertexID(private val value: Any, val type: VertexIDType) {
 	/**
 	 * Converts the value of the VertexID to an [Int].
 	 *
