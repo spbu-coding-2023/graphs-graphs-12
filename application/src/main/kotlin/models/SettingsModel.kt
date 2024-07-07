@@ -154,6 +154,14 @@ class SettingsModel {
 		return true
 	}
 
+	/**
+	 * Loads a graph from a JSON file and updates the [GraphPageViewModel] accordingly.
+	 *
+	 * @param graphPageViewModel the [GraphPageViewModel] to update with the loaded graph
+	 * @param path the path of the JSON file to load the graph from
+	 *
+	 * @return `true` if the graph was successfully loaded, `false` otherwise
+	 */
 	fun loadGraphFromJSON(graphPageViewModel: GraphPageViewModel, path: String): Boolean {
 		try {
 			val graphViewModel = jsonDB.load(File(path))

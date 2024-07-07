@@ -94,6 +94,11 @@ class GraphViewModel(
 		_vertices.putIfAbsent(vertex.id, vertex)
 	}
 
+	/**
+	 * Removes a vertex from the graph and updates the edges accordingly.
+	 *
+	 * @param id the id of the vertex to be removed
+	 */
 	fun removeVertex(id: VertexID) {
 		_vertices.remove(id)
 		_edges.forEach {

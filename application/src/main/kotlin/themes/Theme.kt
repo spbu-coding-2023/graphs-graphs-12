@@ -10,6 +10,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * This function is a theme wrapper for Jetpack Compose applications. It provides customizable themes
+ * based on the provided parameters.
+ *
+ * @param style the color scheme of the theme. Default is [JetStyle.Purple]
+ * @param textSize the size of the text in the theme. Default is [JetSize.Medium]
+ * @param paddingSize the size of the padding in the theme. Default is [JetSize.Medium]
+ * @param corners the corner style of the theme. Default is [JetCorners.Rounded]
+ * @param fonts the font family of the theme. Default is [JetFontFamily.Default]
+ * @param darkTheme a boolean indicating whether the theme should be in dark mode.
+ * 					Default is the system's dark theme setting
+ * @param content the content composable function that will be wrapped with the theme
+ *
+ * @return the composable function that wraps the provided [content] with the custom theme.
+ */
 @Composable
 fun MainTheme(
 	style: JetStyle = JetStyle.Purple,

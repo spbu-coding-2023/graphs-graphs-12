@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import models.SettingsModel
 import viewmodels.pages.GraphPageViewModel
 import viewmodels.pages.HomePageViewModel
-import viewmodels.pages.SettingsPageViewModel
 
 /**
  * MainScreenViewModel is the central point of interaction for the main screen of the application.
@@ -20,7 +19,6 @@ import viewmodels.pages.SettingsPageViewModel
  */
 class MainScreenViewModel(settings: SettingsModel) {
 	val indexSelectedPage = mutableIntStateOf(0)
-	val settingsPageViewModel = SettingsPageViewModel(settings)
 	val graphPageViewModel = GraphPageViewModel(settings, indexSelectedPage)
 	val sideMenuViewModel = SideMenuViewModel(graphPageViewModel)
 	val homePageViewModel = HomePageViewModel(

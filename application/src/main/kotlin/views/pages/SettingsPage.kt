@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import themes.*
-import viewmodels.pages.SettingsPageViewModel
 
 // TODO(move its to utils package)
 /**

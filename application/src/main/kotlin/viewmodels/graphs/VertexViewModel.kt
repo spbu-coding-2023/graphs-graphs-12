@@ -26,6 +26,7 @@ import themes.radiusVerticesStart
  * @property degree the current degree of the vertex
  * @param visibility the initial visibility of the vertex
  * @property visibility the current visibility of the vertex
+ * @property label the initial label of the vertex
  */
 class VertexViewModel(
 	val id: VertexID,

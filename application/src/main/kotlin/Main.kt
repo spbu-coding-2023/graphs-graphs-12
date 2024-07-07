@@ -6,6 +6,9 @@ import views.MainScreen
 import viewmodels.MainScreenViewModel
 import java.awt.Dimension
 
+/**
+ * A pair representing the initial size of the application window.
+ */
 val windowSizeStart = Pair(1000f, 700f)
 
 /**
