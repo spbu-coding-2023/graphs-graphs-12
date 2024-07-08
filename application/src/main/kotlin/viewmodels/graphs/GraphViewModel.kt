@@ -18,7 +18,7 @@ import models.VertexID
 import themes.radiusVerticesStart
 import utils.VertexIDType
 import views.graphs.colorChangeFlag
-import desktop.windowSizeStart
+import windowSizeStart
 import kotlin.random.Random
 
 /**

@@ -161,7 +161,7 @@ potential-bugs:
     ignoreOnClassesPattern: ''
   MissingPackageDeclaration:
     active: true
-    excludes: ['**/*.kts']
+    excludes: ['**/*.kts', '**/Main.kt']
   NullCheckOnMutableProperty:
     active: true
   PropertyUsedBeforeDeclaration:

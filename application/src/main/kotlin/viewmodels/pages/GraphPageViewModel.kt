@@ -28,7 +28,7 @@ import utils.placement_strategy.ForceDirectedPlacementStrategy
 import utils.placement_strategy.RandomPlacementStrategy
 import utils.placement_strategy.RepresentationStrategy
 import viewmodels.graphs.GraphViewModel
-import desktop.windowSizeStart
+import windowSizeStart
 import java.io.File
 
 /**
