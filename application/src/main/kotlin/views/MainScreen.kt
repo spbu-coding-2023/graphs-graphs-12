@@ -1,7 +1,7 @@
 package views
 
+import JetSettings
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -21,27 +21,20 @@ import viewmodels.MainScreenViewModel
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MainScreen(viewModel: MainScreenViewModel) {
+fun MainScreen(viewModel: MainScreenViewModel, jetSettings: JetSettings) {
 	val statePager = rememberPagerState { viewModel.sideMenuViewModel.pagesCount }
 	LaunchedEffect(viewModel.indexSelectedPage.value) {
 		if (viewModel.indexSelectedPage.value != statePager.currentPage) {
 			statePager.animateScrollToPage(viewModel.indexSelectedPage.value)
 		}
 	}
-	val isDarkModeValue = isSystemInDarkTheme()
-
-	val currentStyle = remember { mutableStateOf(JetStyle.Black) }
-	val currentFontSize = remember { mutableStateOf(JetSize.Medium) }
-	val currentCornersStyle = remember { mutableStateOf(JetCorners.Rounded) }
-	val currentFontFamily = remember { mutableStateOf(JetFontFamily.Default) }
-	val isDarkMode = remember { mutableStateOf(isDarkModeValue) }
 
 	MainTheme(
-		style = currentStyle.value,
-		darkTheme = isDarkMode.value,
-		textSize = currentFontSize.value,
-		corners = currentCornersStyle.value,
-		fonts = currentFontFamily.value,
+		style = jetSettings.currentStyle.value,
+		darkTheme = jetSettings.isDarkMode.value,
+		textSize = jetSettings.currentFontSize.value,
+		corners = jetSettings.currentCornersStyle.value,
+		fonts = jetSettings.currentFontFamily.value,
 	) {
 		Row(Modifier.fillMaxSize()) { // todo(add padding and delete other places)
 			SideMenu(statePager, viewModel.indexSelectedPage, viewModel.sideMenuViewModel)
@@ -57,6 +50,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
 						viewModel.sideMenuViewModel.changeVisibility("Save", true)
 						HomePage(viewModel.homePageViewModel)
 					}
+
 					viewModel.sideMenuViewModel.pageOfTab("GraphView") -> {
 						viewModel.sideMenuViewModel.changeVisibility("GraphView", false)
 						viewModel.sideMenuViewModel.changeVisibility("Algorithms", false)
@@ -69,14 +63,9 @@ fun MainScreen(viewModel: MainScreenViewModel) {
 						viewModel.sideMenuViewModel.changeVisibility("Algorithms", true)
 						viewModel.sideMenuViewModel.changeVisibility("Representation", true)
 						viewModel.sideMenuViewModel.changeVisibility("Save", true)
-						SettingsPage(
-							isDarkMode,
-							currentFontSize,
-							currentStyle,
-							currentCornersStyle,
-							currentFontFamily
-						)
+						SettingsPage(jetSettings)
 					}
+
 					else -> HomePage(viewModel.homePageViewModel)
 				}
 			}
