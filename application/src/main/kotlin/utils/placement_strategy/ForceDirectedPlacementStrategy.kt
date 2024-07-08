@@ -12,7 +12,7 @@ import kotlin.math.sqrt
 /**
  * Error message of unexpected algorithm behavior.
  */
-const val standardErrorMessage = "Undefined behaviour: an unfounded vertex."
+const val StandardErrorMessage = "Undefined behaviour: an unfounded vertex."
 
 /**
  * The ForceAtlas2 algorithm.
@@ -203,7 +203,7 @@ class ForceDirectedPlacementStrategy(
  * @throws ExceptionInInitializerError if the list is null
  */
 fun checkAndGetFirst(list: MutableList<Double>?): Double {
-	return list?.get(0) ?: throw ExceptionInInitializerError(standardErrorMessage)
+	return list?.get(0) ?: throw ExceptionInInitializerError(StandardErrorMessage)
 }
 
 /**
@@ -215,7 +215,7 @@ fun checkAndGetFirst(list: MutableList<Double>?): Double {
  * @throws ExceptionInInitializerError if the list is null
  */
 fun checkAndGetSecond(list: MutableList<Double>?): Double {
-	return list?.get(1) ?: throw ExceptionInInitializerError(standardErrorMessage)
+	return list?.get(1) ?: throw ExceptionInInitializerError(StandardErrorMessage)
 }
 
 /**
@@ -227,7 +227,7 @@ fun checkAndGetSecond(list: MutableList<Double>?): Double {
  * @throws ExceptionInInitializerError if the list is null
  */
 fun checkAndAddFirst(list: MutableList<Double>?, value: Double) {
-	if (list == null) throw ExceptionInInitializerError(standardErrorMessage)
+	if (list == null) throw ExceptionInInitializerError(StandardErrorMessage)
 	list[0] += value
 }
 
@@ -240,6 +240,6 @@ fun checkAndAddFirst(list: MutableList<Double>?, value: Double) {
  * @throws ExceptionInInitializerError if the list is null
  */
 fun checkAndAddSecond(list: MutableList<Double>?, value: Double) {
-	if (list == null) throw ExceptionInInitializerError(standardErrorMessage)
+	if (list == null) throw ExceptionInInitializerError(StandardErrorMessage)
 	list[1] += value
 }

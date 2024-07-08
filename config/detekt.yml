@@ -100,10 +100,10 @@ naming:
     allowedPattern: '^(is|has|are)'
   ClassNaming:
     active: true
-    classPattern: '([A-Z][a-z]*)+'
+    classPattern: '([A-Z][0-9a-z]*)+'
   EnumNaming:
     active: true
-    enumEntryPattern: '([A-Z][a-z]*_)+'
+    enumEntryPattern: '([A-Z][0-9a-z_]*)+'
   LambdaParameterNaming:
     active: true
     parameterPattern: '[a-z][A-Za-z0-9]*|_'
