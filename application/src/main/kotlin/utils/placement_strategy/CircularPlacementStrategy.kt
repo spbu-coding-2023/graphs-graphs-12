@@ -26,7 +26,6 @@ class CircularPlacementStrategy : RepresentationStrategy {
 		var point = Pair(center.first, center.second - min(width, height) / 2 - radiusVerticesStart.value)
 		first.xPos = point.first.dp
 		first.yPos = point.second.dp
-		first.color = Color.Gray
 
 		sorted
 			.drop(1)
