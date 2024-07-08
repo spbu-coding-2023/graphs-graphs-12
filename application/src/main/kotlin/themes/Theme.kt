@@ -59,13 +59,13 @@ fun MainTheme(
 
 	val typography = JetTypography(
 		heading = TextStyle(
-			fontSize = when(textSize) {
+			fontSize = when (textSize) {
 				JetSize.Small -> 38.sp
 				JetSize.Medium -> 42.sp
 				JetSize.Big -> 46.sp
 			},
 			fontWeight = FontWeight.Bold,
-			fontFamily = when(fonts) {
+			fontFamily = when (fonts) {
 				JetFontFamily.Default -> FontFamily.Default
 				JetFontFamily.Monospace -> FontFamily.Monospace
 				JetFontFamily.Cursive -> FontFamily.Cursive
@@ -80,14 +80,14 @@ fun MainTheme(
 				JetSize.Big -> 30.sp
 			},
 			fontWeight = FontWeight.Normal,
-			fontFamily = when(fonts) {
+			fontFamily = when (fonts) {
 				JetFontFamily.Default -> FontFamily.Default
 				JetFontFamily.Monospace -> FontFamily.Monospace
 				JetFontFamily.Cursive -> FontFamily.Cursive
 				JetFontFamily.Serif -> FontFamily.Serif
 				JetFontFamily.SansSerif -> FontFamily.SansSerif
 			}
-		) ,
+		),
 		toolbar = TextStyle(
 			fontSize = when (textSize) {
 				JetSize.Small -> 16.sp
@@ -95,7 +95,7 @@ fun MainTheme(
 				JetSize.Big -> 24.sp
 			},
 			fontWeight = FontWeight.Medium,
-			fontFamily = when(fonts) {
+			fontFamily = when (fonts) {
 				JetFontFamily.Default -> FontFamily.Default
 				JetFontFamily.Monospace -> FontFamily.Monospace
 				JetFontFamily.Cursive -> FontFamily.Cursive
@@ -110,7 +110,7 @@ fun MainTheme(
 				JetSize.Big -> 18.sp
 			},
 			fontWeight = FontWeight.Medium,
-			fontFamily = when(fonts) {
+			fontFamily = when (fonts) {
 				JetFontFamily.Default -> FontFamily.Default
 				JetFontFamily.Monospace -> FontFamily.Monospace
 				JetFontFamily.Cursive -> FontFamily.Cursive

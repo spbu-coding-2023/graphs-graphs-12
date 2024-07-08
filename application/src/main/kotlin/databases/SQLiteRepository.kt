@@ -9,7 +9,10 @@ import mu.KotlinLogging
 import utils.VertexIDType
 import viewmodels.graphs.GraphViewModel
 import java.io.File
-import java.sql.*
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.ResultSet
+import java.sql.SQLException
 
 private val logger = KotlinLogging.logger { }
 

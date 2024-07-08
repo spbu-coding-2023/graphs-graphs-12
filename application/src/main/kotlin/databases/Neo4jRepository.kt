@@ -1,7 +1,6 @@
 package databases
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import graphs_lab.core.graphs.WeightedGraph
 import models.VertexID
@@ -119,7 +118,7 @@ class Neo4jRepository : Closeable {
 			val isUnweighted = record["isUnweighted"].toString().toBoolean()
 			val vertexTypeString = record["vertexType"].asString()
 			var vertexType: VertexIDType = VertexIDType.INT_TYPE
-			when(vertexTypeString) {
+			when (vertexTypeString) {
 				"Int" -> vertexType = VertexIDType.INT_TYPE
 				"String" -> vertexType = VertexIDType.STRING_TYPE
 			}

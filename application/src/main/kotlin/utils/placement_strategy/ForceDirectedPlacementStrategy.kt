@@ -4,7 +4,10 @@ import androidx.compose.ui.unit.dp
 import themes.radiusVerticesStart
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
-import kotlin.math.*
+import kotlin.math.abs
+import kotlin.math.log2
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 /**
  * Error message of unexpected algorithm behavior.

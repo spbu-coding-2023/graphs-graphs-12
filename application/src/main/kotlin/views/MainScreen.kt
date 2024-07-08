@@ -2,12 +2,20 @@ package views
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import themes.*
+import themes.JetCorners
+import themes.JetFontFamily
+import themes.JetSize
+import themes.JetStyle
+import themes.MainTheme
 import utils.SideMenuTabType
 import views.pages.GraphViewPage
 import views.pages.HomePage

@@ -1,7 +1,6 @@
 package themes
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 
 /**
  * Custom color for white.
@@ -34,9 +33,9 @@ val baseLightPalette = JetColors(
  * Colors configuration for the base Dark application theme.
  */
 val baseDarkPalette = JetColors(
-	primaryBackground = Color(99,102,106), // greyCustom
-	secondaryBackground = Color(255,76,43), // orangeCustom
-	tertiaryBackground = Color(69,72,76), // darkGreyCustom
+	primaryBackground = Color(99, 102, 106), // greyCustom
+	secondaryBackground = Color(255, 76, 43), // orangeCustom
+	tertiaryBackground = Color(69, 72, 76), // darkGreyCustom
 	primaryText = Color(175, 218, 252), // blueCustom
 	secondaryText = Color.White,
 	tintColor = Color.White
@@ -88,26 +87,26 @@ val purpleDarkPalette = baseDarkPalette.copy(
  * Colors configuration for the Light application theme with custom orange tint color.
  */
 val orangeLightPalette = baseLightPalette.copy(
-	tintColor = Color(255,176,46)
+	tintColor = Color(255, 176, 46)
 )
 
 /**
  * Colors configuration for the Dark application theme with custom orange tint color.
  */
 val orangeDarkPalette = baseDarkPalette.copy(
-	tintColor = Color(255,176,46)
+	tintColor = Color(255, 176, 46)
 )
 
 /**
  * Colors configuration for the Light application theme with custom pink tint color.
  */
 val pinkLightPalette = baseLightPalette.copy(
-	tintColor = Color(255,20,147)
+	tintColor = Color(255, 20, 147)
 )
 
 /**
  * Colors configuration for the Dark application theme with custom pink tint color.
  */
 val pinkDarkPalette = baseDarkPalette.copy(
-	tintColor = Color(255,20,147)
+	tintColor = Color(255, 20, 147)
 )

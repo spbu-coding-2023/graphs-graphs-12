@@ -5,7 +5,6 @@ import models.SettingsModel
 import utils.GraphSavingType
 import utils.VertexIDType
 import viewmodels.pages.HomePageViewModel
-import java.io.File
 
 /**
  * ViewModel for the Create New Graph Dialog.
