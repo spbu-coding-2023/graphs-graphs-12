@@ -9,19 +9,24 @@ import mu.KotlinLogging
 import utils.VertexIDType
 import viewmodels.graphs.GraphViewModel
 import java.io.File
-import java.sql.*
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.ResultSet
+import java.sql.SQLException
 
 private val logger = KotlinLogging.logger { }
 
 /**
  * A class responsible for writing and loading graphs to/from a SQLite database.
  */
-class SqliteRepository {
+class SQLiteRepository {
 	/**
 	 * Writes the given graph to a SQLite database in the specified folder path.
 	 *
 	 * @param graphViewModel the graph to be written to the database
 	 * @param folderPath the path to the folder where the database will be created
+	 *
+	 * @throws SQLException if an error occurs while writing the graph to the database
 	 */
 	fun writeDb(graphViewModel: GraphViewModel, folderPath: String) {
 		val realPath = File(folderPath, "${graphViewModel.graph.label}.db").absolutePath
@@ -76,7 +81,7 @@ class SqliteRepository {
 						");"
 				)
 				logger.info { "Graphs, vertices and edges tables created or already exists." }
-			} catch (exception: Exception) {
+			} catch (exception: SQLException) {
 				logger.error(exception) { "Cannot create tables in database." }
 			} finally {
 				statement.close()
@@ -89,8 +94,6 @@ class SqliteRepository {
 	 *
 	 * @param graphViewModel the graph view model containing the graph to be added
 	 * @param connection the database connection to use for adding the graph
-	 *
-	 * @throws Exception if an error occurs while adding the graph to the database
 	 */
 	private fun addGraph(graphViewModel: GraphViewModel, connection: Connection) {
 		val addGraphStatement by lazy {
@@ -109,7 +112,7 @@ class SqliteRepository {
 
 			addGraphStatement.execute()
 			logger.info { "Added ${graph.label} graph." }
-		} catch (exception: Exception) {
+		} catch (exception: SQLException) {
 			logger.error(exception) { "Cannot add ${graphViewModel.graph.label} graph." }
 		} finally {
 			addGraphStatement.close()
@@ -121,8 +124,6 @@ class SqliteRepository {
 	 *
 	 * @param graphViewModel the graph view model containing the vertices to be added
 	 * @param connection the database connection to use for adding the vertices
-	 *
-	 * @throws Exception if an error occurs while adding the vertices to the database
 	 */
 	private fun addVertices(graphViewModel: GraphViewModel, connection: Connection) {
 		val addVertexStatement by lazy {
@@ -143,7 +144,7 @@ class SqliteRepository {
 				addVertexStatement.execute()
 			}
 			logger.info { "Added vertices." }
-		} catch (exception: Exception) {
+		} catch (exception: SQLException) {
 			logger.error(exception) { "Cannot add vertices." }
 		} finally {
 			addVertexStatement.close()
@@ -174,7 +175,7 @@ class SqliteRepository {
 				addEdgeStatement.execute()
 			}
 			logger.info { "Added edges." }
-		} catch (exception: Exception) {
+		} catch (exception: SQLException) {
 			logger.error(exception) { "Cannot add edges." }
 		} finally {
 			addEdgeStatement.close()
@@ -187,7 +188,7 @@ class SqliteRepository {
 	 * @param pathToDB the path to the SQLite database file
 	 * @return the loaded graph, or null if the graph could not be loaded
 	 *
-	 * @throws Exception ff an error occurs while loading the graph from the database
+	 * @throws SQLException ff an error occurs while loading the graph from the database
 	 */
 	fun loadGraph(pathToDB: String): GraphViewModel? {
 		val realPath = if (pathToDB.endsWith(".db")) pathToDB else "$pathToDB.db"
@@ -274,7 +275,11 @@ class SqliteRepository {
 					val idTarget = resultEdges!!.getString(2)
 					val weight = resultEdges!!.getDouble(3)
 
-					graphViewModel!!.addEdge(VertexID.vertexIDFromString(idSource, typeId), VertexID.vertexIDFromString(idTarget, typeId), weight)
+					graphViewModel!!.addEdge(
+						VertexID.vertexIDFromString(idSource, typeId),
+						VertexID.vertexIDFromString(idTarget, typeId),
+						weight
+					)
 				}
 
 				graphViewModel!!.vertices.forEach {
@@ -287,7 +292,7 @@ class SqliteRepository {
 				}
 
 				logger.info { "Loaded $pathToDB graph." }
-			} catch (exception: Exception) {
+			} catch (exception: SQLException) {
 				logger.error(exception) { "Cannot load $realPath graph." }
 			} finally {
 				connection.close()

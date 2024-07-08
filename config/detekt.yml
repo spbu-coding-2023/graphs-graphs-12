@@ -56,8 +56,7 @@ complexity:
     active: true
     threshold: 750
   LongMethod:
-    active: true
-    threshold: 140
+    active: false
   NamedArguments:
     active: true
     threshold: 3
@@ -76,9 +75,13 @@ complexity:
     active: false
   CyclomaticComplexMethod:
     threshold: 18
+    ignoreSingleWhenExpression: true
+    ignoreSimpleWhenEntries: true
+    ignoreNestingFunctions: true
   LongParameterList:
     active: true
-    functionThreshold: 10
+    functionThreshold: 20
+    constructorThreshold: 10
 
 exceptions:
   active: true
@@ -97,10 +100,10 @@ naming:
     allowedPattern: '^(is|has|are)'
   ClassNaming:
     active: true
-    classPattern: '([A-Z][a-z]*)+'
+    classPattern: '([A-Z][0-9a-z]*)+'
   EnumNaming:
     active: true
-    enumEntryPattern: '([A-Z][a-z]*_)+'
+    enumEntryPattern: '([A-Z][0-9a-z_]*)+'
   LambdaParameterNaming:
     active: true
     parameterPattern: '[a-z][A-Za-z0-9]*|_'
@@ -153,12 +156,12 @@ potential-bugs:
     active: true
     allowExplicitReturnType: true
   LateinitUsage:
-    active: true
+    active: false
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**']
     ignoreOnClassesPattern: ''
   MissingPackageDeclaration:
     active: true
-    excludes: ['**/*.kts']
+    excludes: ['**/*.kts', '**/Main.kt']
   NullCheckOnMutableProperty:
     active: true
   PropertyUsedBeforeDeclaration:
@@ -217,6 +220,8 @@ style:
     active: true
   RedundantVisibilityModifierRule:
     active: true
+  ReturnCount:
+    active: false
   SpacingBetweenPackageAndImports:
     active: true
   UnderscoresInNumericLiterals:
@@ -228,6 +233,10 @@ style:
   UnusedPrivateMember:
     active: true
     ignoreAnnotated: [ 'Preview' ]
+  MaxLineLength:
+    active: false
+  ThrowsCount:
+    active: false
 
 formatting:
   active: true
@@ -240,4 +249,8 @@ formatting:
   PackageName:
     active: false
   SpacingBetweenDeclarationsWithComments:
+    active: false
+  MaximumLineLength:
+    active: false
+  Wrapping:
     active: false

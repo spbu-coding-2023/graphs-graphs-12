@@ -4,16 +4,38 @@ import JetSettings
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Nightlight
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.runtime.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,21 +43,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
-import themes.*
-
-// TODO(move its to utils package)
-/**
- * A data class representing a menu item model.
- *
- * @param title the title of the menu item
- * @param currentIndex the index of the currently selected value. Default is 0
- * @param values a list of possible values for the menu item
- */
-data class MenuItemModel(
-	val title: String,
-	val currentIndex: Int = 0,
-	val values: List<String>
-)
+import themes.JetCorners
+import themes.JetFontFamily
+import themes.JetSize
+import themes.JetStyle
+import themes.JetTheme
+import utils.MenuItemModel
 
 /**
  * This is the main composable function for the Settings Page.
@@ -59,7 +72,6 @@ fun SettingsPage(jetSettings: JetSettings) {
 				.background(Color.Transparent)
 				.align(Alignment.CenterHorizontally),
 			horizontalArrangement = Arrangement.Center
-
 		) {
 			Text(
 				"Settings",
@@ -68,7 +80,6 @@ fun SettingsPage(jetSettings: JetSettings) {
 				color = JetTheme.colors.secondaryText
 			)
 		}
-
 		Column(
 			modifier = Modifier
 				.padding(4.dp)
@@ -118,21 +129,19 @@ fun SettingsPage(jetSettings: JetSettings) {
 				),
 				onItemSelected = {
 					when (it) {
-						0 -> jetSettings.currentFontFamily.value = JetFontFamily.Default
-						1 -> jetSettings.currentFontFamily.value = JetFontFamily.Monospace
-						2 -> jetSettings.currentFontFamily.value = JetFontFamily.Cursive
-						3 -> jetSettings.currentFontFamily.value = JetFontFamily.Serif
-						4 -> jetSettings.currentFontFamily.value = JetFontFamily.SansSerif
-						else -> throw NotImplementedError("No valid value for this $it")
+						0 -> currentFontFamily.value = JetFontFamily.Default
+						1 -> currentFontFamily.value = JetFontFamily.Monospace
+						2 -> currentFontFamily.value = JetFontFamily.Cursive
+						3 -> currentFontFamily.value = JetFontFamily.Serif
+						4 -> currentFontFamily.value = JetFontFamily.SansSerif
+						else -> throw NotImplementedError("No valid value for this font family $it")
 					}
 				}
 			)
-
 			Divider(
 				thickness = 0.5.dp,
 				color = JetTheme.colors.primaryBackground
 			)
-
 			MenuItem(
 				model = MenuItemModel(
 					title = "Font Size",
@@ -149,19 +158,17 @@ fun SettingsPage(jetSettings: JetSettings) {
 				),
 				onItemSelected = {
 					when (it) {
-						0 -> jetSettings.currentFontSize.value = JetSize.Small
-						1 -> jetSettings.currentFontSize.value = JetSize.Medium
-						2 -> jetSettings.currentFontSize.value = JetSize.Big
-						else -> throw NotImplementedError("No valid value for this $it")
+						0 -> currentFontSize.value = JetSize.Small
+						1 -> currentFontSize.value = JetSize.Medium
+						2 -> currentFontSize.value = JetSize.Big
+						else -> throw NotImplementedError("No valid value for this change size $it")
 					}
 				}
 			)
-
 			Divider(
 				thickness = 0.5.dp,
 				color = JetTheme.colors.primaryBackground
 			)
-
 			MenuItem(
 				model = MenuItemModel(
 					title = "Corner Style",
@@ -176,18 +183,16 @@ fun SettingsPage(jetSettings: JetSettings) {
 				),
 				onItemSelected = {
 					when (it) {
-						0 -> jetSettings.currentCornersStyle.value = JetCorners.Rounded
-						1 -> jetSettings.currentCornersStyle.value = JetCorners.Flat
-						else -> throw NotImplementedError("No valid value for this $it")
+						0 -> currentCornersStyle.value = JetCorners.Rounded
+						1 -> currentCornersStyle.value = JetCorners.Flat
+						else -> throw NotImplementedError("No valid value for this corner style $it")
 					}
 				}
 			)
-
 			Divider(
 				thickness = 0.5.dp,
 				color = JetTheme.colors.primaryBackground
 			)
-
 			MenuItem(
 				model = MenuItemModel(
 					title = "Style",
@@ -208,16 +213,15 @@ fun SettingsPage(jetSettings: JetSettings) {
 				),
 				onItemSelected = {
 					when (it) {
-						0 -> jetSettings.currentStyle.value = JetStyle.Black
-						1 -> jetSettings.currentStyle.value = JetStyle.White
-						2 -> jetSettings.currentStyle.value = JetStyle.Purple
-						3 -> jetSettings.currentStyle.value = JetStyle.Orange
-						4 -> jetSettings.currentStyle.value = JetStyle.Pink
-						else -> throw NotImplementedError("No valid value for this $it")
+						0 -> currentStyle.value = JetStyle.Black
+						1 -> currentStyle.value = JetStyle.White
+						2 -> currentStyle.value = JetStyle.Purple
+						3 -> currentStyle.value = JetStyle.Orange
+						4 -> currentStyle.value = JetStyle.Pink
+						else -> throw NotImplementedError("No valid value for this style $it")
 					}
 				}
 			)
-
 		}
 	}
 }
@@ -289,7 +293,6 @@ internal fun MenuItem(
 			}
 		}
 	}
-
 }
 
 /**
@@ -319,12 +322,13 @@ fun ThemeSwitcher(
 	)
 	val offset by remember { offsetState }
 
-	Box(modifier = Modifier
-		.width(size * 2)
-		.height(size)
-		.clip(shape = shape)
-		.clickable { onClick() }
-		.background(JetTheme.colors.primaryText)
+	Box(
+		modifier = Modifier
+			.width(size * 2)
+			.height(size)
+			.clip(shape = shape)
+			.clickable { onClick() }
+			.background(JetTheme.colors.primaryText)
 	) {
 		Box(
 			modifier = Modifier
@@ -343,8 +347,7 @@ fun ThemeSwitcher(
 					modifier = Modifier.size(iconSize),
 					imageVector = Icons.Default.Nightlight,
 					contentDescription = "Theme Icon",
-					tint = if (darkTheme) Color.White
-					else JetTheme.colors.tintColor
+					tint = if (darkTheme) { Color.White } else { JetTheme.colors.tintColor }
 				)
 			}
 			Box(
@@ -355,8 +358,7 @@ fun ThemeSwitcher(
 					modifier = Modifier.size(iconSize),
 					imageVector = Icons.Default.LightMode,
 					contentDescription = "Theme Icon",
-					tint = if (darkTheme) JetTheme.colors.tintColor
-					else Color.White
+					tint = if (darkTheme) { JetTheme.colors.tintColor } else { Color.White }
 				)
 			}
 		}

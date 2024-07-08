@@ -2,7 +2,10 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.window.*
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPosition
+import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberWindowState
 import models.SettingsModel
 import models.utils.GraphInfo
 import themes.JetCorners
@@ -15,6 +18,9 @@ import java.awt.Dimension
 import java.io.File
 import java.io.FileWriter
 
+/**
+ * A pair representing the initial size of the application window.
+ */
 val windowSizeStart = Pair(1000f, 700f)
 
 /**

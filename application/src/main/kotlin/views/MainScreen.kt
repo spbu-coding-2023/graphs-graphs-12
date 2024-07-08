@@ -5,9 +5,17 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import themes.*
+import themes.JetCorners
+import themes.JetFontFamily
+import themes.JetSize
+import themes.JetStyle
+import themes.MainTheme
+import utils.SideMenuTabType
 import views.pages.GraphViewPage
 import views.pages.HomePage
 import views.pages.SettingsPage
@@ -47,28 +55,32 @@ fun MainScreen(viewModel: MainScreenViewModel, jetSettings: JetSettings) {
 			) { pageIndex ->
 				when (pageIndex) {
 					viewModel.sideMenuViewModel.pageOfTab("Home") -> {
-						viewModel.sideMenuViewModel.changeVisibility("Algorithms", true)
-						viewModel.sideMenuViewModel.changeVisibility("Representation", true)
-						viewModel.sideMenuViewModel.changeVisibility("Save", true)
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, true)
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.REPRESENTATION, true)
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.SAVE, true)
 						HomePage(viewModel.homePageViewModel)
 					}
 
 					viewModel.sideMenuViewModel.pageOfTab("GraphView") -> {
-						viewModel.sideMenuViewModel.changeVisibility("GraphView", false)
-						viewModel.sideMenuViewModel.changeVisibility("Algorithms", false)
-						viewModel.sideMenuViewModel.changeVisibility("Representation", false)
-						viewModel.sideMenuViewModel.changeVisibility("Save", false)
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.GRAPH_VIEW, false)
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, false)
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.REPRESENTATION, false)
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.SAVE, false)
 						GraphViewPage(viewModel.graphPageViewModel)
 					}
-
 					viewModel.sideMenuViewModel.pageOfTab("Settings") -> {
-						viewModel.sideMenuViewModel.changeVisibility("Algorithms", true)
-						viewModel.sideMenuViewModel.changeVisibility("Representation", true)
-						viewModel.sideMenuViewModel.changeVisibility("Save", true)
-						SettingsPage(jetSettings)
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, true)
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.REPRESENTATION, true)
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.SAVE, true)
+						SettingsPage(
+							isDarkMode,
+							currentFontSize,
+							currentStyle,
+							currentCornersStyle,
+							currentFontFamily
+						)
 					}
-
-					else -> HomePage(viewModel.homePageViewModel)
+					else -> { HomePage(viewModel.homePageViewModel) }
 				}
 			}
 		}

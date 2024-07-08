@@ -4,8 +4,6 @@ import androidx.compose.ui.unit.dp
 import themes.radiusVerticesStart
 import viewmodels.graphs.VertexViewModel
 import kotlin.random.Random
-import kotlin.random.asJavaRandom
-import kotlin.random.asKotlinRandom
 
 /**
  * A class representing a random placement strategy for vertex placement in a graph representation.

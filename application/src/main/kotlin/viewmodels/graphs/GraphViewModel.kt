@@ -4,7 +4,13 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import graphs_lab.algs.*
+import graphs_lab.algs.BellmanFordShortestPath
+import graphs_lab.algs.CyclesSearchAlgorithms
+import graphs_lab.algs.DijkstraAlgorithm
+import graphs_lab.algs.LeaderRank
+import graphs_lab.algs.MSTAlgorithms
+import graphs_lab.algs.TarjanBridgeFinding
+import graphs_lab.algs.TarjanStrongConnectivityInspector
 import graphs_lab.algs.clustering.louvainClusteringMethod
 import graphs_lab.core.edges.WeightedEdge
 import graphs_lab.core.graphs.WeightedGraph
@@ -70,7 +76,8 @@ class GraphViewModel(
 	fun addVertex(id: VertexID) {
 		graph.addVertex(id)
 		_vertices.putIfAbsent(
-			id, VertexViewModel(
+			id,
+			VertexViewModel(
 				id,
 				Random.nextInt(
 					radiusVerticesStart.value.toInt(),
@@ -94,6 +101,11 @@ class GraphViewModel(
 		_vertices.putIfAbsent(vertex.id, vertex)
 	}
 
+	/**
+	 * Removes a vertex from the graph and updates the edges accordingly.
+	 *
+	 * @param id the id of the vertex to be removed
+	 */
 	fun removeVertex(id: VertexID) {
 		_vertices.remove(id)
 		_edges.forEach {

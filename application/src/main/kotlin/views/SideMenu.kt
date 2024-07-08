@@ -2,15 +2,28 @@ package views
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.Icon
+import androidx.compose.material.Tab
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import models.utils.TabItem
@@ -30,8 +43,11 @@ import viewmodels.SideMenuViewModel
 fun SideMenu(statePager: PagerState, indexSelectedPage: MutableState<Int>, viewModel: SideMenuViewModel) {
 	Column(Modifier.width(sizeBottom).fillMaxHeight()) {
 		viewModel.tabsItems.forEach { tabsColumn ->
-			if (tabsColumn == null) Spacer(Modifier.weight(1f))
-			else SideMenuTabColumn(tabsColumn, statePager, indexSelectedPage, viewModel)
+			if (tabsColumn == null) {
+				Spacer(Modifier.weight(1f))
+			} else {
+				SideMenuTabColumn(tabsColumn, statePager, indexSelectedPage, viewModel)
+			}
 		}
 	}
 }
@@ -46,7 +62,12 @@ fun SideMenu(statePager: PagerState, indexSelectedPage: MutableState<Int>, viewM
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SideMenuTabColumn(tabsColumn: List<TabItem>, statePager: PagerState, indexSelectedPage: MutableState<Int>, viewModel: SideMenuViewModel) {
+fun SideMenuTabColumn(
+	tabsColumn: List<TabItem>,
+	statePager: PagerState,
+	indexSelectedPage: MutableState<Int>,
+	viewModel: SideMenuViewModel
+) {
 	val modifierColumns = Modifier
 		.padding(4.dp)
 		.clip(JetTheme.shapes.cornerStyle)
@@ -67,8 +88,7 @@ fun SideMenuTabColumn(tabsColumn: List<TabItem>, statePager: PagerState, indexSe
 				Tab(
 					selected = statePager.currentPage == indexItemPage,
 					onClick = {
-						if (onItemClick != null) onItemClick()
-						else expanded = true
+						if (onItemClick != null) { onItemClick() } else { expanded = true }
 						if (item.isSelectablePage) {
 							coroutineScope.launch {
 								statePager.scrollToPage(indexItemPage)

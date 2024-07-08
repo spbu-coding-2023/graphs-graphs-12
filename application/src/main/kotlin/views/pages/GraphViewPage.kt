@@ -1,15 +1,50 @@
 package views.pages
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Checkbox
+import androidx.compose.material.CheckboxDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.ArrowUpward
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.ResetTv
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,7 +58,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import graphs_lab.core.edges.WeightedEdge
 import models.VertexID
-import themes.*
+import themes.JetTheme
+import themes.colorEdgesStart
+import themes.colorVerticesStart
+import themes.paddingCustom
+import themes.radiusVerticesStart
+import themes.sizeBottom
+import themes.whiteCustom
+import themes.WidthEdgesStart
 import utils.VertexIDType
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
@@ -77,8 +119,12 @@ fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
 			)
 			Box(Modifier.fillMaxSize()) {
 				MenuInteraction(
-					graphViewModel, idVerticesInfo, isOpenedMenuGraph, isOpenedMenuVertex,
-					Modifier.align(Alignment.BottomEnd), modifierButtons
+					graphViewModel,
+					idVerticesInfo,
+					isOpenedMenuGraph,
+					isOpenedMenuVertex,
+					Modifier.align(Alignment.BottomEnd),
+					modifierButtons
 				)
 			}
 		}
@@ -412,9 +458,13 @@ fun MenuAddingVertex(graphViewModel: GraphViewModel, isShownId: Boolean) {
 				if (idVertex.value.all { it.isDigit() }) {
 					id = VertexID(idVertex.value, graphViewModel.vertexType)
 					statusIdVertex = false
-				} else statusIdVertex = true
+				} else {
+					statusIdVertex = true
+				}
 			}
-		} else statusIdVertex = true
+		} else {
+			statusIdVertex = true
+		}
 
 		if (id != null) {
 			graphViewModel.addVertex(id)
@@ -471,9 +521,13 @@ fun MenuAddingEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWe
 				if (idVertexSource.value.all { it.isDigit() }) {
 					idSource = VertexID(idVertexSource.value, graphViewModel.vertexType)
 					statusIdVertexSource = false
-				} else statusIdVertexSource = true
+				} else {
+					statusIdVertexSource = true
+				}
 			}
-		} else statusIdVertexSource = true
+		} else {
+			statusIdVertexSource = true
+		}
 
 		if (idVertexTarget.value != "" && idVertexTarget.value != idVertexSource.value) {
 			if (graphViewModel.vertexType == VertexIDType.STRING_TYPE) {
@@ -483,9 +537,13 @@ fun MenuAddingEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWe
 				if (idVertexTarget.value.all { it.isDigit() }) {
 					idTarget = VertexID(idVertexTarget.value, graphViewModel.vertexType)
 					statusIdVertexTarget = false
-				} else statusIdVertexTarget = true
+				} else {
+					statusIdVertexTarget = true
+				}
 			}
-		} else statusIdVertexTarget = true
+		} else {
+			statusIdVertexTarget = true
+		}
 
 		if (graphViewModel.isUnweighted) {
 			if (idSource != null && idTarget != null) {
@@ -509,7 +567,9 @@ fun MenuAddingEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWe
 					}!!.visibility = isShownWeigh
 					statusWeight = false
 				}
-			} else statusWeight = true
+			} else {
+				statusWeight = true
+			}
 		}
 	}
 
@@ -760,7 +820,7 @@ fun ButtonResetGraphDisplay(
 					it.visibility = true
 				}
 				graphViewModel.edges.forEach {
-					it.width = widthEdgesStart
+					it.width = WidthEdgesStart
 					it.color = colorEdgesStart
 					it.visibility = false
 				}

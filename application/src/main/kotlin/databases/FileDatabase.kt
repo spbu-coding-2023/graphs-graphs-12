@@ -19,6 +19,8 @@ abstract class FileDatabase<T>(private val fileSuffix: String) {
 	 *
 	 * @param file to read
 	 * @return object of type [T]
+	 *
+	 * @throws IOException if file cannot open or cannot read its data
 	 */
 	fun load(file: File): T {
 		val realFile = if (file.name.endsWith(fileSuffix)) file else File(file.parent, "${file.name}$fileSuffix")
@@ -33,6 +35,8 @@ abstract class FileDatabase<T>(private val fileSuffix: String) {
 	 *
 	 * @param file to write on it
 	 * @param obj to convert it to file data
+	 *
+	 * @throws IOException if file cannot open or cannot write its data
 	 */
 	fun save(file: File, obj: T) {
 		val realFile = if (file.name.endsWith(fileSuffix)) file else File(file.parent, "${file.name}$fileSuffix")
