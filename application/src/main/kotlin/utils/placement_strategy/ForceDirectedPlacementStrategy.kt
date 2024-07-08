@@ -132,8 +132,8 @@ class ForceDirectedPlacementStrategy(
 					}
 					// val forceRepul = kRepul * (vertexSourceViewModel.degree + 1) * (vertexTargetViewModel.degree + 1) / distance // classic
 
-					checkAndAddFirst(tableForce[vertexSourceViewModel], - forceRepul * difX)
-					checkAndAddSecond(tableForce[vertexSourceViewModel], - forceRepul * difY)
+					checkAndAddFirst(tableForce[vertexSourceViewModel], -forceRepul * difX)
+					checkAndAddSecond(tableForce[vertexSourceViewModel], -forceRepul * difY)
 				}
 			}
 
@@ -172,7 +172,7 @@ class ForceDirectedPlacementStrategy(
 			}
 
 			speedGlobal = kTolerance * tractionGlobal / switchingGlobal // adapting the global speed
-			if (speedGlobal > speedGlobalLast / 2 ) {
+			if (speedGlobal > speedGlobalLast / 2) {
 				speedGlobal = speedGlobalLast / 2 * inaccuracy
 			}
 

@@ -246,3 +246,5 @@ formatting:
     active: false
   MaximumLineLength:
     active: false
+  Wrapping:
+    active: false

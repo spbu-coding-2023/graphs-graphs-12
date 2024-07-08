@@ -175,7 +175,10 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 					OutlinedTextField(
 						value = neo4jHost,
 						label = { Text("Host", style = JetTheme.typography.toolbar) },
-						onValueChange = { newValue -> neo4jHost = newValue; isCrateNeo4jConnection = false },
+						onValueChange = { newValue ->
+							neo4jHost = newValue
+							isCrateNeo4jConnection = false
+						},
 						modifier = Modifier.weight(1f),
 						singleLine = true,
 						colors = TextFieldDefaults.textFieldColors(
@@ -188,7 +191,10 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 					OutlinedTextField(
 						value = neo4jUserName,
 						label = { Text("User", style = JetTheme.typography.toolbar) },
-						onValueChange = { newValue -> neo4jUserName = newValue; isCrateNeo4jConnection = false },
+						onValueChange = { newValue ->
+							neo4jUserName = newValue
+							isCrateNeo4jConnection = false
+						},
 						modifier = Modifier.weight(1f),
 						singleLine = true,
 						colors = TextFieldDefaults.textFieldColors(
@@ -201,7 +207,10 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 					OutlinedTextField(
 						value = neo4jPassword,
 						label = { Text("Password", style = JetTheme.typography.toolbar) },
-						onValueChange = { newValue -> neo4jPassword = newValue; isCrateNeo4jConnection = false },
+						onValueChange = { newValue ->
+							neo4jPassword = newValue
+							isCrateNeo4jConnection = false
+						},
 						modifier = Modifier.weight(1f),
 						singleLine = true,
 						colors = TextFieldDefaults.textFieldColors(

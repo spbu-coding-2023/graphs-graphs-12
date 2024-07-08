@@ -102,8 +102,8 @@ fun LoadNewGraphDialog(viewModel: LoadNewGraphDialogViewModel) {
 					OutlinedTextField(
 						value = viewModel.neo4jHost.value,
 						label = { Text("Host", style = JetTheme.typography.toolbar) },
-						onValueChange = {
-							newValue -> viewModel.neo4jHost.value = newValue
+						onValueChange = { newValue ->
+							viewModel.neo4jHost.value = newValue
 							viewModel.isCrateNeo4jConnection.value = false
 						},
 						modifier = Modifier.weight(1f),
@@ -118,8 +118,8 @@ fun LoadNewGraphDialog(viewModel: LoadNewGraphDialogViewModel) {
 					OutlinedTextField(
 						value = viewModel.neo4jUserName.value,
 						label = { Text("User", style = JetTheme.typography.toolbar) },
-						onValueChange = {
-							newValue -> viewModel.neo4jUserName.value = newValue
+						onValueChange = { newValue ->
+							viewModel.neo4jUserName.value = newValue
 							viewModel.isCrateNeo4jConnection.value = false
 						},
 						modifier = Modifier.weight(1f),
@@ -134,8 +134,8 @@ fun LoadNewGraphDialog(viewModel: LoadNewGraphDialogViewModel) {
 					OutlinedTextField(
 						value = viewModel.neo4jPassword.value,
 						label = { Text("Password", style = JetTheme.typography.toolbar) },
-						onValueChange = {
-							newValue -> viewModel.neo4jPassword.value = newValue
+						onValueChange = { newValue ->
+							viewModel.neo4jPassword.value = newValue
 							viewModel.isCrateNeo4jConnection.value = false
 						},
 						modifier = Modifier.weight(1f),

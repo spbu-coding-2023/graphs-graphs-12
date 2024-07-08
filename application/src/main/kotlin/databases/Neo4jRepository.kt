@@ -52,10 +52,10 @@ class Neo4jRepository : Closeable {
 			tx.run(
 				"CREATE (:GraphInfo {" +
 					"label: '$label', " +
-					"isDirected: ${isDirected}, " +
-					"isAutoAddVertex: ${isAutoAddVertex}, " +
-					"isUnweighted: ${isUnweighted}, " +
-					"vertexType: '${vertexType}'" +
+					"isDirected: $isDirected, " +
+					"isAutoAddVertex: $isAutoAddVertex, " +
+					"isUnweighted: $isUnweighted, " +
+					"vertexType: '$vertexType'" +
 					"})"
 			)
 		}
