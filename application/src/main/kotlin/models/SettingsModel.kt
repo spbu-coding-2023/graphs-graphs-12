@@ -63,12 +63,12 @@ class SettingsModel {
 	): GraphInfo? {
 		val graphViewModel = graphPageViewModel.graphViewModel ?: return null
 		when (savingType) {
-			GraphSavingType.LOCAL_FILE -> saveGraphByJSON(graphViewModel, folderPath)
+			GraphSavingType.LOCAL_FILE -> { saveGraphByJSON(graphViewModel, folderPath) }
 			GraphSavingType.NEO4J_DB -> {
 				if (!isNeo4jConnected) return null
 				saveGraphByNeo4j(graphPageViewModel)
 			}
-			GraphSavingType.SQLITE_DB -> saveGraphBySQLite(graphViewModel, folderPath)
+			GraphSavingType.SQLITE_DB -> { saveGraphBySQLite(graphViewModel, folderPath) }
 		}
 		return GraphInfo(
 			graphViewModel.graph.label,

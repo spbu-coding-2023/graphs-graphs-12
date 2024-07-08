@@ -94,6 +94,11 @@ class ForceDirectedPlacementStrategy(
 		inaccuracy: Double
 	) {
 		if (viewModel.vertices.isEmpty()) return
+		if (width <= 0 || height <= 0) {
+			// TODO(Log about all koefs)
+			println("ForceDirectedPlacementStrategy.place: invalid canvas dimensions, by koefs: $kDegree")
+			return
+		}
 
 		var speedGlobal: Double
 		var switchingGlobal = 0.0

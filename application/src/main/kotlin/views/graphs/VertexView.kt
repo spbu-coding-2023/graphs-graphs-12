@@ -23,7 +23,7 @@ import themes.whiteCustom
 import utils.placement_strategy.ForceDirectedPlacementStrategy
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
-import windowSizeStart
+import desktop.windowSizeStart
 
 // TODO(move its params to SettingsModel)
 private var curVertexColor: Color = colorVerticesStart

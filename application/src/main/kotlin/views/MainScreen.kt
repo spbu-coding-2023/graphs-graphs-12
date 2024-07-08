@@ -73,7 +73,6 @@ fun MainScreen(viewModel: MainScreenViewModel) {
 						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.SAVE, false)
 						GraphViewPage(viewModel.graphPageViewModel)
 					}
-
 					viewModel.sideMenuViewModel.pageOfTab("Settings") -> {
 						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, true)
 						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.REPRESENTATION, true)
@@ -86,7 +85,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
 							currentFontFamily
 						)
 					}
-					else -> HomePage(viewModel.homePageViewModel)
+					else -> { HomePage(viewModel.homePageViewModel) }
 				}
 			}
 		}

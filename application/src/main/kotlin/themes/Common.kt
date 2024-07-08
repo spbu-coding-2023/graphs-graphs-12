@@ -21,7 +21,7 @@ val radiusVerticesStart = 20.dp
 /**
  * The width of the edges at the start of the custom shape.
  */
-val widthEdgesStart = 1f
+const val WidthEdgesStart = 1f
 
 /**
  * The padding value for the custom shape.

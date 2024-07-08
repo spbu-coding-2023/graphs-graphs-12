@@ -1,3 +1,5 @@
+package desktop
+
 import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.window.Window

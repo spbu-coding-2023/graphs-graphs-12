@@ -65,7 +65,7 @@ import themes.paddingCustom
 import themes.radiusVerticesStart
 import themes.sizeBottom
 import themes.whiteCustom
-import themes.widthEdgesStart
+import themes.WidthEdgesStart
 import utils.VertexIDType
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
@@ -820,7 +820,7 @@ fun ButtonResetGraphDisplay(
 					it.visibility = true
 				}
 				graphViewModel.edges.forEach {
-					it.width = widthEdgesStart
+					it.width = WidthEdgesStart
 					it.color = colorEdgesStart
 					it.visibility = false
 				}
