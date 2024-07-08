@@ -353,8 +353,8 @@ fun AlgorithmTextButton(
 	TextButton(
 		modifier = modifier,
 		onClick = {
-			if (dropContext != null) expanded.value = true
-			else algButton.isRun.value = true
+			if (dropContext != null) { expanded.value = true }
+			else { algButton.isRun.value = true }
 		},
 		colors = ButtonDefaults.buttonColors(
 			backgroundColor = Color.Transparent

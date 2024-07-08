@@ -20,7 +20,7 @@ import java.io.File
  * @property settings the settings of the application
  */
 class CreateNewGraphDialogViewModel(val homePageViewModel: HomePageViewModel) {
-	val graphName =  mutableStateOf("")
+	val graphName = mutableStateOf("")
 	val selectedVertexTypeID = mutableStateOf(VertexIDType.INT_TYPE)
 	val isGraphWeighted = mutableStateOf(false)
 	val isGraphDirected = mutableStateOf(false)

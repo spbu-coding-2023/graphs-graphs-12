@@ -70,7 +70,8 @@ class GraphViewModel(
 	fun addVertex(id: VertexID) {
 		graph.addVertex(id)
 		_vertices.putIfAbsent(
-			id, VertexViewModel(
+			id,
+			VertexViewModel(
 				id,
 				Random.nextInt(
 					radiusVerticesStart.value.toInt(),

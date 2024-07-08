@@ -2,7 +2,7 @@ package models
 
 import databases.GraphJSONDatabase
 import databases.Neo4jRepository
-import databases.SqliteRepository
+import databases.SQLiteRepository
 import models.utils.GraphInfo
 import org.neo4j.driver.exceptions.Neo4jException
 import org.neo4j.driver.exceptions.ServiceUnavailableException
@@ -24,7 +24,7 @@ import java.sql.SQLException
 class SettingsModel {
 	private val jsonDB = GraphJSONDatabase()
 	private val neo4jDB = Neo4jRepository()
-	private val sqliteDB = SqliteRepository()
+	private val sqliteDB = SQLiteRepository()
 	var isNeo4jConnected = false
 	val graphNameRegEx = Regex("[a-zA-Z][a-zA-Z0-9_-]*")
 

@@ -77,8 +77,12 @@ fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
 			)
 			Box(Modifier.fillMaxSize()) {
 				MenuInteraction(
-					graphViewModel, idVerticesInfo, isOpenedMenuGraph, isOpenedMenuVertex,
-					Modifier.align(Alignment.BottomEnd), modifierButtons
+					graphViewModel,
+					idVerticesInfo,
+					isOpenedMenuGraph,
+					isOpenedMenuVertex,
+					Modifier.align(Alignment.BottomEnd),
+					modifierButtons
 				)
 			}
 		}
@@ -412,9 +416,13 @@ fun MenuAddingVertex(graphViewModel: GraphViewModel, isShownId: Boolean) {
 				if (idVertex.value.all { it.isDigit() }) {
 					id = VertexID(idVertex.value, graphViewModel.vertexType)
 					statusIdVertex = false
-				} else statusIdVertex = true
+				} else {
+					statusIdVertex = true
+				}
 			}
-		} else statusIdVertex = true
+		} else {
+			statusIdVertex = true
+		}
 
 		if (id != null) {
 			graphViewModel.addVertex(id)
@@ -471,9 +479,13 @@ fun MenuAddingEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWe
 				if (idVertexSource.value.all { it.isDigit() }) {
 					idSource = VertexID(idVertexSource.value, graphViewModel.vertexType)
 					statusIdVertexSource = false
-				} else statusIdVertexSource = true
+				} else {
+					statusIdVertexSource = true
+				}
 			}
-		} else statusIdVertexSource = true
+		} else {
+			statusIdVertexSource = true
+		}
 
 		if (idVertexTarget.value != "" && idVertexTarget.value != idVertexSource.value) {
 			if (graphViewModel.vertexType == VertexIDType.STRING_TYPE) {
@@ -483,9 +495,13 @@ fun MenuAddingEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWe
 				if (idVertexTarget.value.all { it.isDigit() }) {
 					idTarget = VertexID(idVertexTarget.value, graphViewModel.vertexType)
 					statusIdVertexTarget = false
-				} else statusIdVertexTarget = true
+				} else {
+					statusIdVertexTarget = true
+				}
 			}
-		} else statusIdVertexTarget = true
+		} else {
+			statusIdVertexTarget = true
+		}
 
 		if (graphViewModel.isUnweighted) {
 			if (idSource != null && idTarget != null) {
@@ -509,7 +525,9 @@ fun MenuAddingEdge(graphViewModel: GraphViewModel, isShownId: Boolean, isShownWe
 					}!!.visibility = isShownWeigh
 					statusWeight = false
 				}
-			} else statusWeight = true
+			} else {
+				statusWeight = true
+			}
 		}
 	}
 

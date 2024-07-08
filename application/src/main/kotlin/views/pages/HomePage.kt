@@ -86,7 +86,8 @@ fun HomePage(viewModel: HomePageViewModel) {
 					modifier = Modifier.size(sizeBottom).clip(JetTheme.shapes.cornerStyle),
 					tint = JetTheme.colors.tintColor
 				)
-				Text("Tasks:",
+				Text(
+					"Tasks:",
 					style = JetTheme.typography.toolbar,
 					color = JetTheme.colors.secondaryText
 				)

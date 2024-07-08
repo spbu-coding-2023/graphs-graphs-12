@@ -99,7 +99,9 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 							) {
 								algButton.inputs.value = listOf(vertex)
 								algButton.isRun.value = true
-							} else errorVertex = true
+							} else {
+								errorVertex = true
+							}
 						} catch (_: Exception) {
 							errorVertex = true
 						}

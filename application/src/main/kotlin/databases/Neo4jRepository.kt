@@ -127,11 +127,14 @@ class Neo4jRepository : Closeable {
 			val graph = when (isUnweighted) {
 				true ->
 					WeightedGraph<VertexID>(
-						label, isDirected = isDirected, isAutoAddVertex = isAutoAddVertex
+						label,
+						isDirected = isDirected,
+						isAutoAddVertex = isAutoAddVertex
 					)
-
 				false -> WeightedUnweightedGraph<VertexID>(
-					label, isDirected = isDirected, isAutoAddVertex = isAutoAddVertex
+					label,
+					isDirected = isDirected,
+					isAutoAddVertex = isAutoAddVertex
 				)
 			}
 
@@ -154,8 +157,13 @@ class Neo4jRepository : Closeable {
 				val degree = it["degree"].toString().toInt()
 
 				graph.addVertex(VertexID.vertexIDFromString(vertex, vertexType))
-				vertexMap[VertexID.vertexIDFromString(vertex, vertexType)] =
-					VertexData(x = xPos, y = yPos, radius = radius, color = color, degree = degree)
+				vertexMap[VertexID.vertexIDFromString(vertex, vertexType)] = VertexData(
+					x = xPos,
+					y = yPos,
+					radius = radius,
+					color = color,
+					degree = degree
+				)
 			}
 
 			result =
@@ -169,7 +177,7 @@ class Neo4jRepository : Closeable {
 				graph.addEdge(
 					VertexID.vertexIDFromString(it["source"].asString(), vertexType),
 					VertexID.vertexIDFromString(it["target"].asString(), vertexType),
-					(it["weight"].toString().toDouble())
+					it["weight"].toString().toDouble()
 				)
 			}
 

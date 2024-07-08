@@ -226,7 +226,6 @@ fun SettingsPage(
 					}
 				}
 			)
-
 		}
 	}
 }
@@ -298,7 +297,6 @@ internal fun MenuItem(
 			}
 		}
 	}
-
 }
 
 /**
@@ -328,12 +326,13 @@ fun ThemeSwitcher(
 	)
 	val offset by remember { offsetState }
 
-	Box(modifier = Modifier
-		.width(size * 2)
-		.height(size)
-		.clip(shape = shape)
-		.clickable { onClick() }
-		.background(JetTheme.colors.primaryText)
+	Box(
+		modifier = Modifier
+			.width(size * 2)
+			.height(size)
+			.clip(shape = shape)
+			.clickable { onClick() }
+			.background(JetTheme.colors.primaryText)
 	) {
 		Box(
 			modifier = Modifier
@@ -352,8 +351,8 @@ fun ThemeSwitcher(
 					modifier = Modifier.size(iconSize),
 					imageVector = Icons.Default.Nightlight,
 					contentDescription = "Theme Icon",
-					tint = if (darkTheme) Color.White
-					else JetTheme.colors.tintColor
+					tint = if (darkTheme) { Color.White }
+					else { JetTheme.colors.tintColor }
 				)
 			}
 			Box(
@@ -364,8 +363,8 @@ fun ThemeSwitcher(
 					modifier = Modifier.size(iconSize),
 					imageVector = Icons.Default.LightMode,
 					contentDescription = "Theme Icon",
-					tint = if (darkTheme) JetTheme.colors.tintColor
-					else Color.White
+					tint = if (darkTheme) { JetTheme.colors.tintColor }
+					else { Color.White }
 				)
 			}
 		}

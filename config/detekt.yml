@@ -244,3 +244,5 @@ formatting:
     active: false
   SpacingBetweenDeclarationsWithComments:
     active: false
+  MaximumLineLength:
+    active: false

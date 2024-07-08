@@ -74,7 +74,8 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 							if (graphPageViewModel.graphViewModel?.graph?.isDirected == true) {
 								if (!algorithmButton.nonDirectionalRequirement) {
 									AlgorithmTextButton(
-										graphPageViewModel.graphViewModel, algorithmButton,
+										graphPageViewModel.graphViewModel,
+										algorithmButton,
 										Modifier.fillMaxWidth()
 									)
 								}

@@ -112,7 +112,7 @@ fun VertexView(
 				}
 			}
 			.onPreviewKeyEvent {
-//				isKeyboardPressed = it.key == Key.CtrlLeft || it.key == Key.CtrlRight || it.isCtrlPressed
+				// isKeyboardPressed = it.key == Key.CtrlLeft || it.key == Key.CtrlRight || it.isCtrlPressed
 				isKeyboardPressed.value = it.isShiftPressed
 				false
 			},

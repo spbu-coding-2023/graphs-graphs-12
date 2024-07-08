@@ -30,8 +30,11 @@ import viewmodels.SideMenuViewModel
 fun SideMenu(statePager: PagerState, indexSelectedPage: MutableState<Int>, viewModel: SideMenuViewModel) {
 	Column(Modifier.width(sizeBottom).fillMaxHeight()) {
 		viewModel.tabsItems.forEach { tabsColumn ->
-			if (tabsColumn == null) Spacer(Modifier.weight(1f))
-			else SideMenuTabColumn(tabsColumn, statePager, indexSelectedPage, viewModel)
+			if (tabsColumn == null) {
+				Spacer(Modifier.weight(1f))
+			} else {
+				SideMenuTabColumn(tabsColumn, statePager, indexSelectedPage, viewModel)
+			}
 		}
 	}
 }
@@ -67,8 +70,8 @@ fun SideMenuTabColumn(tabsColumn: List<TabItem>, statePager: PagerState, indexSe
 				Tab(
 					selected = statePager.currentPage == indexItemPage,
 					onClick = {
-						if (onItemClick != null) onItemClick()
-						else expanded = true
+						if (onItemClick != null) { onItemClick() }
+						else { expanded = true }
 						if (item.isSelectablePage) {
 							coroutineScope.launch {
 								statePager.scrollToPage(indexItemPage)

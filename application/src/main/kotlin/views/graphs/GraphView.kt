@@ -51,25 +51,26 @@ fun GraphView(
 
 	val coroutinePlace = rememberCoroutineScope { Dispatchers.Main }
 
-	Box(Modifier
-		.fillMaxSize()
-		.clip(JetTheme.shapes.cornerStyle)
-		.pointerInput(Unit) {
-			detectDragGestures(PointerMatcher.Primary) {
-				if (1 / zoom >= 1) {
-					center += it * (1 / zoom)
-				} else {
-					center -= it * (1 / zoom)
+	Box(
+		modifier = Modifier
+			.fillMaxSize()
+			.clip(JetTheme.shapes.cornerStyle)
+			.pointerInput(Unit) {
+				detectDragGestures(PointerMatcher.Primary) {
+					if (1 / zoom >= 1) {
+						center += it * (1 / zoom)
+					} else {
+						center -= it * (1 / zoom)
+					}
 				}
 			}
-		}
-		.onPointerEvent(PointerEventType.Scroll) {
-			if (it.changes.first().scrollDelta.y > 0) {
-				zoom -= zoom / 100 // todo(10 for mouse)
-			} else {
-				zoom += zoom / 100 // todo(10 for mouse)
+			.onPointerEvent(PointerEventType.Scroll) {
+				if (it.changes.first().scrollDelta.y > 0) {
+					zoom -= zoom / 100 // todo(10 for mouse)
+				} else {
+					zoom += zoom / 100 // todo(10 for mouse)
+				}
 			}
-		}
 	) {
 		graphViewModel.edges.forEach { edgeViewModel ->
 			EdgeView(edgeViewModel, center, zoomAnimated, graphViewModel)

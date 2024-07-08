@@ -16,7 +16,7 @@ private val logger = KotlinLogging.logger { }
 /**
  * A class responsible for writing and loading graphs to/from a SQLite database.
  */
-class SqliteRepository {
+class SQLiteRepository {
 	/**
 	 * Writes the given graph to a SQLite database in the specified folder path.
 	 *
@@ -272,7 +272,11 @@ class SqliteRepository {
 					val idTarget = resultEdges!!.getString(2)
 					val weight = resultEdges!!.getDouble(3)
 
-					graphViewModel!!.addEdge(VertexID.vertexIDFromString(idSource, typeId), VertexID.vertexIDFromString(idTarget, typeId), weight)
+					graphViewModel!!.addEdge(
+						VertexID.vertexIDFromString(idSource, typeId),
+						VertexID.vertexIDFromString(idTarget, typeId),
+						weight
+					)
 				}
 
 				graphViewModel!!.vertices.forEach {

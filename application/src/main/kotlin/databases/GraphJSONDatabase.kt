@@ -25,9 +25,17 @@ class GraphJSONDatabase : FileDatabase<GraphViewModel>(".json") {
 		val isUnweightedGraph = graphJSONObject.getBoolean("is-unweighted")
 		val isDirectedGraph = graphJSONObject.getBoolean("is-directed")
 		val graph: WeightedGraph<VertexID> = if (isUnweightedGraph) {
-			WeightedUnweightedGraph(graphJSONObject.getString(nameColumnParam), isDirectedGraph, isAutoAddVertex = true)
+			WeightedUnweightedGraph(
+				graphJSONObject.getString(nameColumnParam),
+				isDirectedGraph,
+				isAutoAddVertex = true
+			)
 		} else {
-			WeightedGraph(graphJSONObject.getString(nameColumnParam), isDirectedGraph, isAutoAddVertex = true)
+			WeightedGraph(
+				graphJSONObject.getString(nameColumnParam),
+				isDirectedGraph,
+				isAutoAddVertex = true
+			)
 		}
 		val vertexIDType = VertexIDType.valueOf(graphJSONObject.getString("vertex-id-type"))
 		val graphViewModel = GraphViewModel(graph, vertexIDType, isUnweightedGraph)
@@ -36,7 +44,10 @@ class GraphJSONDatabase : FileDatabase<GraphViewModel>(".json") {
 			if (vertexJSONObject !is JSONObject) return@forEach
 			graphViewModel.addVertex(
 				VertexViewModel(
-					VertexID(vertexJSONObject.getString("id"), vertexIDType),
+					VertexID(
+						vertexJSONObject.getString("id"),
+						vertexIDType
+					),
 					vertexJSONObject.getFloat("xPos").dp,
 					vertexJSONObject.getFloat("yPos").dp,
 					Color(vertexJSONObject.getInt("color")),
@@ -48,10 +59,17 @@ class GraphJSONDatabase : FileDatabase<GraphViewModel>(".json") {
 		val edges = graphJSONObject.getJSONArray("edges")
 		edges.forEach { edgeJSONObject ->
 			if (edgeJSONObject !is JSONObject) return@forEach
-			val source = VertexID(edgeJSONObject.getString("source-id"), vertexIDType)
-			val target = VertexID(edgeJSONObject.getString("target-id"), vertexIDType)
+			val source = VertexID(
+				edgeJSONObject.getString("source-id"),
+				vertexIDType
+			)
+			val target = VertexID(
+				edgeJSONObject.getString("target-id"),
+				vertexIDType
+			)
 			graphViewModel.addEdge(
-				source, target,
+				source,
+				target,
 				edgeJSONObject.getDouble("weight")
 			)
 		}
