@@ -40,11 +40,7 @@ data class MenuItemModel(
 /**
  * This is the main composable function for the Settings Page.
  *
- * @param isDarkMode a [MutableState] that holds the current dark mode status
- * @param currentFontSize a [MutableState] that holds the current font size
- * @param currentStyle a [MutableState] that holds the current style
- * @param currentCornersStyle a [MutableState] that holds the current corners style
- * @param currentFontFamily a [MutableState] that holds the current font family
+ * @param jetSettings an object that stores the current customization parameters
  */
 @Composable
 fun SettingsPage(jetSettings: JetSettings) {

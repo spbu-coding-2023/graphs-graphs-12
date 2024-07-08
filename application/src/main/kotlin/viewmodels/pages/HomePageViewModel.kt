@@ -61,7 +61,7 @@ class HomePageViewModel(
 		}
 
 	/**
-	 * Initializes the tasks list with two ListWidgetItem instances.
+	 * Initializes the tasks list with two ListWidgetItem instances and loads the history of previously loaded graphs.
 	 * The first item represents the "Create Graph" task, which opens a dialog to create a new graph.
 	 * The second item represents the "Load graph" task, which opens a dialog to load an existing graph.
 	 */
@@ -84,7 +84,7 @@ class HomePageViewModel(
 		val file = File("../history")
 		findOrCreateFile(file)
 		file.readLines().forEach {
-			loadGraphInfoFromFile(it)
+			loadGraphInfoFromString(it)
 		}
 	}
 
@@ -164,7 +164,13 @@ class HomePageViewModel(
 		)
 	}
 
-	private fun loadGraphInfoFromFile(string: String) {
+	/**
+	 * Function to load graph information from a string.
+	 * This function adds information from the string to the previously loaded graphs list.
+	 *
+	 * @param string containing information about the graph (name, savingType, folder)
+	 */
+	private fun loadGraphInfoFromString(string: String) {
 		val regex = Regex("""(\w+)\s*=\s*([^,)]+)""")
 		val matches = regex.findAll(string)
 

@@ -14,3 +14,7 @@
 
 ### Apple MacOS folder attributes
 *.DS_Store
+
+# Ignore files that store application variable information
+settings
+history

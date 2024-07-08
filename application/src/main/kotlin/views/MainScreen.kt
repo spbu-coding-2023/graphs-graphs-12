@@ -15,9 +15,11 @@ import viewmodels.MainScreenViewModel
 
 /**
  * MainScreen is the main composable function that represents the main screen of the application.
- * It takes a [viewModel] parameter which is an instance of [MainScreenViewModel].
+ * It takes a [viewModel] parameter which is an instance of [MainScreenViewModel] and [jetSettings] which is a object
+ * of data class [JetSettings].
  *
  * @param viewModel the view model for the main screen
+ * @param jetSettings a settings object that defines the visual appearance and style settings for application
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
