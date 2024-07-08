@@ -4,12 +4,15 @@ import databases.GraphJSONDatabase
 import databases.Neo4jRepository
 import databases.SqliteRepository
 import models.utils.GraphInfo
+import org.neo4j.driver.exceptions.Neo4jException
 import org.neo4j.driver.exceptions.ServiceUnavailableException
 import utils.GraphSavingType
 import utils.PageType
 import viewmodels.graphs.GraphViewModel
 import viewmodels.pages.GraphPageViewModel
 import java.io.File
+import java.io.IOException
+import java.sql.SQLException
 
 /**
  * The SettingsModel class is responsible for managing application settings,
@@ -109,8 +112,8 @@ class SettingsModel {
 			graphPageViewModel.indexSelectedPage.value = PageType.GRAPH_VIEW_PAGE.ordinal
 			graphPageViewModel.dbType = GraphSavingType.SQLITE_DB
 			graphPageViewModel.dbPath = path
-		} catch (ex: Exception) {
-			println("Load JSON error: ${ex.message}")
+		} catch (ex: SQLException) {
+			println("Load SQLite error: ${ex.message}")
 			return false
 		}
 		return true
@@ -125,7 +128,7 @@ class SettingsModel {
 	fun saveGraphBySQLite(graphViewModel: GraphViewModel, folderPath: String) {
 		try {
 			sqliteDB.writeDb(graphViewModel, folderPath)
-		} catch (ex: Exception) {
+		} catch (ex: SQLException) {
 			println("Save SQLite error: ${ex.message}")
 		}
 	}
@@ -147,7 +150,8 @@ class SettingsModel {
 			graphPageViewModel.indexSelectedPage.value = PageType.GRAPH_VIEW_PAGE.ordinal
 			graphPageViewModel.dbType = GraphSavingType.NEO4J_DB
 			graphPageViewModel.dbPath = ""
-		} catch (ex: Exception) {
+		// TODO(check handling of exceptions)
+		} catch (ex: Neo4jException) {
 			println("Load neo4j error: ${ex.message}")
 			return false
 		}
@@ -169,7 +173,7 @@ class SettingsModel {
 			graphPageViewModel.indexSelectedPage.value = PageType.GRAPH_VIEW_PAGE.ordinal
 			graphPageViewModel.dbType = GraphSavingType.LOCAL_FILE
 			graphPageViewModel.dbPath = path
-		} catch (ex: Exception) {
+		} catch (ex: IOException) {
 			println("Load JSON error: ${ex.message}")
 			return false
 		}
@@ -188,7 +192,8 @@ class SettingsModel {
 		}
 		try {
 			neo4jDB.writeData(graphPageViewModel)
-		} catch (ex: Exception) {
+		// TODO(check handling of exceptions)
+		} catch (ex: Neo4jException) {
 			println("Save neo4j error: ${ex.message}")
 		}
 	}
@@ -203,7 +208,7 @@ class SettingsModel {
 		val file = File(folderPath, "${graphViewModel.graph.label}.json")
 		try {
 			jsonDB.save(file, graphViewModel)
-		} catch (ex: Exception) {
+		} catch (ex: IOException) {
 			println("Save JSON error: ${ex.message}")
 		}
 	}

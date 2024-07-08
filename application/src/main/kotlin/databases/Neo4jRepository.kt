@@ -99,6 +99,7 @@ class Neo4jRepository : Closeable {
 	 * @param graphPageView the [GraphPageViewModel] to populate with the graph data
 	 */
 	fun readData(graphPageView: GraphPageViewModel) {
+		// TODO(validation and catching exceptions of execute)
 		val vertexMap = mutableMapOf<VertexID, VertexData>()
 
 		session.readTransaction { tx ->
@@ -154,7 +155,7 @@ class Neo4jRepository : Closeable {
 
 				graph.addVertex(VertexID.vertexIDFromString(vertex, vertexType))
 				vertexMap[VertexID.vertexIDFromString(vertex, vertexType)] =
-							VertexData(x = xPos, y = yPos, radius = radius, color = color, degree = degree)
+					VertexData(x = xPos, y = yPos, radius = radius, color = color, degree = degree)
 			}
 
 			result =
