@@ -12,6 +12,7 @@ import views.MainScreen
 import viewmodels.MainScreenViewModel
 import java.awt.Dimension
 import java.io.File
+import java.io.FileWriter
 
 val windowSizeStart = Pair(1000f, 700f)
 
@@ -29,6 +30,7 @@ data class JetSettings(
 fun main() {
 	application {
 		val settings: SettingsModel = SettingsModel.loadSettings()
+		val mainScreenViewModel = MainScreenViewModel(settings)
 
 		val isDarkModeValue = isSystemInDarkTheme()
 		val jetSettings = JetSettings(
@@ -40,7 +42,7 @@ fun main() {
 		)
 
 		val file = File("../settings")
-		findOrCreateSettings(file)
+		findOrCreateFile(file)
 
 		val converters = arrayOf<(String) -> Any>(
 			{ string -> JetStyle.valueOf(string) },
@@ -66,7 +68,8 @@ fun main() {
 
 		Window(
 			onCloseRequest = {
-				save(jetSettings)
+				saveSettings(jetSettings)
+				saveHistory(mainScreenViewModel)
 				exitApplication()
 			},
 			title = "YMOM",
@@ -74,24 +77,24 @@ fun main() {
 		) {
 			window.minimumSize = Dimension(windowSizeStart.first.toInt(), windowSizeStart.second.toInt())
 
-			MaterialTheme { MainScreen(MainScreenViewModel(settings), jetSettings) }
+			MaterialTheme { MainScreen(mainScreenViewModel, jetSettings) }
 		}
 	}
 }
 
-fun findOrCreateSettings(file: File) {
+fun findOrCreateFile(file: File) {
 	if (!file.exists()) {
 		if (file.createNewFile()) {
-			println("The 'settings' file has been successfully created.")
+			println("The '${file.toString().substringAfter("/")}' file has been successfully created.")
 		} else {
-			println("Failed to create file 'settings'.")
+			println("Failed to create file '${file.toString().substringAfter("/")}'.")
 		}
 	}
 }
 
-fun save(jetSettings: JetSettings) {
+fun saveSettings(jetSettings: JetSettings) {
 	val file = File("../settings")
-	findOrCreateSettings(file)
+	findOrCreateFile(file)
 
 	file.writeText(
 		"${jetSettings.currentStyle.value}\n" +
@@ -100,4 +103,14 @@ fun save(jetSettings: JetSettings) {
 			"${jetSettings.currentFontFamily.value}\n" +
 			"${jetSettings.isDarkMode.value}"
 	)
+}
+
+fun saveHistory(mainScreenViewModel: MainScreenViewModel) {
+	val file = File("../history")
+	findOrCreateFile(file)
+
+	file.writeText("")
+	FileWriter(file, true).use { writer ->
+		mainScreenViewModel.homePageViewModel.previouslyLoadedGraph.forEach { writer.write("$it\n") }
+	}
 }

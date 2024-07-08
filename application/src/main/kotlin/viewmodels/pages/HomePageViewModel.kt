@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.Download
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
+import findOrCreateFile
 import graphs_lab.core.graphs.WeightedGraph
 import models.SettingsModel
 import models.utils.GraphInfo
@@ -79,6 +80,12 @@ class HomePageViewModel(
 				alignment = Alignment.Center,
 			) { isOpenDialogOfLoadingNewGraph = true }
 		)
+
+		val file = File("../history")
+		findOrCreateFile(file)
+		file.readLines().forEach {
+			loadGraphInfoFromFile(it)
+		}
 	}
 
 	/**
@@ -139,15 +146,64 @@ class HomePageViewModel(
 							graphPageViewModel.dbType = saveType
 							graphPageViewModel.dbPath = File(folder, name).absolutePath
 						}
+
 						GraphSavingType.NEO4J_DB -> {
 							settings.loadGraphFromNEO4J(graphPageViewModel)
 							graphPageViewModel.dbType = saveType
 							graphPageViewModel.dbPath = ""
 						}
+
 						GraphSavingType.SQLITE_DB -> {
 							settings.loadGraphFromSQLite(graphPageViewModel, path)
 							graphPageViewModel.dbType = saveType
 							graphPageViewModel.dbPath = path
+						}
+					}
+				}
+			)
+		)
+	}
+
+	private fun loadGraphInfoFromFile(string: String) {
+		val regex = Regex("""(\w+)\s*=\s*([^,)]+)""")
+		val matches = regex.findAll(string)
+
+		val resultMap = mutableMapOf<String, String>()
+
+		for (matchResult in matches) {
+			val key = matchResult.groupValues[1]
+			val value = matchResult.groupValues[2].trim()
+
+			resultMap[key] = value
+		}
+
+		val nameValue = resultMap["name"] ?: return
+		val folderValue = resultMap["folder"] ?: return
+		val savingType: GraphSavingType = when (resultMap["savingType"]) {
+			"Local file" -> GraphSavingType.LOCAL_FILE
+			"SQLite DB" -> GraphSavingType.SQLITE_DB
+			else -> return
+		}
+
+		_previouslyLoadedGraph.add(
+			GraphInfo(
+				nameValue,
+				folderValue,
+				savingType,
+				onClick = { name, folder, saveType ->
+					when (saveType) {
+						GraphSavingType.LOCAL_FILE -> {
+							settings.loadGraphFromJSON(graphPageViewModel, File(folder, name).absolutePath)
+							graphPageViewModel.dbType = saveType
+							graphPageViewModel.dbPath = File(folder, name).absolutePath
+						}
+
+						GraphSavingType.NEO4J_DB -> {}
+
+						GraphSavingType.SQLITE_DB -> {
+							settings.loadGraphFromSQLite(graphPageViewModel, File(folder, name).absolutePath)
+							graphPageViewModel.dbType = saveType
+							graphPageViewModel.dbPath = File(folder, name).absolutePath
 						}
 					}
 				}

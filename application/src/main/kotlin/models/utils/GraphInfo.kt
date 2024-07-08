@@ -39,7 +39,7 @@ class GraphInfo(
 	}
 
 	override fun toString(): String {
-		return "GraphInfo(name = $mainText, folder = $folderPath, previouslyOpenDateTime = $previouslyOpenDateTime)"
+		return "GraphInfo(name = $mainText, savingType = $savingType, folder = $folderPath)"
 	}
 
 	override fun equals(other: Any?): Boolean {

@@ -110,7 +110,7 @@ class SettingsModel {
 			graphPageViewModel.dbType = GraphSavingType.SQLITE_DB
 			graphPageViewModel.dbPath = path
 		} catch (ex: Exception) {
-			println("Load JSON error: ${ex.message}")
+			println("Load SQLite error: ${ex.message}")
 			return false
 		}
 		return true
