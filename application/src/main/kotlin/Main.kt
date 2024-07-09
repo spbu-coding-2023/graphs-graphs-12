@@ -26,11 +26,11 @@ val windowSizeStart = Pair(1000f, 700f)
 /**
  * Data class representing the settings for application.
  *
- * @property currentStyle The current style of application, represented by a MutableState of [JetStyle]
- * @property currentFontSize The current font size of text in application, represented by a MutableState of [JetSize]
- * @property currentCornersStyle The current corner style of application, represented by a MutableState of [JetCorners]
- * @property currentFontFamily The current font family of text in application, represented by a MutableState of [JetFontFamily]
- * @property isDarkMode A boolean MutableState indicating whether the application is in dark mode or not
+ * @property currentStyle the current style of application, represented by a MutableState of [JetStyle]
+ * @property currentFontSize the current font size of text in application, represented by a MutableState of [JetSize]
+ * @property currentCornersStyle the current corner style of application, represented by a MutableState of [JetCorners]
+ * @property currentFontFamily the current font family of text in application, represented by a MutableState of [JetFontFamily]
+ * @property isDarkMode a boolean MutableState indicating whether the application is in dark mode or not
  */
 data class JetSettings(
 	val currentStyle: MutableState<JetStyle>,
@@ -45,9 +45,6 @@ data class JetSettings(
  */
 fun main() {
 	application {
-		val settings: SettingsModel = SettingsModel.loadSettings()
-		val mainScreenViewModel = MainScreenViewModel(settings)
-
 		val isDarkModeValue = isSystemInDarkTheme()
 		val jetSettings = JetSettings(
 			currentStyle = remember { mutableStateOf(JetStyle.Black) },
@@ -57,9 +54,8 @@ fun main() {
 			isDarkMode = remember { mutableStateOf(isDarkModeValue) }
 		)
 
-		val file = File("../settings")
-		findOrCreateFile(file)
-		loadSettings(file, jetSettings)
+		val settings: SettingsModel = SettingsModel.loadSettings(jetSettings)
+		val mainScreenViewModel = MainScreenViewModel(settings)
 
 		Window(
 			onCloseRequest = {
@@ -93,41 +89,11 @@ fun findOrCreateFile(file: File) {
 }
 
 /**
- * Reads the current customization parameters from [file] and writes them to [jetSettings].
- *
- * @param file storing current customization parameters
- * @param jetSettings an object that stores the current customization parameters
- */
-fun loadSettings(file: File, jetSettings: JetSettings) {
-	val converters = arrayOf<(String) -> Any>(
-		{ string -> JetStyle.valueOf(string) },
-		{ string -> JetSize.valueOf(string) },
-		{ string -> JetCorners.valueOf(string) },
-		{ string -> JetFontFamily.valueOf(string) }
-	)
-
-	file.readLines().withIndex().map { indexedValue -> indexedValue.index to indexedValue.value }
-		.forEach { (index, setting) ->
-			try {
-				when (index) {
-					0 -> jetSettings.currentStyle.value = converters[index](setting) as JetStyle
-					1 -> jetSettings.currentFontSize.value = converters[index](setting) as JetSize
-					2 -> jetSettings.currentCornersStyle.value = converters[index](setting) as JetCorners
-					3 -> jetSettings.currentFontFamily.value = converters[index](setting) as JetFontFamily
-					4 -> jetSettings.isDarkMode.value = setting.toBoolean()
-				}
-			} catch (e: IllegalArgumentException) {
-				println("The element '$setting' in line $index does not match any element of the corresponding enumeration.")
-			}
-		}
-}
-
-/**
  * Writes the current customization parameters to the 'settings' file.
  *
  * @param jetSettings an object that stores the current customization parameters
  */
-fun saveSettings(jetSettings: JetSettings) {
+private fun saveSettings(jetSettings: JetSettings) {
 	val file = File("../settings")
 	findOrCreateFile(file)
 
@@ -145,7 +111,7 @@ fun saveSettings(jetSettings: JetSettings) {
  *
  * @param previouslyLoadedGraph a set of previously loaded graphs that will be saved
  */
-fun saveHistory(previouslyLoadedGraph: List<GraphInfo>) {
+private fun saveHistory(previouslyLoadedGraph: List<GraphInfo>) {
 	val file = File("../history")
 	findOrCreateFile(file)
 

@@ -7,13 +7,7 @@ import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import themes.JetCorners
-import themes.JetFontFamily
-import themes.JetSize
-import themes.JetStyle
 import themes.MainTheme
 import utils.SideMenuTabType
 import views.pages.GraphViewPage
@@ -72,13 +66,7 @@ fun MainScreen(viewModel: MainScreenViewModel, jetSettings: JetSettings) {
 						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, true)
 						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.REPRESENTATION, true)
 						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.SAVE, true)
-						SettingsPage(
-							isDarkMode,
-							currentFontSize,
-							currentStyle,
-							currentCornersStyle,
-							currentFontFamily
-						)
+						SettingsPage(jetSettings)
 					}
 					else -> { HomePage(viewModel.homePageViewModel) }
 				}

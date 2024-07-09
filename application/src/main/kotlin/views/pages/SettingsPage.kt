@@ -129,11 +129,11 @@ fun SettingsPage(jetSettings: JetSettings) {
 				),
 				onItemSelected = {
 					when (it) {
-						0 -> currentFontFamily.value = JetFontFamily.Default
-						1 -> currentFontFamily.value = JetFontFamily.Monospace
-						2 -> currentFontFamily.value = JetFontFamily.Cursive
-						3 -> currentFontFamily.value = JetFontFamily.Serif
-						4 -> currentFontFamily.value = JetFontFamily.SansSerif
+						0 -> jetSettings.currentFontFamily.value = JetFontFamily.Default
+						1 -> jetSettings.currentFontFamily.value = JetFontFamily.Monospace
+						2 -> jetSettings.currentFontFamily.value = JetFontFamily.Cursive
+						3 -> jetSettings.currentFontFamily.value = JetFontFamily.Serif
+						4 -> jetSettings.currentFontFamily.value = JetFontFamily.SansSerif
 						else -> throw NotImplementedError("No valid value for this font family $it")
 					}
 				}
@@ -158,9 +158,9 @@ fun SettingsPage(jetSettings: JetSettings) {
 				),
 				onItemSelected = {
 					when (it) {
-						0 -> currentFontSize.value = JetSize.Small
-						1 -> currentFontSize.value = JetSize.Medium
-						2 -> currentFontSize.value = JetSize.Big
+						0 -> jetSettings.currentFontSize.value = JetSize.Small
+						1 -> jetSettings.currentFontSize.value = JetSize.Medium
+						2 -> jetSettings.currentFontSize.value = JetSize.Big
 						else -> throw NotImplementedError("No valid value for this change size $it")
 					}
 				}
@@ -183,8 +183,8 @@ fun SettingsPage(jetSettings: JetSettings) {
 				),
 				onItemSelected = {
 					when (it) {
-						0 -> currentCornersStyle.value = JetCorners.Rounded
-						1 -> currentCornersStyle.value = JetCorners.Flat
+						0 -> jetSettings.currentCornersStyle.value = JetCorners.Rounded
+						1 -> jetSettings.currentCornersStyle.value = JetCorners.Flat
 						else -> throw NotImplementedError("No valid value for this corner style $it")
 					}
 				}
@@ -213,11 +213,11 @@ fun SettingsPage(jetSettings: JetSettings) {
 				),
 				onItemSelected = {
 					when (it) {
-						0 -> currentStyle.value = JetStyle.Black
-						1 -> currentStyle.value = JetStyle.White
-						2 -> currentStyle.value = JetStyle.Purple
-						3 -> currentStyle.value = JetStyle.Orange
-						4 -> currentStyle.value = JetStyle.Pink
+						0 -> jetSettings.currentStyle.value = JetStyle.Black
+						1 -> jetSettings.currentStyle.value = JetStyle.White
+						2 -> jetSettings.currentStyle.value = JetStyle.Purple
+						3 -> jetSettings.currentStyle.value = JetStyle.Orange
+						4 -> jetSettings.currentStyle.value = JetStyle.Pink
 						else -> throw NotImplementedError("No valid value for this style $it")
 					}
 				}

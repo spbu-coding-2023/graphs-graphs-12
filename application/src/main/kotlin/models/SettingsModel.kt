@@ -1,15 +1,22 @@
 package models
 
+import JetSettings
 import databases.GraphJSONDatabase
 import databases.Neo4jRepository
 import databases.SQLiteRepository
+import findOrCreateFile
 import models.utils.GraphInfo
 import org.neo4j.driver.exceptions.Neo4jException
 import org.neo4j.driver.exceptions.ServiceUnavailableException
+import themes.JetCorners
+import themes.JetFontFamily
+import themes.JetSize
+import themes.JetStyle
 import utils.GraphSavingType
 import utils.PageType
 import viewmodels.graphs.GraphViewModel
 import viewmodels.pages.GraphPageViewModel
+import java.io.Closeable
 import java.io.File
 import java.io.IOException
 import java.sql.SQLException
@@ -217,12 +224,48 @@ class SettingsModel {
 		/**
 		 * Loads the application settings from a configuration file.
 		 *
+		 * @param jetSettings an object that stores the current customization parameters
+		 *
 		 * @return a [SettingsModel] object containing the loaded settings
 		 */
 		@JvmStatic
-		fun loadSettings(): SettingsModel {
-			// TODO(valid load of settings from configuration)
+		fun loadSettings(jetSettings: JetSettings): SettingsModel {
+			val file = File("../settings")
+
+			findOrCreateFile(file)
+			loadSettings(file, jetSettings)
+
 			return SettingsModel()
+		}
+
+		/**
+		 * Reads the current customization parameters from [file] and writes them to [jetSettings].
+		 *
+		 * @param file storing current customization parameters
+		 * @param jetSettings an object that stores the current customization parameters
+		 */
+		private fun loadSettings(file: File, jetSettings: JetSettings) {
+			val converters = arrayOf<(String) -> Any>(
+				{ string -> JetStyle.valueOf(string) },
+				{ string -> JetSize.valueOf(string) },
+				{ string -> JetCorners.valueOf(string) },
+				{ string -> JetFontFamily.valueOf(string) }
+			)
+
+			file.readLines().withIndex().map { indexedValue -> indexedValue.index to indexedValue.value }
+				.forEach { (index, setting) ->
+					try {
+						when (index) {
+							0 -> jetSettings.currentStyle.value = converters[index](setting) as JetStyle
+							1 -> jetSettings.currentFontSize.value = converters[index](setting) as JetSize
+							2 -> jetSettings.currentCornersStyle.value = converters[index](setting) as JetCorners
+							3 -> jetSettings.currentFontFamily.value = converters[index](setting) as JetFontFamily
+							4 -> jetSettings.isDarkMode.value = setting.toBoolean()
+						}
+					} catch (e: IllegalArgumentException) {
+						println("The element '$setting' in line $index does not match any element of the corresponding enumeration.")
+					}
+				}
 		}
 	}
 }
