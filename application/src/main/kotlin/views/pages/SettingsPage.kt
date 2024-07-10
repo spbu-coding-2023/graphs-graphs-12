@@ -1,5 +1,6 @@
 package views.pages
 
+import JetSettings
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -52,20 +53,10 @@ import utils.MenuItemModel
 /**
  * This is the main composable function for the Settings Page.
  *
- * @param isDarkMode a [MutableState] that holds the current dark mode status
- * @param currentFontSize a [MutableState] that holds the current font size
- * @param currentStyle a [MutableState] that holds the current style
- * @param currentCornersStyle a [MutableState] that holds the current corners style
- * @param currentFontFamily a [MutableState] that holds the current font family
+ * @param jetSettings an object that stores the current customization parameters
  */
 @Composable
-fun SettingsPage(
-	isDarkMode: MutableState<Boolean>,
-	currentFontSize: MutableState<JetSize>,
-	currentStyle: MutableState<JetStyle>,
-	currentCornersStyle: MutableState<JetCorners>,
-	currentFontFamily: MutableState<JetFontFamily>,
-) {
+fun SettingsPage(jetSettings: JetSettings) {
 	Column(
 		modifier = Modifier
 			.padding(4.dp)
@@ -108,8 +99,8 @@ fun SettingsPage(
 				)
 				Spacer(modifier = Modifier.weight(0.5f))
 				ThemeSwitcher(
-					darkTheme = isDarkMode.value,
-					onClick = { isDarkMode.value = !isDarkMode.value }
+					darkTheme = jetSettings.isDarkMode.value,
+					onClick = { jetSettings.isDarkMode.value = !jetSettings.isDarkMode.value }
 				)
 			}
 
@@ -121,7 +112,7 @@ fun SettingsPage(
 			MenuItem(
 				model = MenuItemModel(
 					title = "Font Family",
-					currentIndex = when (currentFontFamily.value) {
+					currentIndex = when (jetSettings.currentFontFamily.value) {
 						JetFontFamily.Default -> 0
 						JetFontFamily.Monospace -> 1
 						JetFontFamily.Cursive -> 2
@@ -138,11 +129,11 @@ fun SettingsPage(
 				),
 				onItemSelected = {
 					when (it) {
-						0 -> currentFontFamily.value = JetFontFamily.Default
-						1 -> currentFontFamily.value = JetFontFamily.Monospace
-						2 -> currentFontFamily.value = JetFontFamily.Cursive
-						3 -> currentFontFamily.value = JetFontFamily.Serif
-						4 -> currentFontFamily.value = JetFontFamily.SansSerif
+						0 -> jetSettings.currentFontFamily.value = JetFontFamily.Default
+						1 -> jetSettings.currentFontFamily.value = JetFontFamily.Monospace
+						2 -> jetSettings.currentFontFamily.value = JetFontFamily.Cursive
+						3 -> jetSettings.currentFontFamily.value = JetFontFamily.Serif
+						4 -> jetSettings.currentFontFamily.value = JetFontFamily.SansSerif
 						else -> throw NotImplementedError("No valid value for this font family $it")
 					}
 				}
@@ -154,7 +145,7 @@ fun SettingsPage(
 			MenuItem(
 				model = MenuItemModel(
 					title = "Font Size",
-					currentIndex = when (currentFontSize.value) {
+					currentIndex = when (jetSettings.currentFontSize.value) {
 						JetSize.Small -> 0
 						JetSize.Medium -> 1
 						JetSize.Big -> 2
@@ -167,9 +158,9 @@ fun SettingsPage(
 				),
 				onItemSelected = {
 					when (it) {
-						0 -> currentFontSize.value = JetSize.Small
-						1 -> currentFontSize.value = JetSize.Medium
-						2 -> currentFontSize.value = JetSize.Big
+						0 -> jetSettings.currentFontSize.value = JetSize.Small
+						1 -> jetSettings.currentFontSize.value = JetSize.Medium
+						2 -> jetSettings.currentFontSize.value = JetSize.Big
 						else -> throw NotImplementedError("No valid value for this change size $it")
 					}
 				}
@@ -181,7 +172,7 @@ fun SettingsPage(
 			MenuItem(
 				model = MenuItemModel(
 					title = "Corner Style",
-					currentIndex = when (currentCornersStyle.value) {
+					currentIndex = when (jetSettings.currentCornersStyle.value) {
 						JetCorners.Rounded -> 0
 						JetCorners.Flat -> 1
 					},
@@ -192,8 +183,8 @@ fun SettingsPage(
 				),
 				onItemSelected = {
 					when (it) {
-						0 -> currentCornersStyle.value = JetCorners.Rounded
-						1 -> currentCornersStyle.value = JetCorners.Flat
+						0 -> jetSettings.currentCornersStyle.value = JetCorners.Rounded
+						1 -> jetSettings.currentCornersStyle.value = JetCorners.Flat
 						else -> throw NotImplementedError("No valid value for this corner style $it")
 					}
 				}
@@ -205,7 +196,7 @@ fun SettingsPage(
 			MenuItem(
 				model = MenuItemModel(
 					title = "Style",
-					currentIndex = when (currentStyle.value) {
+					currentIndex = when (jetSettings.currentStyle.value) {
 						JetStyle.Black -> 0
 						JetStyle.White -> 1
 						JetStyle.Purple -> 2
@@ -222,11 +213,11 @@ fun SettingsPage(
 				),
 				onItemSelected = {
 					when (it) {
-						0 -> currentStyle.value = JetStyle.Black
-						1 -> currentStyle.value = JetStyle.White
-						2 -> currentStyle.value = JetStyle.Purple
-						3 -> currentStyle.value = JetStyle.Orange
-						4 -> currentStyle.value = JetStyle.Pink
+						0 -> jetSettings.currentStyle.value = JetStyle.Black
+						1 -> jetSettings.currentStyle.value = JetStyle.White
+						2 -> jetSettings.currentStyle.value = JetStyle.Purple
+						3 -> jetSettings.currentStyle.value = JetStyle.Orange
+						4 -> jetSettings.currentStyle.value = JetStyle.Pink
 						else -> throw NotImplementedError("No valid value for this style $it")
 					}
 				}
@@ -277,7 +268,7 @@ internal fun MenuItem(
 			colors = ButtonDefaults.buttonColors(JetTheme.colors.primaryText),
 			shape = JetTheme.shapes.cornerStyle,
 
-		) {
+			) {
 			Text(
 				text = model.values[currentPosition.value],
 				style = JetTheme.typography.body,
