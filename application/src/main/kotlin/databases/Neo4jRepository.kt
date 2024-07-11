@@ -1,7 +1,6 @@
 package databases
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import graphs_lab.core.graphs.WeightedGraph
 import models.VertexID
@@ -53,10 +52,10 @@ class Neo4jRepository : Closeable {
 			tx.run(
 				"CREATE (:GraphInfo {" +
 					"label: '$label', " +
-					"isDirected: ${isDirected}, " +
-					"isAutoAddVertex: ${isAutoAddVertex}, " +
-					"isUnweighted: ${isUnweighted}, " +
-					"vertexType: '${vertexType}'" +
+					"isDirected: $isDirected, " +
+					"isAutoAddVertex: $isAutoAddVertex, " +
+					"isUnweighted: $isUnweighted, " +
+					"vertexType: '$vertexType'" +
 					"})"
 			)
 		}
@@ -99,6 +98,7 @@ class Neo4jRepository : Closeable {
 	 * @param graphPageView the [GraphPageViewModel] to populate with the graph data
 	 */
 	fun readData(graphPageView: GraphPageViewModel) {
+		// TODO(validation and catching exceptions of execute)
 		val vertexMap = mutableMapOf<VertexID, VertexData>()
 
 		session.readTransaction { tx ->
@@ -118,7 +118,7 @@ class Neo4jRepository : Closeable {
 			val isUnweighted = record["isUnweighted"].toString().toBoolean()
 			val vertexTypeString = record["vertexType"].asString()
 			var vertexType: VertexIDType = VertexIDType.INT_TYPE
-			when(vertexTypeString) {
+			when (vertexTypeString) {
 				"Int" -> vertexType = VertexIDType.INT_TYPE
 				"String" -> vertexType = VertexIDType.STRING_TYPE
 			}
@@ -126,11 +126,14 @@ class Neo4jRepository : Closeable {
 			val graph = when (isUnweighted) {
 				true ->
 					WeightedGraph<VertexID>(
-						label, isDirected = isDirected, isAutoAddVertex = isAutoAddVertex
+						label,
+						isDirected = isDirected,
+						isAutoAddVertex = isAutoAddVertex
 					)
-
 				false -> WeightedUnweightedGraph<VertexID>(
-					label, isDirected = isDirected, isAutoAddVertex = isAutoAddVertex
+					label,
+					isDirected = isDirected,
+					isAutoAddVertex = isAutoAddVertex
 				)
 			}
 
@@ -153,8 +156,13 @@ class Neo4jRepository : Closeable {
 				val degree = it["degree"].toString().toInt()
 
 				graph.addVertex(VertexID.vertexIDFromString(vertex, vertexType))
-				vertexMap[VertexID.vertexIDFromString(vertex, vertexType)] =
-							VertexData(x = xPos, y = yPos, radius = radius, color = color, degree = degree)
+				vertexMap[VertexID.vertexIDFromString(vertex, vertexType)] = VertexData(
+					x = xPos,
+					y = yPos,
+					radius = radius,
+					color = color,
+					degree = degree
+				)
 			}
 
 			result =
@@ -168,7 +176,7 @@ class Neo4jRepository : Closeable {
 				graph.addEdge(
 					VertexID.vertexIDFromString(it["source"].asString(), vertexType),
 					VertexID.vertexIDFromString(it["target"].asString(), vertexType),
-					(it["weight"].toString().toDouble())
+					it["weight"].toString().toDouble()
 				)
 			}
 

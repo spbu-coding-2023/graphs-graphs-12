@@ -55,28 +55,28 @@ fun EdgeView(edgeViewModel: EdgeViewModel, center: Offset, zoomAnimated: Float, 
 			val normalizeSEX = vectorSEX / lengthSE
 			val normalizeSEY = vectorSEY / lengthSE
 
-			val AX = endX - normalizeSEX * radius.toPx()
-			val AY = endY - normalizeSEY * radius.toPx()
+			val vectorAX = endX - normalizeSEX * radius.toPx()
+			val vectorAY = endY - normalizeSEY * radius.toPx()
 			val deltaAX = endX - normalizeSEX * (radius.toPx() + lengthArrow * cos(angle).toFloat())
 			val deltaAY = endY - normalizeSEY * (radius.toPx() + lengthArrow * cos(angle).toFloat())
 
 			val normalizeOrtX = -normalizeSEY
 			val normalizeOrtY = normalizeSEX
 
-			val BX = deltaAX + normalizeOrtX * lengthArrow * sin(angle).toFloat()
-			val BY = deltaAY + normalizeOrtY * lengthArrow * sin(angle).toFloat()
-			val CX = deltaAX - normalizeOrtX * lengthArrow * sin(angle).toFloat()
-			val CY = deltaAY - normalizeOrtY * lengthArrow * sin(angle).toFloat()
+			val vectorBX = deltaAX + normalizeOrtX * lengthArrow * sin(angle).toFloat()
+			val vectorBY = deltaAY + normalizeOrtY * lengthArrow * sin(angle).toFloat()
+			val vectorCX = deltaAX - normalizeOrtX * lengthArrow * sin(angle).toFloat()
+			val vectorCY = deltaAY - normalizeOrtY * lengthArrow * sin(angle).toFloat()
 
 			drawLine(
-				start = Offset(AX.toPx(), AY.toPx()),
-				end = Offset(BX.toPx(), BY.toPx()),
+				start = Offset(vectorAX.toPx(), vectorAY.toPx()),
+				end = Offset(vectorBX.toPx(), vectorBY.toPx()),
 				color = edgeViewModel.color,
 				strokeWidth = edgeViewModel.width
 			)
 			drawLine(
-				start = Offset(AX.toPx(), AY.toPx()),
-				end = Offset(CX.toPx(), CY.toPx()),
+				start = Offset(vectorAX.toPx(), vectorAY.toPx()),
+				end = Offset(vectorCX.toPx(), vectorCY.toPx()),
 				color = edgeViewModel.color,
 				strokeWidth = edgeViewModel.width
 			)

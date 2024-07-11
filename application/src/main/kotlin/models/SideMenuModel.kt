@@ -1,6 +1,7 @@
 package models
 
 import models.utils.TabItem
+import utils.SideMenuTabType
 
 /**
  * A model representing the side menu in an application.
@@ -11,7 +12,7 @@ import models.utils.TabItem
  */
 class SideMenuModel {
 	private val _tabsItems = mutableListOf<List<TabItem>?>()
-	private val tabsIdentifier = mutableMapOf<String, TabItem>()
+	private val tabsIdentifier = mutableMapOf<SideMenuTabType, TabItem>()
 	val tabsItems: List<List<TabItem>?>
 		get() = _tabsItems.toList()
 	val tabsCount: Int
@@ -24,7 +25,7 @@ class SideMenuModel {
 	 */
 	fun addTabs(items: List<TabItem>) {
 		_tabsItems.add(items)
-		items.forEach { tabsIdentifier[it.title] = it }
+		items.forEach { tabsIdentifier[SideMenuTabType.valueByTitle(it.title)] = it }
 	}
 
 	/**
@@ -46,11 +47,11 @@ class SideMenuModel {
 	/**
      * Changes the visibility of a tab.
      *
-     * @param tabTitle the title of the tab to change the visibility of
+     * @param tabType the title of the tab to change the visibility of
      * @param isHiddenState the new visibility of the tab
 	 */
-	fun changeTabVisibility(tabTitle: String, isHiddenState: Boolean) {
-		val tabItem = tabsIdentifier[tabTitle] ?: return
+	fun changeTabVisibility(tabType: SideMenuTabType, isHiddenState: Boolean) {
+		val tabItem = tabsIdentifier[tabType] ?: return
 		tabItem.isHidden.value = isHiddenState
 	}
 

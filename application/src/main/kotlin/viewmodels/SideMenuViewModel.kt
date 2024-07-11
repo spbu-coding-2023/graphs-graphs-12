@@ -7,9 +7,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Laptop
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Analytics
+import androidx.compose.material.icons.outlined.Grain
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Laptop
+import androidx.compose.material.icons.outlined.Save
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -19,6 +27,7 @@ import themes.JetTheme
 import utils.PageType
 import utils.AlgorithmTextButton
 import utils.ActionTextButton
+import utils.SideMenuTabType
 import viewmodels.pages.GraphPageViewModel
 
 /**
@@ -57,7 +66,7 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 				Icons.Outlined.Analytics,
 				mutableStateOf(true),
 				isSelectablePage = false,
-				dropDownMenuContext = { tabItem ->
+				dropDownMenuContext = { _ ->
 					Text(
 						"Algorithms",
 						style = JetTheme.typography.toolbar,
@@ -73,7 +82,8 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 							if (graphPageViewModel.graphViewModel?.graph?.isDirected == true) {
 								if (!algorithmButton.nonDirectionalRequirement) {
 									AlgorithmTextButton(
-										graphPageViewModel.graphViewModel, algorithmButton,
+										graphPageViewModel.graphViewModel,
+										algorithmButton,
 										Modifier.fillMaxWidth()
 									)
 								}
@@ -96,7 +106,7 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 				Icons.Outlined.Grain,
 				mutableStateOf(true),
 				isSelectablePage = false,
-				dropDownMenuContext = { tabItem ->
+				dropDownMenuContext = { _ ->
 					Text(
 						"Representation",
 						style = JetTheme.typography.toolbar,
@@ -153,13 +163,13 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 	/**
 	 * Changes the visibility of a tab in the side menu.
 	 *
-	 * @param tabName the name of the tab whose visibility needs to be changed
+	 * @param tabType the type of the tab whose visibility needs to be changed
 	 * @param isHiddenState a boolean indicating whether the tab should be hidden or visible.
 	 * 						If true, the tab will be hidden; if false, the tab will be visible
 	 *
 	 *  @see SideMenuModel.changeTabVisibility
 	 */
-	fun changeVisibility(tabName: String, isHiddenState: Boolean) {
-		sideMenuModel.changeTabVisibility(tabName, isHiddenState)
+	fun changeVisibility(tabType: SideMenuTabType, isHiddenState: Boolean) {
+		sideMenuModel.changeTabVisibility(tabType, isHiddenState)
 	}
 }

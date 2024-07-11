@@ -1,11 +1,27 @@
 package views.dialogs
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -86,7 +102,10 @@ fun LoadNewGraphDialog(viewModel: LoadNewGraphDialogViewModel) {
 					OutlinedTextField(
 						value = viewModel.neo4jHost.value,
 						label = { Text("Host", style = JetTheme.typography.toolbar) },
-						onValueChange = {newValue -> viewModel.neo4jHost.value = newValue; viewModel.isCrateNeo4jConnection.value = false},
+						onValueChange = { newValue ->
+							viewModel.neo4jHost.value = newValue
+							viewModel.isCrateNeo4jConnection.value = false
+						},
 						modifier = Modifier.weight(1f),
 						singleLine = true,
 						colors = TextFieldDefaults.textFieldColors(
@@ -99,7 +118,10 @@ fun LoadNewGraphDialog(viewModel: LoadNewGraphDialogViewModel) {
 					OutlinedTextField(
 						value = viewModel.neo4jUserName.value,
 						label = { Text("User", style = JetTheme.typography.toolbar) },
-						onValueChange = {newValue -> viewModel.neo4jUserName.value = newValue; viewModel.isCrateNeo4jConnection.value = false},
+						onValueChange = { newValue ->
+							viewModel.neo4jUserName.value = newValue
+							viewModel.isCrateNeo4jConnection.value = false
+						},
 						modifier = Modifier.weight(1f),
 						singleLine = true,
 						colors = TextFieldDefaults.textFieldColors(
@@ -112,7 +134,10 @@ fun LoadNewGraphDialog(viewModel: LoadNewGraphDialogViewModel) {
 					OutlinedTextField(
 						value = viewModel.neo4jPassword.value,
 						label = { Text("Password", style = JetTheme.typography.toolbar) },
-						onValueChange = {newValue -> viewModel.neo4jPassword.value = newValue; viewModel.isCrateNeo4jConnection.value = false},
+						onValueChange = { newValue ->
+							viewModel.neo4jPassword.value = newValue
+							viewModel.isCrateNeo4jConnection.value = false
+						},
 						modifier = Modifier.weight(1f),
 						singleLine = true,
 						colors = TextFieldDefaults.textFieldColors(
@@ -147,7 +172,7 @@ fun LoadNewGraphDialog(viewModel: LoadNewGraphDialogViewModel) {
 					),
 					modifier = Modifier.weight(0.5f).padding(5.dp, 0.dp),
 					onClick = {
-						var isLoad = false
+						var isLoad: Boolean
 						when (viewModel.selectedLoadType.value) {
 							GraphSavingType.NEO4J_DB -> {
 								viewModel.settings.connectToNeo4J(
@@ -160,9 +185,11 @@ fun LoadNewGraphDialog(viewModel: LoadNewGraphDialogViewModel) {
 									return@TextButton
 								}
 								coroutineScope.launch {
-									isLoad = viewModel.settings.loadGraphFromNEO4J(viewModel.homePageViewModel.graphPage)
+									isLoad = viewModel.settings.loadGraphFromNEO4J(
+										viewModel.homePageViewModel.graphPage
+									)
 									if (isLoad) {
-										viewModel.homePageViewModel.loadGraphInfo(GraphSavingType.NEO4J_DB,"")
+										viewModel.homePageViewModel.loadGraphInfo(GraphSavingType.NEO4J_DB, "")
 										viewModel.homePageViewModel.isOpenDialogOfLoadingNewGraph = false
 									}
 								}

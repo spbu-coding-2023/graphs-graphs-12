@@ -4,7 +4,15 @@ import androidx.compose.ui.unit.dp
 import themes.radiusVerticesStart
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
-import kotlin.math.*
+import kotlin.math.abs
+import kotlin.math.log2
+import kotlin.math.pow
+import kotlin.math.sqrt
+
+/**
+ * Error message of unexpected algorithm behavior.
+ */
+const val StandardErrorMessage = "Undefined behaviour: an unfounded vertex."
 
 /**
  * The ForceAtlas2 algorithm.
@@ -66,6 +74,7 @@ class ForceDirectedPlacementStrategy(
 		)
 	}
 
+	// TODO(clearing param lists)
 	/**
 	 * Places the [viewModel] vertices but [vertex] on an imaginary canvas with the help of some coefficients.
 	 */
@@ -85,6 +94,11 @@ class ForceDirectedPlacementStrategy(
 		inaccuracy: Double
 	) {
 		if (viewModel.vertices.isEmpty()) return
+		if (width <= 0 || height <= 0) {
+			// TODO(Log about all koefs)
+			println("ForceDirectedPlacementStrategy.place: invalid canvas dimensions, by koefs: $kDegree")
+			return
+		}
 
 		var speedGlobal: Double
 		var switchingGlobal = 0.0
@@ -102,8 +116,8 @@ class ForceDirectedPlacementStrategy(
 			}.toMutableMap()
 
 			viewModel.vertices.forEach { vertexSourceViewModel ->
-//				val length = sqrt(vertexSourceViewModel.xPos.value.toDouble().pow(2) + vertexSourceViewModel.yPos.value.toDouble().pow(2))
-//				val forceGrav = kGrav * (vertexSourceViewModel.degree + 1) * length // strong gravity
+				// val length = sqrt(vertexSourceViewModel.xPos.value.toDouble().pow(2) + vertexSourceViewModel.yPos.value.toDouble().pow(2))
+				// val forceGrav = kGrav * (vertexSourceViewModel.degree + 1) * length // strong gravity
 				val forceGrav = kGrav * (vertexSourceViewModel.degree + 1) // gravity
 
 				tableForce[vertexSourceViewModel] = mutableListOf(forceGrav, forceGrav)
@@ -113,18 +127,18 @@ class ForceDirectedPlacementStrategy(
 					val difY = (vertexTargetViewModel.yPos - vertexSourceViewModel.yPos).value.toDouble()
 
 					val distance = sqrt(difX.pow(2) + difY.pow(2))
-					val distanceOverlapping = distance - vertexSourceViewModel.radius / radiusVerticesStart - vertexTargetViewModel.radius / radiusVerticesStart
-
+					val distanceOverlapping =
+						distance - vertexSourceViewModel.radius / radiusVerticesStart - vertexTargetViewModel.radius / radiusVerticesStart
 					var forceRepul = 0.0
 					if (distanceOverlapping > 0) {
-						forceRepul = kRepul * (vertexSourceViewModel.degree + 1) * (vertexTargetViewModel.degree + 1) / distanceOverlapping  // prevent overlapping
+						forceRepul = kRepul * (vertexSourceViewModel.degree + 1) * (vertexTargetViewModel.degree + 1) / distanceOverlapping // prevent overlapping
 					} else if (distanceOverlapping < 0) {
 						forceRepul = kRepulOver * (vertexSourceViewModel.degree + 1) * (vertexTargetViewModel.degree + 1) // prevent overlapping
 					}
-//					val forceRepul = kRepul * (vertexSourceViewModel.degree + 1) * (vertexTargetViewModel.degree + 1) / distance // classic
+					// val forceRepul = kRepul * (vertexSourceViewModel.degree + 1) * (vertexTargetViewModel.degree + 1) / distance // classic
 
-					checkAndAddFirst(tableForce[vertexSourceViewModel],  - forceRepul * difX)
-					checkAndAddSecond(tableForce[vertexSourceViewModel],  - forceRepul * difY)
+					checkAndAddFirst(tableForce[vertexSourceViewModel], -forceRepul * difX)
+					checkAndAddSecond(tableForce[vertexSourceViewModel], -forceRepul * difY)
 				}
 			}
 
@@ -133,16 +147,16 @@ class ForceDirectedPlacementStrategy(
 				val difY = (edgeViewModel.target.yPos - edgeViewModel.source.yPos).value.toDouble()
 
 				val distance = sqrt(difX.pow(2) + difY.pow(2))
-//				val distanceOverlapping = distance - edgeViewModel.source.radius / radiusVerticesStart - edgeViewModel.target.radius / radiusVerticesStart
+				// val distanceOverlapping = distance - edgeViewModel.source.radius / radiusVerticesStart - edgeViewModel.target.radius / radiusVerticesStart
 
 				val forceAttr = kAttr * (log2(1 + distance)) // linlog mode
-//				var forceAttr = 0.0
-//				if (distanceOverlapping > 0) {
-//					forceAttr = distanceOverlapping // prevent overlapping
-//					forceAttr = kAttr * (log2(1 + distanceOverlapping)) // unity linlog and prevent overlapping
-//				}
-//				val forceAttr = kAttr * edgeViewModel.edge.weight.pow(kDegree) * (distance / edgeViewModel.source.degree + 1) // dissuade hubs mode
-//				val forceAttr = kAttr * edgeViewModel.edge.weight.pow(kDegree) * (log2(1 + distance) / edgeViewModel.source.degree + 1) // unity linlog and dissuade hubs
+				// var forceAttr = 0.0
+				// if (distanceOverlapping > 0) {
+					// forceAttr = distanceOverlapping // prevent overlapping
+					// forceAttr = kAttr * (log2(1 + distanceOverlapping)) // unity linlog and prevent overlapping
+				// }
+				// val forceAttr = kAttr * edgeViewModel.edge.weight.pow(kDegree) * (distance / edgeViewModel.source.degree + 1) // dissuade hubs mode
+				// val forceAttr = kAttr * edgeViewModel.edge.weight.pow(kDegree) * (log2(1 + distance) / edgeViewModel.source.degree + 1) // unity linlog and dissuade hubs
 
 				checkAndAddFirst(tableForce[edgeViewModel.source], forceAttr * difX)
 				checkAndAddSecond(tableForce[edgeViewModel.source], forceAttr * difY)
@@ -163,7 +177,7 @@ class ForceDirectedPlacementStrategy(
 			}
 
 			speedGlobal = kTolerance * tractionGlobal / switchingGlobal // adapting the global speed
-			if (speedGlobal > speedGlobalLast / 2 ) {
+			if (speedGlobal > speedGlobalLast / 2) {
 				speedGlobal = speedGlobalLast / 2 * inaccuracy
 			}
 
@@ -194,7 +208,7 @@ class ForceDirectedPlacementStrategy(
  * @throws ExceptionInInitializerError if the list is null
  */
 fun checkAndGetFirst(list: MutableList<Double>?): Double {
-	return list?.get(0) ?: throw ExceptionInInitializerError("Undefined behaviour: an unfounded vertex.")
+	return list?.get(0) ?: throw ExceptionInInitializerError(StandardErrorMessage)
 }
 
 /**
@@ -206,7 +220,7 @@ fun checkAndGetFirst(list: MutableList<Double>?): Double {
  * @throws ExceptionInInitializerError if the list is null
  */
 fun checkAndGetSecond(list: MutableList<Double>?): Double {
-	return list?.get(1) ?: throw ExceptionInInitializerError("Undefined behaviour: an unfounded vertex.")
+	return list?.get(1) ?: throw ExceptionInInitializerError(StandardErrorMessage)
 }
 
 /**
@@ -218,7 +232,7 @@ fun checkAndGetSecond(list: MutableList<Double>?): Double {
  * @throws ExceptionInInitializerError if the list is null
  */
 fun checkAndAddFirst(list: MutableList<Double>?, value: Double) {
-	if (list == null) throw ExceptionInInitializerError("Undefined behaviour: an unfounded vertex.")
+	if (list == null) throw ExceptionInInitializerError(StandardErrorMessage)
 	list[0] += value
 }
 
@@ -231,6 +245,6 @@ fun checkAndAddFirst(list: MutableList<Double>?, value: Double) {
  * @throws ExceptionInInitializerError if the list is null
  */
 fun checkAndAddSecond(list: MutableList<Double>?, value: Double) {
-	if (list == null) throw ExceptionInInitializerError("Undefined behaviour: an unfounded vertex.")
+	if (list == null) throw ExceptionInInitializerError(StandardErrorMessage)
 	list[1] += value
 }

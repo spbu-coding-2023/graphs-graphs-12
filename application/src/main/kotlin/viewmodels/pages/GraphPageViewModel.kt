@@ -1,8 +1,19 @@
 package viewmodels.pages
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.ButtonColors
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.material.TextFieldColors
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -12,7 +23,10 @@ import models.utils.AlgorithmModel
 import themes.JetTheme
 import utils.GraphSavingType
 import utils.PageType
-import utils.placement_strategy.*
+import utils.placement_strategy.CircularPlacementStrategy
+import utils.placement_strategy.ForceDirectedPlacementStrategy
+import utils.placement_strategy.RandomPlacementStrategy
+import utils.placement_strategy.RepresentationStrategy
 import viewmodels.graphs.GraphViewModel
 import windowSizeStart
 import java.io.File
@@ -99,8 +113,10 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 							) {
 								algButton.inputs.value = listOf(vertex)
 								algButton.isRun.value = true
-							} else errorVertex = true
-						} catch (e: Exception) {
+							} else {
+								errorVertex = true
+							}
+						} catch (_: Exception) {
 							errorVertex = true
 						}
 					}
@@ -293,7 +309,7 @@ private fun dropDownMenuForSP(
 						VertexID.vertexIDFromString(target, graphViewModel.vertexType)
 					)
 				}
-			} catch (e: Exception) {
+			} catch (_: Exception) {
 				errorSource = true
 				errorTarget = true
 			}

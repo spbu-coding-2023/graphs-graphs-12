@@ -1,6 +1,5 @@
 package utils.placement_strategy
 
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import themes.radiusVerticesStart
 import viewmodels.graphs.VertexViewModel
@@ -26,7 +25,6 @@ class CircularPlacementStrategy : RepresentationStrategy {
 		var point = Pair(center.first, center.second - min(width, height) / 2 - radiusVerticesStart.value)
 		first.xPos = point.first.dp
 		first.yPos = point.second.dp
-		first.color = Color.Gray
 
 		sorted
 			.drop(1)
