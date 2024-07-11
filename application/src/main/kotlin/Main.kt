@@ -1,11 +1,13 @@
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import models.JetSettings
 import models.SettingsModel
 import models.utils.GraphInfo
 import themes.JetCorners
@@ -22,23 +24,6 @@ import java.io.FileWriter
  * A pair representing the initial size of the application window.
  */
 val windowSizeStart = Pair(1000f, 700f)
-
-/**
- * Data class representing the settings for application.
- *
- * @property currentStyle the current style of application, represented by a MutableState of [JetStyle]
- * @property currentFontSize the current font size of text in application, represented by a MutableState of [JetSize]
- * @property currentCornersStyle the current corner style of application, represented by a MutableState of [JetCorners]
- * @property currentFontFamily the current font family of text in application, represented by a MutableState of [JetFontFamily]
- * @property isDarkMode a boolean MutableState indicating whether the application is in dark mode or not
- */
-data class JetSettings(
-	val currentStyle: MutableState<JetStyle>,
-	val currentFontSize: MutableState<JetSize>,
-	val currentCornersStyle: MutableState<JetCorners>,
-	val currentFontFamily: MutableState<JetFontFamily>,
-	val isDarkMode: MutableState<Boolean>
-)
 
 /**
  * Application entry point.

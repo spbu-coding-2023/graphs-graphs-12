@@ -172,7 +172,7 @@ fun LoadNewGraphDialog(viewModel: LoadNewGraphDialogViewModel) {
 					),
 					modifier = Modifier.weight(0.5f).padding(5.dp, 0.dp),
 					onClick = {
-						var isLoad = false
+						var isLoad: Boolean
 						when (viewModel.selectedLoadType.value) {
 							GraphSavingType.NEO4J_DB -> {
 								viewModel.settings.connectToNeo4J(

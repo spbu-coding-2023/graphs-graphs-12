@@ -1,6 +1,5 @@
 package models
 
-import JetSettings
 import databases.GraphJSONDatabase
 import databases.Neo4jRepository
 import databases.SQLiteRepository
@@ -16,7 +15,6 @@ import utils.GraphSavingType
 import utils.PageType
 import viewmodels.graphs.GraphViewModel
 import viewmodels.pages.GraphPageViewModel
-import java.io.Closeable
 import java.io.File
 import java.io.IOException
 import java.sql.SQLException
@@ -262,8 +260,12 @@ class SettingsModel {
 							3 -> jetSettings.currentFontFamily.value = converters[index](setting) as JetFontFamily
 							4 -> jetSettings.isDarkMode.value = setting.toBoolean()
 						}
-					} catch (e: IllegalArgumentException) {
-						println("The element '$setting' in line $index does not match any element of the corresponding enumeration.")
+					} catch (illegalArgumentException: IllegalArgumentException) {
+						println(
+							"The element '$setting' in line $index doesn't match any element " +
+							"of the corresponding enumeration. " +
+							"Exception: ${illegalArgumentException.message}"
+						)
 					}
 				}
 		}

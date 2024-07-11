@@ -1,6 +1,5 @@
 package views.pages
 
-import JetSettings
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -32,7 +31,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
+import models.JetSettings
 import themes.JetCorners
 import themes.JetFontFamily
 import themes.JetSize
@@ -280,7 +279,7 @@ internal fun MenuItem(
 				expanded = isDropdownOpen.value,
 				onDismissRequest = { isDropdownOpen.value = false }
 			) {
-				model.values.forEachIndexed { index, value ->
+				model.values.forEachIndexed { index, _ ->
 					DropdownMenuItem(
 						onClick = {
 							onItemSelected?.invoke(index)

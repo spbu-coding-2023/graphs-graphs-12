@@ -66,7 +66,7 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 				Icons.Outlined.Analytics,
 				mutableStateOf(true),
 				isSelectablePage = false,
-				dropDownMenuContext = { tabItem ->
+				dropDownMenuContext = { _ ->
 					Text(
 						"Algorithms",
 						style = JetTheme.typography.toolbar,
@@ -106,7 +106,7 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 				Icons.Outlined.Grain,
 				mutableStateOf(true),
 				isSelectablePage = false,
-				dropDownMenuContext = { tabItem ->
+				dropDownMenuContext = { _ ->
 					Text(
 						"Representation",
 						style = JetTheme.typography.toolbar,
