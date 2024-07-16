@@ -45,6 +45,7 @@ import utils.CustomRadioButton
 import utils.GraphSavingType
 import utils.VertexIDType
 import viewmodels.dialogs.CreateNewGraphDialogViewModel
+import java.io.File
 
 /**
  * A composable function that creates a dialog window for creating a new graph.
@@ -142,7 +143,10 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 				ComboBox(
 					items = GraphSavingType.entries.toTypedArray(),
 					modifier = Modifier.weight(1f),
-					onItemClick = { item: GraphSavingType -> viewModel.selectedSaveType.value = item },
+					onItemClick = { item: GraphSavingType ->
+						viewModel.selectedSaveType.value = item
+						viewModel.updateSaveFolder(item)
+					},
 					textAlign = TextAlign.Center
 				)
 			}
@@ -153,7 +157,7 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 			) {
 				if (viewModel.selectedSaveType.value != GraphSavingType.NEO4J_DB) {
 					OutlinedTextField(
-						value = viewModel.saveFolder.value,
+						value = viewModel.saveFolder.value.absolutePath,
 						readOnly = true,
 						label = { Text("Folder path", style = JetTheme.typography.toolbar) },
 						onValueChange = {},
@@ -280,7 +284,7 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 									viewModel.isGraphDirected.value,
 									viewModel.isGraphWeighted.value,
 									viewModel.selectedSaveType.value,
-									viewModel.saveFolder.value
+									viewModel.saveFolder.value.absolutePath
 								)
 							}
 							viewModel.homePageViewModel.isOpenDialogOfCreatingNewGraph = false
@@ -291,9 +295,16 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 				}
 			}
 		}
-		DirectoryPicker(isOpenFolderPickDialog) { path ->
+		DirectoryPicker(
+			isOpenFolderPickDialog,
+			initialDirectory = viewModel.saveFolder.value.absolutePath,
+			title = "Choose save directory"
+		) { path ->
 			isOpenFolderPickDialog = false
-			if (path != null) viewModel.saveFolder.value = path
+			if (path != null) {
+				viewModel.isCustomSaveDirectory.value = true
+				viewModel.saveFolder.value = File(path)
+			}
 		}
 	}
 }

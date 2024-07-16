@@ -25,6 +25,7 @@ import java.sql.SQLException
  *
  * @property isNeo4jConnected indicates whether a Neo4J database is connected
  * @property graphNameRegEx a regular expression used to validate graph names
+ * @property applicationContextDirectory the directory of application context
  */
 class SettingsModel {
 	private val jsonDB = GraphJSONDatabase()
@@ -32,6 +33,13 @@ class SettingsModel {
 	private val sqliteDB = SQLiteRepository()
 	var isNeo4jConnected = false
 	val graphNameRegEx = Regex("[a-zA-Z][a-zA-Z0-9_-]*")
+	val applicationContextDirectory = File(System.getProperty("user.home"), "graph-lab")
+
+	init {
+		if (!applicationContextDirectory.exists()) {
+			applicationContextDirectory.mkdirs()
+		}
+	}
 
 	/**
 	 * Connects to a Neo4J database using the provided URI, username, and password.

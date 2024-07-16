@@ -5,6 +5,7 @@ import models.SettingsModel
 import utils.GraphSavingType
 import utils.VertexIDType
 import viewmodels.pages.HomePageViewModel
+import java.io.File
 
 /**
  * ViewModel for the Create New Graph Dialog.
@@ -17,15 +18,31 @@ import viewmodels.pages.HomePageViewModel
  * @property selectedSaveType the type of saving the new graph
  * @property saveFolder the folder where the new graph will be saved
  * @property settings the settings of the application
+ * @property isCustomSaveDirectory flag to indicate whether user didn't chosen default directory to save the new graph
  */
 class CreateNewGraphDialogViewModel(val homePageViewModel: HomePageViewModel) {
+	private val localFileSavingDirectory = File(
+		homePageViewModel.settings.applicationContextDirectory,
+		"local-simple-dbs"
+	)
+	private val sqliteSavingDirectory = File(
+		homePageViewModel.settings.applicationContextDirectory,
+		"sqlite-dbs"
+
+	)
 	val graphName = mutableStateOf("")
 	val selectedVertexTypeID = mutableStateOf(VertexIDType.INT_TYPE)
 	val isGraphWeighted = mutableStateOf(false)
 	val isGraphDirected = mutableStateOf(false)
 	val selectedSaveType = mutableStateOf(GraphSavingType.LOCAL_FILE)
-	val saveFolder = mutableStateOf(System.getProperty("user.home"))
 	val settings: SettingsModel = homePageViewModel.settings
+	val isCustomSaveDirectory = mutableStateOf(false)
+	val saveFolder = mutableStateOf(localFileSavingDirectory)
+
+	init {
+		if (!localFileSavingDirectory.exists()) localFileSavingDirectory.mkdirs()
+		if (!sqliteSavingDirectory.exists()) sqliteSavingDirectory.mkdirs()
+	}
 
 	/**
 	 * Checks if the given graph name is valid according to the application's settings.
@@ -37,5 +54,31 @@ class CreateNewGraphDialogViewModel(val homePageViewModel: HomePageViewModel) {
 	 */
 	fun isValidGraphName(newGraphName: String): Boolean {
 		return settings.graphNameRegEx.matches(newGraphName)
+	}
+
+	/**
+	 * Updates the save folder based on the selected graph saving type.
+	 *
+	 * This function checks if the user has chosen a custom save directory. If not, it updates the save folder
+	 * based on the selected graph saving type.
+	 *
+	 * @param saveType the type of saving the new graph. It can be either [GraphSavingType.LOCAL_FILE] or
+	 * [GraphSavingType.SQLITE_DB].
+	 *
+	 * @see isCustomSaveDirectory
+	 * @see localFileSavingDirectory
+	 * @see sqliteSavingDirectory
+	 * @see saveFolder
+	 */
+	fun updateSaveFolder(saveType: GraphSavingType) {
+		if (!isCustomSaveDirectory.value) {
+			when (saveType) {
+				GraphSavingType.LOCAL_FILE ->
+					saveFolder.value = localFileSavingDirectory
+				GraphSavingType.SQLITE_DB ->
+					saveFolder.value = sqliteSavingDirectory
+				else -> println("Choose saving type of graph as $saveType.")
+			}
+		}
 	}
 }
