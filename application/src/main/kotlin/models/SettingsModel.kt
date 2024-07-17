@@ -236,12 +236,13 @@ class SettingsModel {
 		 */
 		@JvmStatic
 		fun loadSettings(jetSettings: JetSettings): SettingsModel {
-			val file = File("../settings")
+			val settings = SettingsModel()
+			val file = File(settings.applicationContextDirectory, ".settings")
 
 			findOrCreateFile(file)
 			loadSettings(file, jetSettings)
 
-			return SettingsModel()
+			return settings
 		}
 
 		/**
