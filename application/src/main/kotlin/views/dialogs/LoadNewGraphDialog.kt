@@ -83,7 +83,7 @@ fun LoadNewGraphDialog(viewModel: LoadNewGraphDialogViewModel) {
 					OutlinedTextField(
 						value = viewModel.loadFile.value,
 						readOnly = true,
-						label = { Text("Folder path", style = JetTheme.typography.toolbar) },
+						label = { Text("File path", style = JetTheme.typography.toolbar) },
 						onValueChange = {},
 						modifier = Modifier.weight(1f),
 						singleLine = true,
@@ -231,7 +231,11 @@ fun LoadNewGraphDialog(viewModel: LoadNewGraphDialogViewModel) {
 				}
 			}
 		}
-		FilePicker(isOpenFilePickDialog) { selectedPath ->
+		FilePicker(
+			isOpenFilePickDialog,
+			initialDirectory = viewModel.settings.applicationContextDirectory.absolutePath,
+			title = "Load graph",
+		) { selectedPath ->
 			isOpenFilePickDialog = false
 			if (selectedPath != null) viewModel.loadFile.value = selectedPath.path
 		}
