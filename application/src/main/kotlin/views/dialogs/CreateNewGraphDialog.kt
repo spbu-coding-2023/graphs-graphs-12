@@ -37,15 +37,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindow
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberDialogState
-import com.darkrockstudios.libraries.mpfilepicker.DirectoryPicker
 import kotlinx.coroutines.launch
 import themes.JetTheme
 import utils.ComboBox
 import utils.CustomRadioButton
 import utils.GraphSavingType
 import utils.VertexIDType
+import utils.filedialogs.DirectoryPickerDialog
+import utils.filedialogs.FilePickerDialog
+import utils.filedialogs.PickerDialog
 import viewmodels.dialogs.CreateNewGraphDialogViewModel
-import java.io.File
 
 /**
  * A composable function that creates a dialog window for creating a new graph.
@@ -295,16 +296,16 @@ fun CreateNewGraphDialog(viewModel: CreateNewGraphDialogViewModel) {
 				}
 			}
 		}
-		DirectoryPicker(
+		DirectoryPickerDialog(
 			isOpenFolderPickDialog,
-			initialDirectory = viewModel.saveFolder.value.absolutePath,
-			title = "Choose save directory"
-		) { path ->
-			isOpenFolderPickDialog = false
-			if (path != null) {
-				viewModel.isCustomSaveDirectory.value = true
-				viewModel.saveFolder.value = File(path)
+			"Choose directory",
+			viewModel.saveFolder.value,
+			onCloseRequest = { isOpenFolderPickDialog = false },
+			onChooseDirectory = { folder ->
+				if (folder.isDirectory && folder.exists()) {
+					viewModel.saveFolder.value = folder
+				}
 			}
-		}
+		)
 	}
 }

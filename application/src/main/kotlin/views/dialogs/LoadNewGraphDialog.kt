@@ -35,6 +35,7 @@ import kotlinx.coroutines.launch
 import themes.JetTheme
 import utils.ComboBox
 import utils.GraphSavingType
+import utils.filedialogs.FilePickerDialog
 import viewmodels.dialogs.LoadNewGraphDialogViewModel
 
 /**
@@ -231,13 +232,16 @@ fun LoadNewGraphDialog(viewModel: LoadNewGraphDialogViewModel) {
 				}
 			}
 		}
-		FilePicker(
+		FilePickerDialog(
 			isOpenFilePickDialog,
-			initialDirectory = viewModel.settings.applicationContextDirectory.absolutePath,
-			title = "Load graph",
-		) { selectedPath ->
-			isOpenFilePickDialog = false
-			if (selectedPath != null) viewModel.loadFile.value = selectedPath.path
-		}
+			"Load graph-info file",
+			initDirectory = viewModel.settings.applicationContextDirectory,
+			onCloseRequest = { isOpenFilePickDialog = false },
+			onChooseFile = { selectedPath ->
+				isOpenFilePickDialog = false
+				viewModel.loadFile.value = selectedPath.path
+			},
+			fileExtension = viewModel.fileExtension
+		)
 	}
 }

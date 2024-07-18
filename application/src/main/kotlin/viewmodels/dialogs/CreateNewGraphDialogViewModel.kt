@@ -28,7 +28,6 @@ class CreateNewGraphDialogViewModel(val homePageViewModel: HomePageViewModel) {
 	private val sqliteSavingDirectory = File(
 		homePageViewModel.settings.applicationContextDirectory,
 		"sqlite-dbs"
-
 	)
 	val graphName = mutableStateOf("")
 	val selectedVertexTypeID = mutableStateOf(VertexIDType.INT_TYPE)

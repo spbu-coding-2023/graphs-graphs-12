@@ -25,4 +25,10 @@ class LoadNewGraphDialogViewModel(val homePageViewModel: HomePageViewModel) {
 	val selectedLoadType = mutableStateOf(GraphSavingType.LOCAL_FILE)
 	val loadFile = mutableStateOf("")
 	val settings: SettingsModel = homePageViewModel.settings
+	val fileExtension: List<Regex>
+		get() {
+			val regex = selectedLoadType.value.filenamePatterns
+			if (regex != null) return listOf(regex)
+			else return listOf()
+		}
 }
