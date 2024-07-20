@@ -37,7 +37,9 @@ import themes.sizeBottom
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
-import java.util.Date
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * This function is used to display an empty content screen with a specified message and an icon.
@@ -77,6 +79,7 @@ fun FileContent(
 			"File ${file.absolutePath} not exists"
 		)
 	} else {
+		val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
 		Column(
 			modifier.border(0.5.dp, Color.Black, RectangleShape).padding(0.25.dp),
 			verticalArrangement = Arrangement.spacedBy(2.dp)
@@ -95,7 +98,7 @@ fun FileContent(
 				)
 				listOf(
 					"Name: ${file.name}",
-					"Last Modified: ${Date(file.lastModified()).toLocaleString()}",
+					"Last Modified: ${dateFormat.format(Date(file.lastModified()))}",
 					"Size: ${file.length()} bytes"
 				).forEach { text ->
 					Text(
