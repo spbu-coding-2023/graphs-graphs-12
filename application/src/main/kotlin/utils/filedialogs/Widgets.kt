@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -25,13 +27,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import themes.JetTheme
+import themes.sizeBottom
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
+import java.util.Date
 
 @Composable
 fun EmptyContent(
@@ -56,18 +62,54 @@ fun FileContent(
 		modifier,
 		"File ${file.absolutePath} not exists"
 	)
-	Box(modifier.border(0.5.dp, Color.Black, RectangleShape).padding(0.25.dp)) {
-		LazyColumn(
-			modifier = Modifier.fillMaxSize().align(Alignment.TopCenter),
-			horizontalAlignment = Alignment.Start
+	Column(
+		modifier.border(0.5.dp, Color.Black, RectangleShape).padding(0.25.dp),
+		verticalArrangement = Arrangement.spacedBy(2.dp)
+	) {
+		Column(
+			modifier = Modifier.border(0.5.dp, Color.Black, RectangleShape).padding(0.25.dp),
+			verticalArrangement = Arrangement.spacedBy(2.dp),
+			horizontalAlignment = Alignment.CenterHorizontally
 		) {
-			item {
-				val reader = BufferedReader(FileReader(file))
+			Text(
+				"File info",
+				modifier = Modifier.fillMaxWidth(),
+				textAlign = TextAlign.Center,
+				style = JetTheme.typography.body,
+				color = JetTheme.colors.secondaryText
+			)
+			listOf(
+				"Name: ${file.name}",
+				"Last Modified: ${Date(file.lastModified()).toLocaleString()}",
+				"Size: ${file.length()} bytes"
+			).forEach { text ->
 				Text(
-					modifier = modifier.padding(8.dp),
-					text = reader.use { it.readText() }
+					text,
+					modifier = Modifier.fillMaxWidth().padding(8.dp),
+					textAlign = TextAlign.Left,
+					style = JetTheme.typography.mini.copy(fontSize = JetTheme.typography.mini.fontSize / 1.15),
+					color = JetTheme.colors.secondaryText
 				)
-				reader.close()
+			}
+		}
+		Box {
+			LazyColumn(
+				modifier = Modifier.fillMaxSize().align(Alignment.TopCenter),
+				horizontalAlignment = Alignment.Start
+			) {
+				item {
+
+				}
+				item {
+					val reader = BufferedReader(FileReader(file))
+					Text(
+						modifier = modifier.padding(8.dp),
+						text = reader.use { it.readText() },
+						style = JetTheme.typography.toolbar,
+						color = JetTheme.colors.secondaryText
+					)
+					reader.close()
+				}
 			}
 		}
 	}
@@ -106,16 +148,23 @@ fun DirectoryContent(
 					Icon(
 						imageVector = if (item.isDirectory) Icons.Filled.Folder else Icons.Filled.FilePresent,
 						contentDescription = if (item.isDirectory) "Directory" else "File",
-						modifier = Modifier.weight(0.5f)
+						modifier = Modifier.weight(0.5f).size(sizeBottom).clip(JetTheme.shapes.cornerStyle),
+						tint = JetTheme.colors.tintColor
 					)
 					TextButton(
 						onClick = {
 							chosenFile = if (!item.isFile) null else item
 							onItemClick(item)
 						},
-						modifier = Modifier.weight(4.5f)
+						colors = ButtonDefaults.buttonColors(
+							backgroundColor = JetTheme.colors.primaryBackground,
+							contentColor = JetTheme.colors.secondaryText,
+							disabledContentColor = JetTheme.colors.secondaryText,
+							disabledBackgroundColor = JetTheme.colors.tertiaryBackground
+						),
+						modifier = Modifier.weight(4.5f).padding(5.dp, 5.dp),
 					) {
-						Text(item.absolutePath, textAlign = TextAlign.Left)
+						Text(item.absolutePath)
 					}
 				}
 			}
@@ -129,16 +178,23 @@ fun DirectoryContent(
 					Icon(
 						imageVector = if (item.isDirectory) Icons.Filled.Folder else Icons.Filled.FilePresent,
 						contentDescription = if (item.isDirectory) "Directory" else "File",
-						modifier = Modifier.weight(0.5f)
+						modifier = Modifier.weight(0.5f).size(sizeBottom).clip(JetTheme.shapes.cornerStyle),
+						tint = JetTheme.colors.tintColor
 					)
 					TextButton(
 						onClick = {
 							chosenFile = if (!item.isFile) null else item
 							onItemClick(item)
 						},
-						modifier = Modifier.weight(4.5f)
+						colors = ButtonDefaults.buttonColors(
+							backgroundColor = JetTheme.colors.primaryBackground,
+							contentColor = JetTheme.colors.secondaryText,
+							disabledContentColor = JetTheme.colors.secondaryText,
+							disabledBackgroundColor = JetTheme.colors.tertiaryBackground
+						),
+						modifier = Modifier.weight(4.5f).padding(5.dp, 5.dp),
 					) {
-						Text(item.absolutePath, textAlign = TextAlign.Left)
+						Text(item.absolutePath)
 					}
 				}
 			}
