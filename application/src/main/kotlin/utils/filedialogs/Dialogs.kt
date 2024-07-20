@@ -40,6 +40,20 @@ import themes.JetTheme
 import themes.sizeBottom
 import java.io.File
 
+/**
+ * A composable function that displays a dialog window for selecting a file or directory.
+ *
+ * @param isOpen a boolean indicating whether the dialog is open or closed
+ * @param icon the painter for the icon displayed in the dialog window
+ * @param title the title of the dialog window
+ * @param initDirectory the initial directory to display when the dialog is opened
+ * @param onCloseRequest a lambda function to be called when the dialog is closed
+ * @param onChooseItem an optional lambda function to be called when an item (file or directory) is chosen.
+ *                      It takes two parameters: the chosen directory and the chosen file (or null if a file isn't chosen).
+ *                      It should return a boolean indicating whether the dialog should be closed after the item is chosen
+ * @param filter an optional lambda function to filter the items displayed in the dialog.
+ *               It takes a File as a parameter and returns a boolean indicating whether the item should be displayed.
+ */
 @Composable
 fun PickerDialog(
 	isOpen: Boolean,
@@ -94,7 +108,7 @@ fun PickerDialog(
 				}
 				IconButton(
 					onClick = {
-						if (currentDirectory.parentFile!= null) {
+						if (currentDirectory.parentFile != null) {
 							currentDirectory = currentDirectory.parentFile
 							currentFile = null
 						}
@@ -110,7 +124,8 @@ fun PickerDialog(
 				}
 				OutlinedTextField(
 					value = currentDirectory.absolutePath,
-					onValueChange = { _ ->  },
+					onValueChange = { _ ->
+					},
 					readOnly = true,
 					modifier = Modifier.weight(6f),
 					singleLine = true,
@@ -147,7 +162,7 @@ fun PickerDialog(
 					)
 				}
 			}
-			Row (
+			Row(
 				modifier = Modifier.weight(1f),
 				verticalAlignment = Alignment.CenterVertically,
 				horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -186,6 +201,19 @@ fun PickerDialog(
 	}
 }
 
+/**
+ * A composable function that displays a dialog window for selecting a directory.
+ * It is a wrapper around the [PickerDialog] function, with a default icon for directory selection.
+ *
+ * @param isOpen a boolean indicating whether the dialog is open or closed
+ * @param title the title of the dialog window. Default value is "Directory Picker"
+ * @param initDirectory the initial directory to display when the dialog is opened
+ * @param onCloseRequest a lambda function to be called when the dialog is closed
+ * @param onChooseDirectory an optional lambda function to be called when a directory is chosen.
+ *                          It takes a single parameter: the chosen directory.
+ *                          It should return a boolean indicating whether the dialog should be closed after the directory is chosen.
+ *                          Default value is null, meaning no action is taken when a directory is chosen
+ */
 @Composable
 fun DirectoryPickerDialog(
 	isOpen: Boolean,
@@ -208,6 +236,22 @@ fun DirectoryPickerDialog(
 	)
 }
 
+/**
+ * A composable function that displays a dialog window for selecting a file.
+ * It is a wrapper around the [PickerDialog] function, with a default icon for file selection.
+ *
+ * @param isOpen a boolean indicating whether the dialog is open or closed
+ * @param title the title of the dialog window. Default value is "Directory Picker"
+ * @param initDirectory the initial directory to display when the dialog is opened
+ * @param onCloseRequest a lambda function to be called when the dialog is closed
+ * @param onChooseFile an optional lambda function to be called when a file is chosen.
+ *                     It takes a single parameter: the chosen file.
+ *                     It should return a boolean indicating whether the dialog should be closed after the file is chosen.
+ *                     Default value is null, meaning no action is taken when a file is chosen
+ * @param fileExtension a list of regular expressions representing the allowed file extensions.
+ *                      Only files with names matching any of the provided regular expressions will be displayed.
+ *                      Default value is an empty list, meaning all files will be displayed
+ */
 @Composable
 fun FilePickerDialog(
 	isOpen: Boolean,
@@ -227,7 +271,7 @@ fun FilePickerDialog(
 			if (currentFile == null) {
 				false
 			} else if (onChooseFile != null) {
-				onChooseFile(currentFile);
+				onChooseFile(currentFile)
 				true
 			} else {
 				true
