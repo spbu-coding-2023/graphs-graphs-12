@@ -21,7 +21,6 @@ dependencies {
 	implementation("org.xerial", "sqlite-jdbc", sqliteJdbcVersion)
 	implementation("io.github.microutils", "kotlin-logging-jvm", "2.0.6")
 	implementation("org.slf4j", "slf4j-simple", "1.7.29")
-	implementation("com.darkrockstudios:mpfilepicker:3.1.0")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.1")
 }
