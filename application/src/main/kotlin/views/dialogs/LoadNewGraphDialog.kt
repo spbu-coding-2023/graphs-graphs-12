@@ -30,11 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindow
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberDialogState
-import com.darkrockstudios.libraries.mpfilepicker.FilePicker
 import kotlinx.coroutines.launch
 import themes.JetTheme
 import utils.ComboBox
 import utils.GraphSavingType
+import utils.filedialogs.FilePickerDialog
 import viewmodels.dialogs.LoadNewGraphDialogViewModel
 
 /**
@@ -83,7 +83,7 @@ fun LoadNewGraphDialog(viewModel: LoadNewGraphDialogViewModel) {
 					OutlinedTextField(
 						value = viewModel.loadFile.value,
 						readOnly = true,
-						label = { Text("Folder path", style = JetTheme.typography.toolbar) },
+						label = { Text("File path", style = JetTheme.typography.toolbar) },
 						onValueChange = {},
 						modifier = Modifier.weight(1f),
 						singleLine = true,
@@ -231,9 +231,16 @@ fun LoadNewGraphDialog(viewModel: LoadNewGraphDialogViewModel) {
 				}
 			}
 		}
-		FilePicker(isOpenFilePickDialog) { selectedPath ->
-			isOpenFilePickDialog = false
-			if (selectedPath != null) viewModel.loadFile.value = selectedPath.path
-		}
+		FilePickerDialog(
+			isOpenFilePickDialog,
+			"Load graph-info file",
+			initDirectory = viewModel.settings.applicationContextDirectory,
+			onCloseRequest = { isOpenFilePickDialog = false },
+			onChooseFile = { selectedPath ->
+				isOpenFilePickDialog = false
+				viewModel.loadFile.value = selectedPath.path
+			},
+			fileExtension = viewModel.fileExtension
+		)
 	}
 }

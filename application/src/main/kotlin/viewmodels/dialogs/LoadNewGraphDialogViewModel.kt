@@ -16,6 +16,7 @@ import viewmodels.pages.HomePageViewModel
  * @property selectedLoadType a MutableState of the selected graph load type
  * @property loadFile a MutableState of the file path to load the graph from
  * @property settings the settings of the application
+ * @property fileExtension a MutableState of the file extension
  */
 class LoadNewGraphDialogViewModel(val homePageViewModel: HomePageViewModel) {
 	var neo4jHost = mutableStateOf("")
@@ -25,4 +26,13 @@ class LoadNewGraphDialogViewModel(val homePageViewModel: HomePageViewModel) {
 	val selectedLoadType = mutableStateOf(GraphSavingType.LOCAL_FILE)
 	val loadFile = mutableStateOf("")
 	val settings: SettingsModel = homePageViewModel.settings
+	val fileExtension: List<Regex>
+		get() {
+			val regex = selectedLoadType.value.filenamePattern
+			if (regex != null) {
+				return listOf(regex)
+			} else {
+				return listOf()
+			}
+		}
 }

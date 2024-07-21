@@ -81,11 +81,7 @@ class HomePageViewModel(
 			) { isOpenDialogOfLoadingNewGraph = true }
 		)
 
-		val file = File("../history")
-		findOrCreateFile(file)
-		file.readLines().forEach {
-			loadGraphInfoFromString(it)
-		}
+		loadHistory()
 	}
 
 	/**
@@ -215,5 +211,13 @@ class HomePageViewModel(
 				}
 			)
 		)
+	}
+
+	private fun loadHistory() {
+		val file = File(settings.applicationContextDirectory, "/.history")
+		findOrCreateFile(file)
+		file.readLines().forEach {
+			loadGraphInfoFromString(it)
+		}
 	}
 }

@@ -44,8 +44,8 @@ fun main() {
 
 		Window(
 			onCloseRequest = {
-				saveSettings(jetSettings)
-				saveHistory(mainScreenViewModel.homePageViewModel.previouslyLoadedGraph)
+				saveSettings(settings, jetSettings)
+				saveHistory(settings, mainScreenViewModel.homePageViewModel.previouslyLoadedGraph)
 				exitApplication()
 			},
 			title = "YMOM",
@@ -78,8 +78,8 @@ fun findOrCreateFile(file: File) {
  *
  * @param jetSettings an object that stores the current customization parameters
  */
-private fun saveSettings(jetSettings: JetSettings) {
-	val file = File("../settings")
+private fun saveSettings(settings: SettingsModel, jetSettings: JetSettings) {
+	val file = File(settings.applicationContextDirectory, ".settings")
 	findOrCreateFile(file)
 
 	file.writeText(
@@ -96,8 +96,8 @@ private fun saveSettings(jetSettings: JetSettings) {
  *
  * @param previouslyLoadedGraph a set of previously loaded graphs that will be saved
  */
-private fun saveHistory(previouslyLoadedGraph: List<GraphInfo>) {
-	val file = File("../history")
+private fun saveHistory(settings: SettingsModel, previouslyLoadedGraph: List<GraphInfo>) {
+	val file = File(settings.applicationContextDirectory, ".history")
 	findOrCreateFile(file)
 
 	file.writeText("")
