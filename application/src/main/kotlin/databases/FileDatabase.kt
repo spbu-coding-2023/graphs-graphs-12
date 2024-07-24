@@ -1,10 +1,13 @@
 package databases
 
+import mu.KotlinLogging
 import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
+
+private val logger = KotlinLogging.logger("FileDatabase")
 
 /**
  * File database.
@@ -23,10 +26,12 @@ abstract class FileDatabase<T>(private val fileSuffix: String) {
 	 * @throws IOException if file cannot open or cannot read its data
 	 */
 	fun load(file: File): T {
+		logger.info { "Open DB file to load: ${file.absolutePath}" }
 		val realFile = if (file.name.endsWith(fileSuffix)) file else File(file.parent, "${file.name}$fileSuffix")
 		val reader = BufferedReader(FileReader(realFile))
 		val result = load(reader)
 		reader.close()
+		logger.info { "Close DB file: ${file.absolutePath}" }
 		return result
 	}
 
@@ -39,9 +44,11 @@ abstract class FileDatabase<T>(private val fileSuffix: String) {
 	 * @throws IOException if file cannot open or cannot write its data
 	 */
 	fun save(file: File, obj: T) {
+		logger.info { "Load DB file to save object: ${file.absolutePath}" }
 		val realFile = if (file.name.endsWith(fileSuffix)) file else File(file.parent, "${file.name}$fileSuffix")
 		val writer = BufferedWriter(FileWriter(realFile))
 		save(writer, obj)
+		logger.info { "Close DB file: ${file.absolutePath}" }
 		writer.close()
 	}
 

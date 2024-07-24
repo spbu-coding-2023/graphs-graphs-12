@@ -14,7 +14,7 @@ import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
 
-private val logger = KotlinLogging.logger { }
+private val logger = KotlinLogging.logger("SQLiteDatabase")
 
 /**
  * A class responsible for writing and loading graphs to/from a SQLite database.
@@ -42,7 +42,7 @@ class SQLiteRepository {
 		addEdges(graphViewModel, connection)
 
 		connection.close()
-		logger.info { "Connection closed." }
+		logger.info { "Save graph: ${graphViewModel.graph}" }
 	}
 
 	/**
@@ -298,7 +298,7 @@ class SQLiteRepository {
 				connection.close()
 			}
 		}
-
+		logger.info { "Load graph: ${graphViewModel?.graph}" }
 		return graphViewModel
 	}
 
