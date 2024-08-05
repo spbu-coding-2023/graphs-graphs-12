@@ -48,10 +48,13 @@ import kotlinx.coroutines.launch
 import models.VertexID
 import models.utils.AlgorithmModel
 import models.utils.ListWidgetItem
+import mu.KotlinLogging
 import themes.JetTheme
 import themes.sizeBottom
 import viewmodels.graphs.GraphViewModel
 import viewmodels.pages.GraphPageViewModel
+
+private val logger = KotlinLogging.logger("Widgets")
 
 /**
  * [Composable] Widget of List with elements, which implements [ListWidgetItem].
@@ -82,14 +85,20 @@ fun LazyListWidget(
 			horizontalAlignment = Alignment.CenterHorizontally,
 		) {
 			items(listItems.reversed()) { item: ListWidgetItem ->
-				if (item.isHidden) return@items // analog of continue
+				if (item.isHidden) {
+					logger.debug { "Item: ${item.mainText} is hidden" }
+					return@items
+				}
 				Card(
 					modifier = Modifier
 						.fillMaxWidth(itemWidth)
 						.padding(10.dp)
 						.clip(JetTheme.shapes.cornerStyle),
 					elevation = 5.dp,
-					onClick = item.onClick,
+					onClick = {
+						logger.info { "Click on item: ${item.mainText}" }
+						item.onClick()
+					},
 					backgroundColor = JetTheme.colors.primaryText
 				) {
 					Box(
@@ -128,7 +137,12 @@ fun LazyListWidget(
 								var expanded by remember { mutableStateOf(false) }
 
 								Box {
-									IconButton(onClick = { expanded = true }) {
+									IconButton(
+										onClick = {
+											logger.info { "Open dropdown menu of item: ${item.mainText}" }
+											expanded = true
+										}
+									) {
 										Icon(Icons.Default.MoreVert, contentDescription = "Show menu")
 									}
 									DropdownMenu(
@@ -168,14 +182,20 @@ fun StaticListWidget(
 		headlineContext()
 		Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
 			listItems.forEach { item: ListWidgetItem ->
-				if (item.isHidden) return@forEach
+				if (item.isHidden) {
+					logger.debug { "Item: ${item.mainText} is hidden" }
+					return@forEach
+				}
 				Card(
 					modifier = Modifier
 						.fillMaxWidth(itemWidth)
 						.padding(10.dp)
 						.clip(JetTheme.shapes.cornerStyle),
 					elevation = 5.dp,
-					onClick = item.onClick,
+					onClick = {
+						logger.info { "Click on item: ${item.mainText}" }
+						item.onClick()
+					},
 					backgroundColor = JetTheme.colors.primaryText
 				) {
 					Box(
@@ -284,6 +304,7 @@ fun <T> ComboBox(
 							)
 						},
 						onClick = {
+							logger.warn { "Click on item: $item" }
 							if (onItemClick != null) onItemClick(item)
 							selectedText = item.toString()
 							expanded = false
@@ -325,6 +346,10 @@ fun CustomRadioButton(
 	Box(
 		modifier = modifier.background(Color.Transparent)
 	) {
+		val onButtonClick = {
+			logger.info { "Click on button: $text" }
+			onClick()
+		}
 		Row(
 			verticalAlignment = verticalAlignment,
 			modifier = Modifier.align(Alignment.Center)
@@ -332,12 +357,12 @@ fun CustomRadioButton(
 			if (!reversed) {
 				RadioButton(
 					selected = selected,
-					onClick = onClick,
+					onClick = onButtonClick,
 					modifier = Modifier.align(Alignment.CenterVertically),
 					colors = RadioButtonDefaults.colors(JetTheme.colors.secondaryText)
 				)
 				TextButton(
-					onClick = onClick,
+					onClick = onButtonClick,
 					modifier = Modifier,
 					colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent)
 				) {
@@ -345,14 +370,14 @@ fun CustomRadioButton(
 				}
 			} else {
 				TextButton(
-					onClick = onClick,
+					onClick = onButtonClick,
 					colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent)
 				) {
 					Text(text, textAlign = textAlign, style = textStyle, color = JetTheme.colors.secondaryText)
 				}
 				RadioButton(
 					selected = selected,
-					onClick = onClick,
+					onClick = onButtonClick,
 					colors = RadioButtonDefaults.colors(JetTheme.colors.secondaryText)
 				)
 			}
@@ -380,6 +405,7 @@ fun AlgorithmTextButton(
 	TextButton(
 		modifier = modifier,
 		onClick = {
+			logger.info { "Choose algorithm: ${algButton.label}" }
 			if (dropContext != null) { expanded.value = true } else { algButton.isRun.value = true }
 		},
 		colors = ButtonDefaults.buttonColors(
@@ -437,7 +463,10 @@ fun ActionTextButton(
 	modifier: Modifier
 ) {
 	TextButton(
-		onClick = { actionEntry.value(graphPageViewModel) },
+		onClick = {
+			logger.info { "Perform action: ${actionEntry.key}" }
+			actionEntry.value(graphPageViewModel)
+		},
 		modifier = modifier,
 		colors = ButtonDefaults.buttonColors(
 			backgroundColor = Color.Transparent
