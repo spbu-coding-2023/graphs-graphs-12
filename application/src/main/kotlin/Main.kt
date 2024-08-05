@@ -10,6 +10,7 @@ import androidx.compose.ui.window.rememberWindowState
 import models.JetSettings
 import models.SettingsModel
 import models.utils.GraphInfo
+import mu.KotlinLogging
 import themes.JetCorners
 import themes.JetFontFamily
 import themes.JetSize
@@ -19,6 +20,8 @@ import viewmodels.MainScreenViewModel
 import java.awt.Dimension
 import java.io.File
 import java.io.FileWriter
+
+private val logger = KotlinLogging.logger("EntryPoint")
 
 /**
  * A pair representing the initial size of the application window.
@@ -30,6 +33,7 @@ val windowSizeStart = Pair(1000f, 700f)
  */
 fun main() {
 	application {
+		logger.info { "Starting YMOM graph-lab application..." }
 		val isDarkModeValue = isSystemInDarkTheme()
 		val jetSettings = JetSettings(
 			currentStyle = remember { mutableStateOf(JetStyle.Black) },
@@ -46,6 +50,7 @@ fun main() {
 			onCloseRequest = {
 				saveSettings(settings, jetSettings)
 				saveHistory(settings, mainScreenViewModel.homePageViewModel.previouslyLoadedGraph)
+				logger.info { "Close YMOM graph-lab application" }
 				exitApplication()
 			},
 			title = "YMOM",
