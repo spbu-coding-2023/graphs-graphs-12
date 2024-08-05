@@ -1,11 +1,14 @@
 package utils.placement_strategy
 
 import androidx.compose.ui.unit.dp
+import mu.KotlinLogging
 import themes.radiusVerticesStart
 import viewmodels.graphs.VertexViewModel
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
+
+private val logger = KotlinLogging.logger("CircularPlacementStrategy")
 
 /**
  * A class that implements the [RepresentationStrategy] interface and places vertices in a circular pattern.
@@ -13,7 +16,7 @@ import kotlin.math.sin
 class CircularPlacementStrategy : RepresentationStrategy {
 	override fun place(width: Double, height: Double, vertices: Collection<VertexViewModel>) {
 		if (vertices.isEmpty()) {
-			println("CircularPlacementStrategy.place: there is nothing to place 👐🏻")
+			logger.info { "There is nothing to place: vertices collection is empty" }
 			return
 		}
 
