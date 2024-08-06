@@ -23,12 +23,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import models.SideMenuModel
 import models.utils.TabItem
+import mu.KotlinLogging
 import themes.JetTheme
 import utils.PageType
 import utils.AlgorithmTextButton
 import utils.ActionTextButton
 import utils.SideMenuTabType
 import viewmodels.pages.GraphPageViewModel
+
+private val logger = KotlinLogging.logger("SideMenuViewModel")
 
 /**
  * ViewModel for the side menu. Manages the tabs, their visibility, and the pages they correspond to.
@@ -170,6 +173,7 @@ class SideMenuViewModel(graphPageViewModel: GraphPageViewModel) {
 	 *  @see SideMenuModel.changeTabVisibility
 	 */
 	fun changeVisibility(tabType: SideMenuTabType, isHiddenState: Boolean) {
+		logger.info { "Changing visibility of tab $tabType to ${if (isHiddenState) "hidden" else "visible"}" }
 		sideMenuModel.changeTabVisibility(tabType, isHiddenState)
 	}
 }

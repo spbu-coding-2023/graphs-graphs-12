@@ -13,13 +13,23 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newCoroutineContext
 import models.SettingsModel
 import models.VertexID
 import models.utils.AlgorithmModel
+import mu.KotlinLogging
 import themes.JetTheme
 import utils.GraphSavingType
 import utils.PageType
@@ -30,6 +40,9 @@ import utils.placement_strategy.RepresentationStrategy
 import viewmodels.graphs.GraphViewModel
 import windowSizeStart
 import java.io.File
+import kotlin.coroutines.coroutineContext
+
+private val logger = KotlinLogging.logger("GraphPageViewModel")
 
 /**
  * ViewModel for the GraphPage. Manages the state of the graph, algorithms, and representation strategies.
@@ -46,6 +59,7 @@ import java.io.File
 class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: MutableState<Int>) {
 	private val _representationStrategy = mutableStateOf<RepresentationStrategy>(RandomPlacementStrategy())
 	private val _graph = mutableStateOf<GraphViewModel?>(null)
+	@OptIn(DelicateCoroutinesApi::class)
 	var representationStrategy: RepresentationStrategy
 		get() = _representationStrategy.value
 		set(newStrategy) {
@@ -54,10 +68,11 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 		}
 	var dbType = GraphSavingType.LOCAL_FILE
 	var dbPath = ""
+	@OptIn(DelicateCoroutinesApi::class)
 	var graphViewModel: GraphViewModel?
 		get() = _graph.value
 		set(newModel) {
-			save()
+			save() // TODO(is need on change graph)
 			_graph.value = newModel
 			if (newModel == null) indexSelectedPage.value = PageType.HOME_PAGE.ordinal
 			updateGraphRepresentation()
@@ -174,15 +189,17 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 	 * @see windowSizeStart
 	 * @see GraphViewModel.vertices
 	 */
+	@DelicateCoroutinesApi
 	private fun updateGraphRepresentation() {
-		// TODO(run it by coroutine scope)
 		// TODO(Create a dependency on the actual size of the program window, and not on the starting size)
 		val model = _graph.value ?: return
-		representationStrategy.place(
-			windowSizeStart.first.toDouble(),
-			windowSizeStart.second.toDouble(),
-			model.vertices
-		)
+		GlobalScope.launch {
+			representationStrategy.place(
+				windowSizeStart.first.toDouble(),
+				windowSizeStart.second.toDouble(),
+				model.vertices
+			)
+		}
 	}
 
 	/**
