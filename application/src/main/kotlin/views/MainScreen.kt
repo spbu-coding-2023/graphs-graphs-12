@@ -9,12 +9,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import models.JetSettings
+import mu.KotlinLogging
 import themes.MainTheme
+import utils.PageType
 import utils.SideMenuTabType
 import views.pages.GraphViewPage
 import views.pages.HomePage
 import views.pages.SettingsPage
 import viewmodels.MainScreenViewModel
+
+private val logger = KotlinLogging.logger("MainScreen")
 
 /**
  * MainScreen is the main composable function that represents the main screen of the application.
@@ -30,10 +34,9 @@ fun MainScreen(viewModel: MainScreenViewModel, jetSettings: JetSettings) {
 	val statePager = rememberPagerState { viewModel.sideMenuViewModel.pagesCount }
 	LaunchedEffect(viewModel.indexSelectedPage.value) {
 		if (viewModel.indexSelectedPage.value != statePager.currentPage) {
-			statePager.animateScrollToPage(viewModel.indexSelectedPage.value)
+			statePager.scrollToPage(viewModel.indexSelectedPage.value)
 		}
 	}
-
 	MainTheme(
 		style = jetSettings.currentStyle.value,
 		darkTheme = jetSettings.isDarkMode.value,
@@ -48,6 +51,10 @@ fun MainScreen(viewModel: MainScreenViewModel, jetSettings: JetSettings) {
 				state = statePager,
 				userScrollEnabled = false
 			) { pageIndex ->
+				if (pageIndex != viewModel.indexSelectedPage.value) {
+					return@VerticalPager
+				}
+				logger.info { "Select page: ${PageType.entries.getOrNull(pageIndex)}" }
 				when (pageIndex) {
 					viewModel.sideMenuViewModel.pageOfTab("Home") -> {
 						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, true)
@@ -55,7 +62,6 @@ fun MainScreen(viewModel: MainScreenViewModel, jetSettings: JetSettings) {
 						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.SAVE, true)
 						HomePage(viewModel.homePageViewModel)
 					}
-
 					viewModel.sideMenuViewModel.pageOfTab("GraphView") -> {
 						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.GRAPH_VIEW, false)
 						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, false)
