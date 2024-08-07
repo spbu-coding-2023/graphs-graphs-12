@@ -293,7 +293,7 @@ class GraphViewModel(
 				Random.nextInt(64, 223)
 			)
 			components[i]?.forEach { id ->
-				graph.vertexEdges(id).forEach inlineForEach@ {
+				graph.vertexEdges(id).forEach inlineForEach@{
 					val component = components[i] ?: return@inlineForEach
 					if (component.contains(it.idTarget)) {
 						val e = _edges[WeightedEdge(id, it.idTarget, 1.0)] ?: return@inlineForEach
@@ -329,7 +329,7 @@ class GraphViewModel(
 				Random.nextInt(64, 223)
 			)
 			cycle.forEach { id ->
-				graph.vertexEdges(id).forEach inlineForEach@ {
+				graph.vertexEdges(id).forEach inlineForEach@{
 					if (cycle.contains(it.idTarget)) {
 						val e = _edges[WeightedEdge(id, it.idTarget, 1.0)] ?: return@inlineForEach
 						e.color = color
@@ -355,11 +355,10 @@ class GraphViewModel(
 		val mst = resultAlgo.kruskalAlgorithm()
 		logger.info { "Kruskal's MST algorithm result: $mst" }
 
-
 		mst.forEach {
 			val idSource = it.idSource
 			val idTarget = it.idTarget
-			graph.vertexEdges(idSource).forEach inlineForEach@ { edge ->
+			graph.vertexEdges(idSource).forEach inlineForEach@{ edge ->
 				if (edge.idTarget == idTarget) {
 					val e = _edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)] ?: return@inlineForEach
 					e.color = Color(83, 55, 122) // Purple
@@ -387,7 +386,7 @@ class GraphViewModel(
 		mst.forEach {
 			val idSource = it.idSource
 			val idTarget = it.idTarget
-			graph.vertexEdges(idSource).forEach inlineForEach@ { edge ->
+			graph.vertexEdges(idSource).forEach inlineForEach@{ edge ->
 				if (edge.idTarget == idTarget) {
 					val e = _edges[WeightedEdge(edge.idSource, edge.idTarget, 1.0)] ?: return@inlineForEach
 					e.color = Color(83, 55, 122) // Purple
