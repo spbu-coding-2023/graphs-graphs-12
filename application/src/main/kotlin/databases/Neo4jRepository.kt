@@ -205,7 +205,6 @@ class Neo4jRepository : Closeable {
 		session.writeTransaction { tx ->
 			tx.run("match (v) - [e] -> () delete v, e")
 			tx.run("match (v) delete v")
-			println("Removed all data from Neo4j database")
 		}
 		logger.info { "Clear database" }
 	}
