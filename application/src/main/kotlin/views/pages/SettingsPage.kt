@@ -42,12 +42,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import models.JetSettings
+import mu.KotlinLogging
 import themes.JetCorners
 import themes.JetFontFamily
 import themes.JetSize
 import themes.JetStyle
 import themes.JetTheme
 import utils.MenuItemModel
+
+private val logger = KotlinLogging.logger("SettingsPage")
 
 /**
  * This is the main composable function for the Settings Page.
@@ -111,30 +114,15 @@ fun SettingsPage(jetSettings: JetSettings) {
 			MenuItem(
 				model = MenuItemModel(
 					title = "Font Family",
-					currentIndex = when (jetSettings.currentFontFamily.value) {
-						JetFontFamily.Default -> 0
-						JetFontFamily.Monospace -> 1
-						JetFontFamily.Cursive -> 2
-						JetFontFamily.Serif -> 3
-						JetFontFamily.SansSerif -> 4
-					},
-					values = listOf(
-						"Default",
-						"Monospace",
-						"Cursive",
-						"Serif",
-						"SansSerif"
-					)
+					currentIndex = jetSettings.currentFontFamily.value.ordinal,
+					values = JetFontFamily.entries
 				),
-				onItemSelected = {
-					when (it) {
-						0 -> jetSettings.currentFontFamily.value = JetFontFamily.Default
-						1 -> jetSettings.currentFontFamily.value = JetFontFamily.Monospace
-						2 -> jetSettings.currentFontFamily.value = JetFontFamily.Cursive
-						3 -> jetSettings.currentFontFamily.value = JetFontFamily.Serif
-						4 -> jetSettings.currentFontFamily.value = JetFontFamily.SansSerif
-						else -> throw NotImplementedError("No valid value for this font family $it")
+				onItemSelected = { order ->
+					val newFontFamily = JetFontFamily.entries.getOrElse(order) {
+						JetFontFamily.Default
 					}
+					jetSettings.currentFontFamily.value = newFontFamily
+					logger.info { "Change font family to $newFontFamily" }
 				}
 			)
 			Divider(
@@ -144,24 +132,15 @@ fun SettingsPage(jetSettings: JetSettings) {
 			MenuItem(
 				model = MenuItemModel(
 					title = "Font Size",
-					currentIndex = when (jetSettings.currentFontSize.value) {
-						JetSize.Small -> 0
-						JetSize.Medium -> 1
-						JetSize.Big -> 2
-					},
-					values = listOf(
-						"Small",
-						"Medium",
-						"Big"
-					)
+					currentIndex = jetSettings.currentFontSize.value.ordinal,
+					values = JetSize.entries
 				),
-				onItemSelected = {
-					when (it) {
-						0 -> jetSettings.currentFontSize.value = JetSize.Small
-						1 -> jetSettings.currentFontSize.value = JetSize.Medium
-						2 -> jetSettings.currentFontSize.value = JetSize.Big
-						else -> throw NotImplementedError("No valid value for this change size $it")
+				onItemSelected = { order ->
+					val newFontSize = JetSize.entries.getOrElse(order) {
+						JetSize.Medium
 					}
+					jetSettings.currentFontSize.value = newFontSize
+					logger.info { "Change font size to $newFontSize" }
 				}
 			)
 			Divider(
@@ -171,21 +150,15 @@ fun SettingsPage(jetSettings: JetSettings) {
 			MenuItem(
 				model = MenuItemModel(
 					title = "Corner Style",
-					currentIndex = when (jetSettings.currentCornersStyle.value) {
-						JetCorners.Rounded -> 0
-						JetCorners.Flat -> 1
-					},
-					values = listOf(
-						"Rounded",
-						"Flat",
-					)
+					currentIndex = jetSettings.currentCornersStyle.value.ordinal,
+					values = JetCorners.entries
 				),
-				onItemSelected = {
-					when (it) {
-						0 -> jetSettings.currentCornersStyle.value = JetCorners.Rounded
-						1 -> jetSettings.currentCornersStyle.value = JetCorners.Flat
-						else -> throw NotImplementedError("No valid value for this corner style $it")
+				onItemSelected = { order ->
+					val newCornerStyle = JetCorners.entries.getOrElse(order) {
+						JetCorners.Rounded
 					}
+					jetSettings.currentCornersStyle.value = newCornerStyle
+					logger.info { "Change corner style to $newCornerStyle" }
 				}
 			)
 			Divider(
@@ -195,30 +168,16 @@ fun SettingsPage(jetSettings: JetSettings) {
 			MenuItem(
 				model = MenuItemModel(
 					title = "Style",
-					currentIndex = when (jetSettings.currentStyle.value) {
-						JetStyle.Black -> 0
-						JetStyle.White -> 1
-						JetStyle.Purple -> 2
-						JetStyle.Orange -> 3
-						JetStyle.Pink -> 4
-					},
-					values = listOf(
-						"Black",
-						"White",
-						"Purple",
-						"Orange",
-						"Pink"
-					)
+					currentIndex = jetSettings.currentStyle.value.ordinal,
+					values = JetStyle.entries
 				),
-				onItemSelected = {
-					when (it) {
-						0 -> jetSettings.currentStyle.value = JetStyle.Black
-						1 -> jetSettings.currentStyle.value = JetStyle.White
-						2 -> jetSettings.currentStyle.value = JetStyle.Purple
-						3 -> jetSettings.currentStyle.value = JetStyle.Orange
-						4 -> jetSettings.currentStyle.value = JetStyle.Pink
-						else -> throw NotImplementedError("No valid value for this style $it")
+				onItemSelected =
+				{ order ->
+					val newAppStyle = JetStyle.entries.getOrElse(order) {
+						JetStyle.Black
 					}
+					jetSettings.currentStyle.value = newAppStyle
+					logger.info { "Change app style to $newAppStyle" }
 				}
 			)
 		}
@@ -234,8 +193,8 @@ fun SettingsPage(jetSettings: JetSettings) {
  * @param onItemSelected a callback function that will be invoked when an item is selected.
  */
 @Composable
-internal fun MenuItem(
-	model: MenuItemModel,
+internal fun <T> MenuItem(
+	model: MenuItemModel<T>,
 	onItemSelected: ((Int) -> Unit)? = null
 ) {
 	val isDropdownOpen = remember { mutableStateOf(false) }
@@ -253,9 +212,7 @@ internal fun MenuItem(
 			style = JetTheme.typography.body,
 			color = JetTheme.colors.secondaryText
 		)
-
 		Spacer(modifier = Modifier.weight(0.5f))
-
 		Button(
 			modifier = Modifier
 				.width(200.dp)
@@ -269,7 +226,7 @@ internal fun MenuItem(
 
 			) {
 			Text(
-				text = model.values[currentPosition.value],
+				text = model.values[currentPosition.value].toString(),
 				style = JetTheme.typography.body,
 			)
 			DropdownMenu(
@@ -286,7 +243,7 @@ internal fun MenuItem(
 							currentPosition.value = index
 							isDropdownOpen.value = false
 						},
-						text = { Text(model.values[index], style = JetTheme.typography.body) }
+						text = { Text(model.values[index].toString(), style = JetTheme.typography.body) }
 					)
 				}
 			}
@@ -320,13 +277,15 @@ fun ThemeSwitcher(
 		animationSpec = animationSpec
 	)
 	val offset by remember { offsetState }
-
 	Box(
 		modifier = Modifier
 			.width(size * 2)
 			.height(size)
 			.clip(shape = shape)
-			.clickable { onClick() }
+			.clickable {
+				onClick()
+				logger.info { "Switch theme to ${if (darkTheme) "DARK" else "LIGHT"}." }
+			}
 			.background(JetTheme.colors.primaryText)
 	) {
 		Box(
