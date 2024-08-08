@@ -1,0 +1,32 @@
+name: Coverage Report
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ main, develop ]
+
+
+jobs:
+  coverage:
+    name: Load Jacoco Report
+    runs-on: ubuntu-latest
+    permissions: write-all
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build and test
+        run: ./gradlew test
+        continue-on-error: true
+
+      - name: Run Coverage
+        run: ./gradlew jacocoTestReport
+
+      - name: Add coverage to PR
+        uses: madrapps/jacoco-report@v1.6.1
+        id: jacoco
+        with:
+          paths: ./graphs-lab/build/reports/jacoco/info.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 40
+          min-coverage-changed-files: 60
