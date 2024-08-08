@@ -16,6 +16,7 @@ import themes.JetStyle
 import utils.GraphSavingType
 import utils.PageType
 import utils.isLargeOnParamsThen
+import utils.valueOf
 import viewmodels.graphs.GraphViewModel
 import viewmodels.pages.GraphPageViewModel
 import java.io.File
@@ -261,7 +262,7 @@ class SettingsModel {
 			val file = File(settings.applicationContextDirectory, ".settings")
 
 			findOrCreateFile(file)
-			loadSettings(file, jetSettings)
+			loadSettings(file, settings, jetSettings)
 
 			return settings
 		}
@@ -270,35 +271,32 @@ class SettingsModel {
 		 * Reads the current customization parameters from [file] and writes them to [jetSettings].
 		 *
 		 * @param file storing current customization parameters
+		 * @param settings value of application settings
 		 * @param jetSettings an object that stores the current customization parameters
 		 */
-		private fun loadSettings(file: File, jetSettings: JetSettings) {
-			val converters = arrayOf<(String) -> Any>(
-				{ string -> JetStyle.valueOf(string) },
-				{ string -> JetSize.valueOf(string) },
-				{ string -> JetCorners.valueOf(string) },
-				{ string -> JetFontFamily.valueOf(string) }
-			)
-
-			file.readLines().withIndex().map { indexedValue -> indexedValue.index to indexedValue.value }
-				.forEach { (index, setting) ->
-					try {
-						when (index) {
-							0 -> jetSettings.currentStyle.value = converters[index](setting) as JetStyle
-							1 -> jetSettings.currentFontSize.value = converters[index](setting) as JetSize
-							2 -> jetSettings.currentCornersStyle.value = converters[index](setting) as JetCorners
-							3 -> jetSettings.currentFontFamily.value = converters[index](setting) as JetFontFamily
-							4 -> jetSettings.isDarkMode.value = setting.toBoolean()
-						}
-					} catch (illegalArgumentException: IllegalArgumentException) {
-						logger.info {
-							("LoadSettingsError: " +
-							"the element '$setting' in line $index doesn't match any element " +
-							"of the corresponding enumeration. " +
-							"Exception: ${illegalArgumentException.message}")
+		private fun loadSettings(file: File, settings: SettingsModel, jetSettings: JetSettings) {
+			file.readLines().forEachIndexed { index, setting ->
+				try {
+					when (index) {
+						0 -> jetSettings.currentStyle.value = JetStyle.valueOf(setting)
+						1 -> jetSettings.currentFontSize.value = JetSize.valueOf(setting)
+						2 -> jetSettings.currentCornersStyle.value = JetCorners.valueOf(setting)
+						3 -> jetSettings.currentFontFamily.value = JetFontFamily.valueOf(setting)
+						4 -> jetSettings.isDarkMode.value = setting.toBoolean()
+						5 -> settings.actualWindowSize = IntSize.valueOf(setting)
+						else -> logger.warn {
+							"Unexpected $index line on settings file ${file.absolutePath}: $setting."
 						}
 					}
+				} catch (illegalArgumentException: IllegalArgumentException) {
+					logger.info {
+						("LoadSettingsError: " +
+						"the element '$setting' in line $index doesn't match any element " +
+						"of the corresponding enumeration. " +
+						"Exception: ${illegalArgumentException.message}")
+					}
 				}
+			}
 		}
 	}
 }
