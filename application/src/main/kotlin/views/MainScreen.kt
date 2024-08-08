@@ -46,44 +46,38 @@ fun MainScreen(viewModel: MainScreenViewModel, jetSettings: JetSettings) {
 		corners = jetSettings.currentCornersStyle.value,
 		fonts = jetSettings.currentFontFamily.value,
 	) {
-		Box(
-			Modifier.onGloballyPositioned { coordinates ->
-				viewModel.settings.actualWindowSize = coordinates.size
-			}
-		) {
-			Row(Modifier.fillMaxSize()) { // todo(add padding and delete other places)
-				SideMenu(statePager, viewModel.indexSelectedPage, viewModel.sideMenuViewModel)
-				VerticalPager(
-					modifier = Modifier.fillMaxSize(),
-					state = statePager,
-					userScrollEnabled = false
-				) { pageIndex ->
-					if (pageIndex != viewModel.indexSelectedPage.value) {
-						return@VerticalPager
+		Row(Modifier.fillMaxSize()) { // todo(add padding and delete other places)
+			SideMenu(statePager, viewModel.indexSelectedPage, viewModel.sideMenuViewModel)
+			VerticalPager(
+				modifier = Modifier.fillMaxSize(),
+				state = statePager,
+				userScrollEnabled = false
+			) { pageIndex ->
+				if (pageIndex != viewModel.indexSelectedPage.value) {
+					return@VerticalPager
+				}
+				logger.info { "Select page: ${PageType.entries.getOrNull(pageIndex)}" }
+				when (pageIndex) {
+					viewModel.sideMenuViewModel.pageOfTab("Home") -> {
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, true)
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.REPRESENTATION, true)
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.SAVE, true)
+						HomePage(viewModel.homePageViewModel)
 					}
-					logger.info { "Select page: ${PageType.entries.getOrNull(pageIndex)}" }
-					when (pageIndex) {
-						viewModel.sideMenuViewModel.pageOfTab("Home") -> {
-							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, true)
-							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.REPRESENTATION, true)
-							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.SAVE, true)
-							HomePage(viewModel.homePageViewModel)
-						}
-						viewModel.sideMenuViewModel.pageOfTab("GraphView") -> {
-							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.GRAPH_VIEW, false)
-							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, false)
-							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.REPRESENTATION, false)
-							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.SAVE, false)
-							GraphViewPage(viewModel.graphPageViewModel)
-						}
-						viewModel.sideMenuViewModel.pageOfTab("Settings") -> {
-							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, true)
-							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.REPRESENTATION, true)
-							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.SAVE, true)
-							SettingsPage(jetSettings)
-						}
-						else -> { HomePage(viewModel.homePageViewModel) }
+					viewModel.sideMenuViewModel.pageOfTab("GraphView") -> {
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.GRAPH_VIEW, false)
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, false)
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.REPRESENTATION, false)
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.SAVE, false)
+						GraphViewPage(viewModel.graphPageViewModel)
 					}
+					viewModel.sideMenuViewModel.pageOfTab("Settings") -> {
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, true)
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.REPRESENTATION, true)
+						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.SAVE, true)
+						SettingsPage(jetSettings)
+					}
+					else -> { HomePage(viewModel.homePageViewModel) }
 				}
 			}
 		}
