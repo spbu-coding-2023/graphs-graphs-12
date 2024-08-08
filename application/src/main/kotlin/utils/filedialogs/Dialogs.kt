@@ -36,9 +36,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogState
 import androidx.compose.ui.window.DialogWindow
 import androidx.compose.ui.window.WindowPosition
+import mu.KotlinLogging
 import themes.JetTheme
 import themes.sizeBottom
 import java.io.File
+
+private val logger = KotlinLogging.logger("FileDialogs")
 
 /**
  * A composable function that displays a dialog window for selecting a file or directory.
@@ -222,6 +225,9 @@ fun DirectoryPickerDialog(
 	onCloseRequest: (() -> Unit),
 	onChooseDirectory: ((File) -> Unit)? = null,
 ) {
+	if (isOpen) {
+		logger.info { "Open DirectoryPickerDialog for directory: $initDirectory" }
+	}
 	PickerDialog(
 		isOpen,
 		rememberVectorPainter(Icons.Filled.FolderOpen),
@@ -261,6 +267,9 @@ fun FilePickerDialog(
 	onChooseFile: ((File) -> Unit)? = null,
 	fileExtension: List<Regex> = listOf()
 ) {
+	if (isOpen) {
+		logger.info { "Open FilePickerDialog with init directory: $initDirectory" }
+	}
 	PickerDialog(
 		isOpen,
 		rememberVectorPainter(Icons.Filled.FileOpen),

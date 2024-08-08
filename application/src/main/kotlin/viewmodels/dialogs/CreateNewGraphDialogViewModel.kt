@@ -2,10 +2,13 @@ package viewmodels.dialogs
 
 import androidx.compose.runtime.mutableStateOf
 import models.SettingsModel
+import mu.KotlinLogging
 import utils.GraphSavingType
 import utils.VertexIDType
 import viewmodels.pages.HomePageViewModel
 import java.io.File
+
+private val logger = KotlinLogging.logger("CreateNewGraphDialogViewModel")
 
 /**
  * ViewModel for the Create New Graph Dialog.
@@ -52,6 +55,7 @@ class CreateNewGraphDialogViewModel(val homePageViewModel: HomePageViewModel) {
 	 * @see SettingsModel.graphNameRegEx for the regular expression used to validate the graph name
 	 */
 	fun isValidGraphName(newGraphName: String): Boolean {
+		logger.info { "Validate graph name: $newGraphName" }
 		return settings.graphNameRegEx.matches(newGraphName)
 	}
 
@@ -70,13 +74,14 @@ class CreateNewGraphDialogViewModel(val homePageViewModel: HomePageViewModel) {
 	 * @see saveFolder
 	 */
 	fun updateSaveFolder(saveType: GraphSavingType) {
+		logger.info { "Update save folder for saving type: $saveType" }
 		if (!isCustomSaveDirectory.value) {
 			when (saveType) {
 				GraphSavingType.LOCAL_FILE ->
 					saveFolder.value = localFileSavingDirectory
 				GraphSavingType.SQLITE_DB ->
 					saveFolder.value = sqliteSavingDirectory
-				else -> println("Choose saving type of graph as $saveType.")
+				else -> logger.warn { "Unsaving directory saving type of graph: $saveType." }
 			}
 		}
 	}

@@ -17,6 +17,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import models.SettingsModel
 import models.VertexID
 import models.utils.AlgorithmModel
@@ -46,6 +49,8 @@ import java.io.File
 class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: MutableState<Int>) {
 	private val _representationStrategy = mutableStateOf<RepresentationStrategy>(RandomPlacementStrategy())
 	private val _graph = mutableStateOf<GraphViewModel?>(null)
+
+	@OptIn(DelicateCoroutinesApi::class)
 	var representationStrategy: RepresentationStrategy
 		get() = _representationStrategy.value
 		set(newStrategy) {
@@ -54,10 +59,12 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 		}
 	var dbType = GraphSavingType.LOCAL_FILE
 	var dbPath = ""
+
+	@OptIn(DelicateCoroutinesApi::class)
 	var graphViewModel: GraphViewModel?
 		get() = _graph.value
 		set(newModel) {
-			save()
+			save() // TODO(is need on change graph)
 			_graph.value = newModel
 			if (newModel == null) indexSelectedPage.value = PageType.HOME_PAGE.ordinal
 			updateGraphRepresentation()
@@ -174,15 +181,17 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 	 * @see windowSizeStart
 	 * @see GraphViewModel.vertices
 	 */
+	@DelicateCoroutinesApi
 	private fun updateGraphRepresentation() {
-		// TODO(run it by coroutine scope)
 		// TODO(Create a dependency on the actual size of the program window, and not on the starting size)
 		val model = _graph.value ?: return
-		representationStrategy.place(
-			windowSizeStart.first.toDouble(),
-			windowSizeStart.second.toDouble(),
-			model.vertices
-		)
+		GlobalScope.launch {
+			representationStrategy.place(
+				windowSizeStart.first.toDouble(),
+				windowSizeStart.second.toDouble(),
+				model.vertices
+			)
+		}
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package utils.placement_strategy
 
 import androidx.compose.ui.unit.dp
+import mu.KotlinLogging
 import themes.radiusVerticesStart
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
@@ -8,6 +9,8 @@ import kotlin.math.abs
 import kotlin.math.log2
 import kotlin.math.pow
 import kotlin.math.sqrt
+
+private val logger = KotlinLogging.logger("ForceDirectedPlacementStrategy")
 
 /**
  * Error message of unexpected algorithm behavior.
@@ -32,9 +35,6 @@ const val StandardErrorMessage = "Undefined behaviour: an unfounded vertex."
 class ForceDirectedPlacementStrategy(
 	private val viewModel: GraphViewModel,
 ) : RepresentationStrategy {
-	/**
-	 * Places the [viewModel] vertices on an imaginary canvas.
-	 */
 	override fun place(width: Double, height: Double, vertices: Collection<VertexViewModel>) {
 		placeForceDirected(
 			width,
@@ -93,10 +93,13 @@ class ForceDirectedPlacementStrategy(
 		kTolerance: Double,
 		inaccuracy: Double
 	) {
-		if (viewModel.vertices.isEmpty()) return
+		if (viewModel.vertices.isEmpty()) {
+			logger.info { "There is nothing to place: vertices collection is empty" }
+			return
+		}
 		if (width <= 0 || height <= 0) {
 			// TODO(Log about all koefs)
-			println("ForceDirectedPlacementStrategy.place: invalid canvas dimensions, by koefs: $kDegree")
+			logger.info { "invalid canvas dimensions, by coefficient: $kDegree" }
 			return
 		}
 

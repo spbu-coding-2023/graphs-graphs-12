@@ -6,6 +6,7 @@ import androidx.compose.ui.unit.dp
 import graphs_lab.core.graphs.WeightedGraph
 import models.VertexID
 import models.WeightedUnweightedGraph
+import mu.KotlinLogging
 import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
@@ -15,6 +16,8 @@ import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
 import java.io.BufferedReader
 import java.io.BufferedWriter
+
+private val logger = KotlinLogging.logger("GraphJSONDatabase")
 
 /**
  * Graph json database.
@@ -75,6 +78,7 @@ class GraphJSONDatabase : FileDatabase<GraphViewModel>(".json") {
 				edgeJSONObject.getDouble("weight")
 			)
 		}
+		logger.info { "Load graph: $graph" }
 		return graphViewModel
 	}
 
@@ -90,6 +94,7 @@ class GraphJSONDatabase : FileDatabase<GraphViewModel>(".json") {
 			)
 		)
 		graphJSONObject.write(writer, 1, 0)
+		logger.info { "Save graph: ${obj.graph}" }
 	}
 
 	/**

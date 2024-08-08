@@ -1,9 +1,12 @@
 package utils.placement_strategy
 
 import androidx.compose.ui.unit.dp
+import mu.KotlinLogging
 import themes.radiusVerticesStart
 import viewmodels.graphs.VertexViewModel
 import kotlin.random.Random
+
+private val logger = KotlinLogging.logger("RandomPlacementStrategy")
 
 /**
  * A class representing a random placement strategy for vertex placement in a graph representation.
@@ -13,6 +16,10 @@ import kotlin.random.Random
 class RandomPlacementStrategy : RepresentationStrategy {
 	private val randomizer = Random(Random.nextLong())
 	override fun place(width: Double, height: Double, vertices: Collection<VertexViewModel>) {
+		if (vertices.isEmpty()) {
+			logger.info { "There is nothing to place: vertices collection is empty" }
+			return
+		}
 		vertices.forEach { vertex ->
 			vertex.xPos = randomizer.nextDouble(
 				radiusVerticesStart.value.toDouble(),

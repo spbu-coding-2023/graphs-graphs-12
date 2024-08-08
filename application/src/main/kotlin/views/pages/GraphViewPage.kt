@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import graphs_lab.core.edges.WeightedEdge
 import models.VertexID
+import mu.KotlinLogging
 import themes.JetTheme
 import themes.colorEdgesStart
 import themes.colorVerticesStart
@@ -72,6 +73,8 @@ import viewmodels.graphs.VertexViewModel
 import viewmodels.pages.GraphPageViewModel
 import views.graphs.GraphView
 import views.graphs.colorChangeFlag
+
+private val logger = KotlinLogging.logger("GraphViewPage")
 
 /**
  * This is a composable function for representing [GraphViewModel].
@@ -152,12 +155,14 @@ fun MenuInteraction(
 ) {
 	val isShownWeigh = remember { mutableStateOf(false) }
 	LaunchedEffect(isShownWeigh.value) {
+		logger.info { "Change visibility of vertex ID to ${if (isShownWeigh.value) "visible" else "hidden"}" }
 		graphViewModel.edges.forEach {
 			it.visibility = isShownWeigh.value
 		}
 	}
 	val isShownId = remember { mutableStateOf(true) }
 	LaunchedEffect(isShownId.value) {
+		logger.info { "Change visibility of vertex ID to ${if (isShownId.value) "visible" else "hidden"}" }
 		graphViewModel.vertices.forEach {
 			it.visibility = isShownId.value
 		}
@@ -812,6 +817,7 @@ fun ButtonResetGraphDisplay(
 	Column(modifierParent) {
 		IconButton(
 			onClick = {
+				logger.info { "Clear algorithms results" }
 				colorChangeFlag.value = true
 
 				graphViewModel.vertices.forEach {
@@ -847,7 +853,10 @@ fun ButtonResetGraphDisplay(
 @Composable
 fun ButtonOpeningMenuGraph(isOpenedMenuGraph: MutableState<Boolean>, modifierButton: Modifier) {
 	IconButton(
-		onClick = { isOpenedMenuGraph.value = !isOpenedMenuGraph.value },
+		onClick = {
+			logger.info { "Update graph menu visibility to ${if (!isOpenedMenuGraph.value) "visible" else "hidden"}" }
+			isOpenedMenuGraph.value = !isOpenedMenuGraph.value
+		},
 		modifier = modifierButton.pointerHoverIcon(PointerIcon.Hand),
 		content = {
 			Icon(

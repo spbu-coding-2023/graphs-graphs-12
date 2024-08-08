@@ -88,10 +88,9 @@ fun SideMenuTabColumn(
 				Tab(
 					selected = statePager.currentPage == indexItemPage,
 					onClick = {
-						if (onItemClick != null) { onItemClick() } else { expanded = true }
-						if (item.isSelectablePage) {
-							coroutineScope.launch {
-								statePager.scrollToPage(indexItemPage)
+						coroutineScope.launch {
+							if (onItemClick != null) { onItemClick() } else { expanded = true }
+							if (item.isSelectablePage) {
 								indexSelectedPage.value = indexItemPage
 							}
 						}

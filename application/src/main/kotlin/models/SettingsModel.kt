@@ -5,6 +5,7 @@ import databases.Neo4jRepository
 import databases.SQLiteRepository
 import findOrCreateFile
 import models.utils.GraphInfo
+import mu.KotlinLogging
 import org.neo4j.driver.exceptions.Neo4jException
 import org.neo4j.driver.exceptions.ServiceUnavailableException
 import themes.JetCorners
@@ -18,6 +19,8 @@ import viewmodels.pages.GraphPageViewModel
 import java.io.File
 import java.io.IOException
 import java.sql.SQLException
+
+private val logger = KotlinLogging.logger("SettingsModel")
 
 /**
  * The SettingsModel class is responsible for managing application settings,
@@ -36,7 +39,11 @@ class SettingsModel {
 	val applicationContextDirectory = File(System.getProperty("user.home"), "graph-lab")
 
 	init {
+		logger.info { "Initializing application settings" }
 		if (!applicationContextDirectory.exists()) {
+			logger.warn {
+				"Not found application context directory: $applicationContextDirectory. It will created now."
+			}
 			applicationContextDirectory.mkdirs()
 		}
 	}
@@ -54,9 +61,9 @@ class SettingsModel {
 			neo4jDB.connect(uri, user, password)
 			isNeo4jConnected = true
 		} catch (ex: ServiceUnavailableException) {
-			println("Can't access to Neo4J: ${ex.message}")
+			logger.error { "Neo4jError: ${ex.localizedMessage}" }
 		} catch (ex: IllegalArgumentException) {
-			println("Neo4j invalid connection: ${ex.message}")
+			logger.error { "Neo4jError(${ex::javaClass.name}): ${ex.localizedMessage}" }
 		}
 	}
 
@@ -75,6 +82,7 @@ class SettingsModel {
 		folderPath: String
 	): GraphInfo? {
 		val graphViewModel = graphPageViewModel.graphViewModel ?: return null
+		logger.info { "Start saving of graph: ${graphViewModel.graph.label}" }
 		when (savingType) {
 			GraphSavingType.LOCAL_FILE -> { saveGraphByJSON(graphViewModel, folderPath) }
 			GraphSavingType.NEO4J_DB -> {
@@ -83,6 +91,7 @@ class SettingsModel {
 			}
 			GraphSavingType.SQLITE_DB -> { saveGraphBySQLite(graphViewModel, folderPath) }
 		}
+		logger.info { "Graph ${graphViewModel.graph.label} saved successfully" }
 		return GraphInfo(
 			graphViewModel.graph.label,
 			folderPath,
@@ -126,7 +135,7 @@ class SettingsModel {
 			graphPageViewModel.dbType = GraphSavingType.SQLITE_DB
 			graphPageViewModel.dbPath = path
 		} catch (ex: SQLException) {
-			println("Load SQLite error: ${ex.message}")
+			logger.info { "SQLiteLoadError: ${ex.message}" }
 			return false
 		}
 		return true
@@ -142,7 +151,7 @@ class SettingsModel {
 		try {
 			sqliteDB.writeDb(graphViewModel, folderPath)
 		} catch (ex: SQLException) {
-			println("Save SQLite error: ${ex.message}")
+			logger.info { "SQLiteSaveError: ${ex.message}" }
 		}
 	}
 
@@ -155,7 +164,7 @@ class SettingsModel {
 	 */
 	fun loadGraphFromNEO4J(graphPageViewModel: GraphPageViewModel): Boolean {
 		if (!isNeo4jConnected) {
-			println("Can't load graph because not found connection to neo4j DB")
+			logger.info { "Can't load graph, because not found connection to Neo4jDatabase" }
 			return false
 		}
 		try {
@@ -163,9 +172,9 @@ class SettingsModel {
 			graphPageViewModel.indexSelectedPage.value = PageType.GRAPH_VIEW_PAGE.ordinal
 			graphPageViewModel.dbType = GraphSavingType.NEO4J_DB
 			graphPageViewModel.dbPath = ""
-		// TODO(check handling of exceptions)
+			// TODO(check handling of exceptions)
 		} catch (ex: Neo4jException) {
-			println("Load neo4j error: ${ex.message}")
+			logger.info { "Neo4jLoadError: ${ex.message}" }
 			return false
 		}
 		return true
@@ -187,7 +196,7 @@ class SettingsModel {
 			graphPageViewModel.dbType = GraphSavingType.LOCAL_FILE
 			graphPageViewModel.dbPath = path
 		} catch (ex: IOException) {
-			println("Load JSON error: ${ex.message}")
+			logger.info { "JSONLoadError: ${ex.message}" }
 			return false
 		}
 		return true
@@ -200,14 +209,14 @@ class SettingsModel {
 	 */
 	private fun saveGraphByNeo4j(graphPageViewModel: GraphPageViewModel) {
 		if (!isNeo4jConnected) {
-			println("Can't save graph because not found connection to neo4j DB")
+			logger.info { "Can't save graph, because not found connection to Neo4jDatabase" }
 			return
 		}
 		try {
 			neo4jDB.writeData(graphPageViewModel)
-		// TODO(check handling of exceptions)
+			// TODO(check handling of exceptions)
 		} catch (ex: Neo4jException) {
-			println("Save neo4j error: ${ex.message}")
+			logger.info { "Neo4jSaveError: ${ex.message}" }
 		}
 	}
 
@@ -222,7 +231,7 @@ class SettingsModel {
 		try {
 			jsonDB.save(file, graphViewModel)
 		} catch (ex: IOException) {
-			println("Save JSON error: ${ex.message}")
+			logger.info { "JSONSaveError: ${ex.message}" }
 		}
 	}
 
@@ -270,11 +279,12 @@ class SettingsModel {
 							4 -> jetSettings.isDarkMode.value = setting.toBoolean()
 						}
 					} catch (illegalArgumentException: IllegalArgumentException) {
-						println(
-							"The element '$setting' in line $index doesn't match any element " +
+						logger.info {
+							("LoadSettingsError: " +
+							"the element '$setting' in line $index doesn't match any element " +
 							"of the corresponding enumeration. " +
-							"Exception: ${illegalArgumentException.message}"
-						)
+							"Exception: ${illegalArgumentException.message}")
+						}
 					}
 				}
 		}

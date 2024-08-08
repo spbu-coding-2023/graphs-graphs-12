@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import mu.KotlinLogging
 import themes.JetTheme
 import themes.sizeBottom
 import java.io.BufferedReader
@@ -39,6 +40,8 @@ import java.io.File
 import java.io.FileReader
 import java.text.SimpleDateFormat
 import java.util.*
+
+private val logger = KotlinLogging.logger("FileDialogs.Widgets")
 
 /**
  * This function is used to display an empty content screen with a specified message and an icon.
@@ -51,6 +54,7 @@ fun EmptyContent(
 	modifier: Modifier = Modifier,
 	message: String = "Can't open content"
 ) {
+	logger.warn { "Open empty content: $message" }
 	Column(modifier) {
 		Icon(Icons.Filled.NotAccessible, message)
 	}
@@ -70,7 +74,7 @@ fun FileContent(
 	if (!file.isFile) {
 		EmptyContent(
 			modifier,
-			"Can't open content of ${file.absolutePath}"
+			"Can't open content of file: ${file.absolutePath}"
 		)
 	} else if (!file.exists()) {
 		EmptyContent(
@@ -78,6 +82,7 @@ fun FileContent(
 			"File ${file.absolutePath} not exists"
 		)
 	} else {
+		logger.info { "Display content of file: ${file.absolutePath}" }
 		val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
 		Column(
 			modifier.border(0.5.dp, Color.Black, RectangleShape).padding(0.25.dp),
@@ -151,14 +156,15 @@ fun DirectoryContent(
 	if (!directory.isDirectory) {
 		EmptyContent(
 			modifier,
-			"Can't open content of ${directory.absolutePath}"
+			"Can't open content of ${directory.absolutePath}, bacause it's not a directory"
 		)
 	} else if (!directory.exists()) {
 		EmptyContent(
 			modifier,
-			"File ${directory.absolutePath} not exists"
+			"Directory ${directory.absolutePath} not exists"
 		)
 	} else {
+		logger.info { "Display content of directory: $directory" }
 		var chosenFile by remember { mutableStateOf<File?>(null) }
 		Box(
 			modifier

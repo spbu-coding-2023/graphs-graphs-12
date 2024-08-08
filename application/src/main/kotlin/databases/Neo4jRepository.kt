@@ -5,6 +5,7 @@ import androidx.compose.ui.unit.dp
 import graphs_lab.core.graphs.WeightedGraph
 import models.VertexID
 import models.WeightedUnweightedGraph
+import mu.KotlinLogging
 import org.neo4j.driver.AuthTokens
 import org.neo4j.driver.Driver
 import org.neo4j.driver.GraphDatabase
@@ -13,6 +14,8 @@ import utils.VertexIDType
 import viewmodels.graphs.GraphViewModel
 import viewmodels.pages.GraphPageViewModel
 import java.io.Closeable
+
+private val logger = KotlinLogging.logger("Neo4jDatabase")
 
 /**
  * [Neo4jRepository] class is responsible for connecting, writing, reading, and clearing data in Neo4j database.
@@ -32,7 +35,7 @@ class Neo4jRepository : Closeable {
 		driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password))
 		driver.verifyConnectivity()
 		session = driver.session()
-		println("Connected to Neo4j database")
+		logger.info { "Connected to Neo4j database" }
 	}
 
 	/**
@@ -89,7 +92,7 @@ class Neo4jRepository : Closeable {
 			}
 		}
 
-		println("Graph was saved")
+		logger.info { "Save graph: ${graphPageView.graphViewModel?.graph}" }
 	}
 
 	/**
@@ -191,7 +194,7 @@ class Neo4jRepository : Closeable {
 				it.degree = vertex.degree
 			}
 		}
-		println("Graph was loaded")
+		logger.info { "Load graph: ${graphPageView.graphViewModel?.graph}" }
 	}
 
 	/**
@@ -202,8 +205,8 @@ class Neo4jRepository : Closeable {
 		session.writeTransaction { tx ->
 			tx.run("match (v) - [e] -> () delete v, e")
 			tx.run("match (v) delete v")
-			println("Removed all data from Neo4j database")
 		}
+		logger.info { "Clear database" }
 	}
 
 	/**
