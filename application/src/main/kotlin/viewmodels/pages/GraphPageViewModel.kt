@@ -177,7 +177,7 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 	 * of the graph model.
 	 *
 	 * @see RepresentationStrategy.place
-	 * @see windowSizeStart
+	 * @see SettingsModel.actualWindowSize
 	 * @see GraphViewModel.vertices
 	 */
 	@DelicateCoroutinesApi
