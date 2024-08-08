@@ -50,7 +50,7 @@ fun main() {
 		val mainScreenViewModel = MainScreenViewModel(settings)
 		val windowState = rememberWindowState(
 			position = WindowPosition(Alignment.Center),
-			size = DpSize(settings.actualWindowSize.width.dp, settings.minimalWindowSize.height.dp)
+			size = DpSize(settings.actualWindowSize.width.dp, settings.actualWindowSize.height.dp)
 		)
 		Window(
 			onCloseRequest = {
