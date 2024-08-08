@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import graphs_lab.core.graphs.WeightedGraph
+import models.SettingsModel
 import models.VertexID
 import mu.KotlinLogging
 import utils.VertexIDType
@@ -18,8 +19,10 @@ private val logger = KotlinLogging.logger("SQLiteDatabase")
 
 /**
  * A class responsible for writing and loading graphs to/from a SQLite database.
+ *
+ * @property settings application settings to valid init loaded graphs
  */
-class SQLiteRepository {
+class SQLiteRepository(val settings: SettingsModel) {
 	/**
 	 * Writes the given graph to a SQLite database in the specified folder path.
 	 *
@@ -257,7 +260,12 @@ class SQLiteRepository {
 				val isAutoAddVertex = resultGraphs!!.getBoolean(5)
 
 				val typeId = if (type == "String") VertexIDType.STRING_TYPE else VertexIDType.INT_TYPE
-				graphViewModel = GraphViewModel(WeightedGraph(label, isDirected, isAutoAddVertex), typeId, !isWeighted)
+				graphViewModel = GraphViewModel(
+					WeightedGraph(label, isDirected, isAutoAddVertex),
+					typeId,
+					!isWeighted,
+					settings
+				)
 
 				while (resultVertices!!.next()) {
 					val id = resultVertices!!.getString(1)

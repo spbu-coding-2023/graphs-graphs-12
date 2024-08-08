@@ -1,6 +1,7 @@
 package views
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.VerticalPager
@@ -8,6 +9,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
 import models.JetSettings
 import mu.KotlinLogging
 import themes.MainTheme
@@ -44,38 +46,44 @@ fun MainScreen(viewModel: MainScreenViewModel, jetSettings: JetSettings) {
 		corners = jetSettings.currentCornersStyle.value,
 		fonts = jetSettings.currentFontFamily.value,
 	) {
-		Row(Modifier.fillMaxSize()) { // todo(add padding and delete other places)
-			SideMenu(statePager, viewModel.indexSelectedPage, viewModel.sideMenuViewModel)
-			VerticalPager(
-				modifier = Modifier.fillMaxSize(),
-				state = statePager,
-				userScrollEnabled = false
-			) { pageIndex ->
-				if (pageIndex != viewModel.indexSelectedPage.value) {
-					return@VerticalPager
-				}
-				logger.info { "Select page: ${PageType.entries.getOrNull(pageIndex)}" }
-				when (pageIndex) {
-					viewModel.sideMenuViewModel.pageOfTab("Home") -> {
-						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, true)
-						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.REPRESENTATION, true)
-						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.SAVE, true)
-						HomePage(viewModel.homePageViewModel)
+		Box(
+			Modifier.onGloballyPositioned { coordinates ->
+				viewModel.settings.actualWindowSize = coordinates.size
+			}
+		) {
+			Row(Modifier.fillMaxSize()) { // todo(add padding and delete other places)
+				SideMenu(statePager, viewModel.indexSelectedPage, viewModel.sideMenuViewModel)
+				VerticalPager(
+					modifier = Modifier.fillMaxSize(),
+					state = statePager,
+					userScrollEnabled = false
+				) { pageIndex ->
+					if (pageIndex != viewModel.indexSelectedPage.value) {
+						return@VerticalPager
 					}
-					viewModel.sideMenuViewModel.pageOfTab("GraphView") -> {
-						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.GRAPH_VIEW, false)
-						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, false)
-						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.REPRESENTATION, false)
-						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.SAVE, false)
-						GraphViewPage(viewModel.graphPageViewModel)
+					logger.info { "Select page: ${PageType.entries.getOrNull(pageIndex)}" }
+					when (pageIndex) {
+						viewModel.sideMenuViewModel.pageOfTab("Home") -> {
+							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, true)
+							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.REPRESENTATION, true)
+							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.SAVE, true)
+							HomePage(viewModel.homePageViewModel)
+						}
+						viewModel.sideMenuViewModel.pageOfTab("GraphView") -> {
+							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.GRAPH_VIEW, false)
+							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, false)
+							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.REPRESENTATION, false)
+							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.SAVE, false)
+							GraphViewPage(viewModel.graphPageViewModel)
+						}
+						viewModel.sideMenuViewModel.pageOfTab("Settings") -> {
+							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, true)
+							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.REPRESENTATION, true)
+							viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.SAVE, true)
+							SettingsPage(jetSettings)
+						}
+						else -> { HomePage(viewModel.homePageViewModel) }
 					}
-					viewModel.sideMenuViewModel.pageOfTab("Settings") -> {
-						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.ALGORITHMS, true)
-						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.REPRESENTATION, true)
-						viewModel.sideMenuViewModel.changeVisibility(SideMenuTabType.SAVE, true)
-						SettingsPage(jetSettings)
-					}
-					else -> { HomePage(viewModel.homePageViewModel) }
 				}
 			}
 		}

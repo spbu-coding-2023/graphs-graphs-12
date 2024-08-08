@@ -18,12 +18,12 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import models.SettingsModel
 import themes.colorVerticesStart
 import themes.whiteCustom
 import utils.placement_strategy.ForceDirectedPlacementStrategy
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
-import windowSizeStart
 
 // TODO(move its params to SettingsModel)
 private var curVertexColor: Color = colorVerticesStart
@@ -39,6 +39,7 @@ internal val colorChangeFlag: MutableState<Boolean> = mutableStateOf(false)
  * @param idVerticesInfo a mutable state holding the currently selected vertex
  * @param coroutinePlace a coroutine scope for running placement algorithms
  * @param isKeyboardPressed a mutable state indicating whether the shift key is pressed
+ * @param settings application settings to depends on actual window size
  */
 @Composable
 fun VertexView(
@@ -48,7 +49,8 @@ fun VertexView(
 	graphViewModel: GraphViewModel,
 	idVerticesInfo: MutableState<VertexViewModel?>,
 	coroutinePlace: CoroutineScope,
-	isKeyboardPressed: MutableState<Boolean>
+	isKeyboardPressed: MutableState<Boolean>,
+	settings: SettingsModel
 ) {
 	Canvas(Modifier) {
 		drawCircle(
@@ -104,8 +106,8 @@ fun VertexView(
 					vertexViewModel.onDrag(dragAmount)
 					coroutinePlace.launch {
 						ForceDirectedPlacementStrategy(graphViewModel).placeWithoutVertex(
-							windowSizeStart.second.toDouble(),
-							windowSizeStart.second.toDouble(),
+							settings.actualWindowSize.width.toDouble(),
+							settings.actualWindowSize.height.toDouble(),
 							vertexViewModel
 						)
 					}

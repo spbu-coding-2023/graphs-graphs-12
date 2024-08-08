@@ -24,6 +24,7 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
 import kotlinx.coroutines.Dispatchers
+import models.SettingsModel
 import themes.JetTheme
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
@@ -36,6 +37,7 @@ import viewmodels.graphs.VertexViewModel
  * @param idVerticesInfo a mutable state to hold the selected vertex's ViewModel
  * @param centerBox the initial center position of the graph
  * @param changeCenter a mutable state to indicate if the center position needs to be reset
+ * @param settings application settings to depends on actual window size
  */
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -43,7 +45,8 @@ fun GraphView(
 	graphViewModel: GraphViewModel,
 	idVerticesInfo: MutableState<VertexViewModel?>,
 	centerBox: Offset,
-	changeCenter: MutableState<Boolean>
+	changeCenter: MutableState<Boolean>,
+	settings: SettingsModel
 ) {
 	var zoom by remember { mutableFloatStateOf(0.80f) }
 	val zoomAnimated by animateFloatAsState(zoom, tween(200, 0, LinearOutSlowInEasing))
@@ -83,7 +86,16 @@ fun GraphView(
 
 		val isKeyboardPressed = remember { mutableStateOf(false) }
 		graphViewModel.vertices.forEach { vertexViewModel ->
-			VertexView(vertexViewModel, center, zoomAnimated, graphViewModel, idVerticesInfo, coroutinePlace, isKeyboardPressed)
+			VertexView(
+				vertexViewModel,
+				center,
+				zoomAnimated,
+				graphViewModel,
+				idVerticesInfo,
+				coroutinePlace,
+				isKeyboardPressed,
+				settings
+			)
 		}
 	}
 }

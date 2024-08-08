@@ -31,7 +31,6 @@ import utils.placement_strategy.ForceDirectedPlacementStrategy
 import utils.placement_strategy.RandomPlacementStrategy
 import utils.placement_strategy.RepresentationStrategy
 import viewmodels.graphs.GraphViewModel
-import windowSizeStart
 import java.io.File
 
 /**
@@ -187,8 +186,8 @@ class GraphPageViewModel(val settings: SettingsModel, val indexSelectedPage: Mut
 		val model = _graph.value ?: return
 		GlobalScope.launch {
 			representationStrategy.place(
-				windowSizeStart.first.toDouble(),
-				windowSizeStart.second.toDouble(),
+				settings.actualWindowSize.width.toDouble(),
+				settings.actualWindowSize.height.toDouble(),
 				model.vertices
 			)
 		}

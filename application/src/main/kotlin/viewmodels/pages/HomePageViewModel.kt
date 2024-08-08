@@ -107,7 +107,7 @@ class HomePageViewModel(
 		} else {
 			WeightedUnweightedGraph<VertexID>(graphName, isGraphDirected, isAutoAddVertex = true)
 		}
-		val graphViewModel = GraphViewModel(graph, vertexIDType, isUnweighted = !isGraphWeighted)
+		val graphViewModel = GraphViewModel(graph, vertexIDType, isUnweighted = !isGraphWeighted, settings)
 		graphPage.graphViewModel = graphViewModel
 		val saveResult = settings.saveGraph(graphPage, savingType, saveFolder)
 		if (saveResult != null) {

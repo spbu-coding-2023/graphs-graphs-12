@@ -1,5 +1,6 @@
 package models
 
+import androidx.compose.ui.unit.IntSize
 import databases.GraphJSONDatabase
 import databases.Neo4jRepository
 import databases.SQLiteRepository
@@ -14,6 +15,7 @@ import themes.JetSize
 import themes.JetStyle
 import utils.GraphSavingType
 import utils.PageType
+import utils.isLargeOnParamsThen
 import viewmodels.graphs.GraphViewModel
 import viewmodels.pages.GraphPageViewModel
 import java.io.File
@@ -29,14 +31,24 @@ private val logger = KotlinLogging.logger("SettingsModel")
  * @property isNeo4jConnected indicates whether a Neo4J database is connected
  * @property graphNameRegEx a regular expression used to validate graph names
  * @property applicationContextDirectory the directory of application context
+ * @property minimalWindowSize a minimal size of application window
+ * @property actualWindowSize [IntSize] value of actual window size
  */
 class SettingsModel {
-	private val jsonDB = GraphJSONDatabase()
-	private val neo4jDB = Neo4jRepository()
-	private val sqliteDB = SQLiteRepository()
+	private val jsonDB = GraphJSONDatabase(this)
+	private val neo4jDB = Neo4jRepository(this)
+	private val sqliteDB = SQLiteRepository(this)
 	var isNeo4jConnected = false
 	val graphNameRegEx = Regex("[a-zA-Z][a-zA-Z0-9_-]*")
 	val applicationContextDirectory = File(System.getProperty("user.home"), "graph-lab")
+	val minimalWindowSize = IntSize(1240, 720)
+	var actualWindowSize = minimalWindowSize
+		set(value) {
+			if (value.isLargeOnParamsThen(minimalWindowSize)) {
+				logger.info { "Resizing window to ${value.width}x${value.height}" }
+				field = value
+			}
+		}
 
 	init {
 		logger.info { "Initializing application settings" }

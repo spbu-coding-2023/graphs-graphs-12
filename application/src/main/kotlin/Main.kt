@@ -3,6 +3,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
@@ -22,11 +24,6 @@ import java.io.File
 import java.io.FileWriter
 
 private val logger = KotlinLogging.logger("EntryPoint")
-
-/**
- * A pair representing the initial size of the application window.
- */
-val windowSizeStart = Pair(1000f, 700f)
 
 /**
  * Application entry point.
@@ -54,10 +51,12 @@ fun main() {
 				exitApplication()
 			},
 			title = "YMOM",
-			state = rememberWindowState(position = WindowPosition(Alignment.Center)),
+			state = rememberWindowState(
+				position = WindowPosition(Alignment.Center),
+				size = DpSize(settings.actualWindowSize.width.dp, settings.minimalWindowSize.height.dp)
+			),
 		) {
-			window.minimumSize = Dimension(windowSizeStart.first.toInt(), windowSizeStart.second.toInt())
-
+			window.minimumSize = Dimension(settings.minimalWindowSize.width, settings.minimalWindowSize.height)
 			MaterialTheme { MainScreen(mainScreenViewModel, jetSettings) }
 		}
 	}
