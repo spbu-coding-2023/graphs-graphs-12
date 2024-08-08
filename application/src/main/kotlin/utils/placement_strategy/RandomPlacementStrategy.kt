@@ -20,6 +20,7 @@ class RandomPlacementStrategy : RepresentationStrategy {
 			logger.info { "There is nothing to place: vertices collection is empty" }
 			return
 		}
+		logger.info { "Place graph on field with size ${width}x$height" }
 		vertices.forEach { vertex ->
 			vertex.xPos = randomizer.nextDouble(
 				radiusVerticesStart.value.toDouble(),
