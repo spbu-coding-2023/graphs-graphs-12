@@ -13,12 +13,12 @@ import graphs_lab.algs.TarjanStrongConnectivityInspector
 import graphs_lab.algs.clustering.louvainClusteringMethod
 import graphs_lab.core.edges.WeightedEdge
 import graphs_lab.core.graphs.WeightedGraph
+import models.SettingsModel
 import models.VertexID
 import mu.KotlinLogging
 import themes.radiusVerticesStart
 import utils.VertexIDType
 import views.graphs.colorChangeFlag
-import windowSizeStart
 import kotlin.random.Random
 
 private val logger = KotlinLogging.logger("GraphViewModel")
@@ -32,11 +32,13 @@ private val logger = KotlinLogging.logger("GraphViewModel")
  * @property vertices the collection of vertices in the graph
  * @property edges the collection of edges in the graph
  * @property countEdges the number of edges in the graph
+ * @property settings application settings to depend on actual window size
  */
 class GraphViewModel(
 	val graph: WeightedGraph<VertexID>,
 	val vertexType: VertexIDType,
 	val isUnweighted: Boolean,
+	val settings: SettingsModel
 ) {
 	private val _vertices = mutableStateMapOf<VertexID, VertexViewModel>()
 	val vertices: Collection<VertexViewModel>
@@ -83,11 +85,11 @@ class GraphViewModel(
 				id,
 				Random.nextInt(
 					radiusVerticesStart.value.toInt(),
-					windowSizeStart.second.toInt() - radiusVerticesStart.value.toInt()
+					(settings.actualWindowSize.width - radiusVerticesStart.value).toInt()
 				).dp,
 				Random.nextInt(
 					radiusVerticesStart.value.toInt(),
-					windowSizeStart.second.toInt() - radiusVerticesStart.value.toInt()
+					(settings.actualWindowSize.height - radiusVerticesStart.value).toInt()
 				).dp
 			)
 		)
@@ -146,11 +148,11 @@ class GraphViewModel(
 				idSource,
 				Random.nextInt(
 					radiusVerticesStart.value.toInt(),
-					windowSizeStart.second.toInt() - radiusVerticesStart.value.toInt()
+					(settings.actualWindowSize.width - radiusVerticesStart.value).toInt()
 				).dp,
 				Random.nextInt(
 					radiusVerticesStart.value.toInt(),
-					windowSizeStart.second.toInt() - radiusVerticesStart.value.toInt()
+					(settings.actualWindowSize.height - radiusVerticesStart.value).toInt()
 				).dp,
 				degree = 1
 			)
@@ -160,11 +162,11 @@ class GraphViewModel(
 				idTarget,
 				Random.nextInt(
 					radiusVerticesStart.value.toInt(),
-					windowSizeStart.second.toInt() - radiusVerticesStart.value.toInt()
+					(settings.actualWindowSize.width - radiusVerticesStart.value).toInt()
 				).dp,
 				Random.nextInt(
 					radiusVerticesStart.value.toInt(),
-					windowSizeStart.second.toInt() - radiusVerticesStart.value.toInt()
+					(settings.actualWindowSize.height - radiusVerticesStart.value).toInt()
 				).dp,
 				degree = 1
 			)

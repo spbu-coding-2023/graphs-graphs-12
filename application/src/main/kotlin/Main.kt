@@ -1,8 +1,11 @@
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
@@ -15,6 +18,7 @@ import themes.JetCorners
 import themes.JetFontFamily
 import themes.JetSize
 import themes.JetStyle
+import utils.toIntSize
 import views.MainScreen
 import viewmodels.MainScreenViewModel
 import java.awt.Dimension
@@ -22,11 +26,6 @@ import java.io.File
 import java.io.FileWriter
 
 private val logger = KotlinLogging.logger("EntryPoint")
-
-/**
- * A pair representing the initial size of the application window.
- */
-val windowSizeStart = Pair(1000f, 700f)
 
 /**
  * Application entry point.
@@ -45,7 +44,10 @@ fun main() {
 
 		val settings: SettingsModel = SettingsModel.loadSettings(jetSettings)
 		val mainScreenViewModel = MainScreenViewModel(settings)
-
+		val windowState = rememberWindowState(
+			position = WindowPosition(Alignment.Center),
+			size = DpSize(settings.actualWindowSize.width.dp, settings.actualWindowSize.height.dp)
+		)
 		Window(
 			onCloseRequest = {
 				saveSettings(settings, jetSettings)
@@ -54,10 +56,12 @@ fun main() {
 				exitApplication()
 			},
 			title = "YMOM",
-			state = rememberWindowState(position = WindowPosition(Alignment.Center)),
+			state = windowState,
 		) {
-			window.minimumSize = Dimension(windowSizeStart.first.toInt(), windowSizeStart.second.toInt())
-
+			window.minimumSize = Dimension(settings.minimalWindowSize.width, settings.minimalWindowSize.height)
+			LaunchedEffect(windowState.size) {
+				settings.actualWindowSize = windowState.size.toIntSize()
+			}
 			MaterialTheme { MainScreen(mainScreenViewModel, jetSettings) }
 		}
 	}
@@ -88,11 +92,12 @@ private fun saveSettings(settings: SettingsModel, jetSettings: JetSettings) {
 	findOrCreateFile(file)
 
 	file.writeText(
-		"${jetSettings.currentStyle.value}\n" +
-			"${jetSettings.currentFontSize.value}\n" +
-			"${jetSettings.currentCornersStyle.value}\n" +
-			"${jetSettings.currentFontFamily.value}\n" +
-			"${jetSettings.isDarkMode.value}"
+	"${jetSettings.currentStyle.value}\n" +
+		"${jetSettings.currentFontSize.value}\n" +
+		"${jetSettings.currentCornersStyle.value}\n" +
+		"${jetSettings.currentFontFamily.value}\n" +
+		"${jetSettings.isDarkMode.value}\n" +
+		"${settings.actualWindowSize}"
 	)
 }
 

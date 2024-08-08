@@ -19,7 +19,7 @@ class CircularPlacementStrategy : RepresentationStrategy {
 			logger.info { "There is nothing to place: vertices collection is empty" }
 			return
 		}
-
+		logger.info { "Place graph on field with size ${width}x$height" }
 		val center = Pair(width / 2, height / 2)
 		val angle = 2 * Math.PI / vertices.size
 

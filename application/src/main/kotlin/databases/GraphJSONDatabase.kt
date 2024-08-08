@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import graphs_lab.core.graphs.WeightedGraph
+import models.SettingsModel
 import models.VertexID
 import models.WeightedUnweightedGraph
 import mu.KotlinLogging
@@ -22,8 +23,10 @@ private val logger = KotlinLogging.logger("GraphJSONDatabase")
 /**
  * Graph json database.
  * Its simple implementation of [FileDatabase] for [GraphViewModel] object to `load`/`save`.
+ *
+ * @property settings application settings to valid init loaded graphs
  */
-class GraphJSONDatabase : FileDatabase<GraphViewModel>(".json") {
+class GraphJSONDatabase(val settings: SettingsModel) : FileDatabase<GraphViewModel>(".json") {
 	override fun load(reader: BufferedReader): GraphViewModel {
 		val nameColumnParam = "graph-name"
 		val graphJSONObject = JSONObject(JSONTokener(reader))
@@ -43,7 +46,7 @@ class GraphJSONDatabase : FileDatabase<GraphViewModel>(".json") {
 			)
 		}
 		val vertexIDType = VertexIDType.valueOf(graphJSONObject.getString("vertex-id-type"))
-		val graphViewModel = GraphViewModel(graph, vertexIDType, isUnweightedGraph)
+		val graphViewModel = GraphViewModel(graph, vertexIDType, isUnweightedGraph, settings)
 		val vertices = graphJSONObject.getJSONArray("vertices")
 		vertices.forEach { vertexJSONObject ->
 			if (vertexJSONObject !is JSONObject) return@forEach

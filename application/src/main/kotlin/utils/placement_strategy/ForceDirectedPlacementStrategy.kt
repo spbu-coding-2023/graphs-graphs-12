@@ -102,7 +102,7 @@ class ForceDirectedPlacementStrategy(
 			logger.info { "invalid canvas dimensions, by coefficient: $kDegree" }
 			return
 		}
-
+		logger.info { "Place graph on field with size ${width}x$height" }
 		var speedGlobal: Double
 		var switchingGlobal = 0.0
 		var tractionGlobal = 0.0

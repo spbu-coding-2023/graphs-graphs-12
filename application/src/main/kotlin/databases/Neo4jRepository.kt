@@ -3,6 +3,7 @@ package databases
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import graphs_lab.core.graphs.WeightedGraph
+import models.SettingsModel
 import models.VertexID
 import models.WeightedUnweightedGraph
 import mu.KotlinLogging
@@ -19,8 +20,10 @@ private val logger = KotlinLogging.logger("Neo4jDatabase")
 
 /**
  * [Neo4jRepository] class is responsible for connecting, writing, reading, and clearing data in Neo4j database.
+ *
+ * @property settings application settings to valid init loaded graphs
  */
-class Neo4jRepository : Closeable {
+class Neo4jRepository(val settings: SettingsModel) : Closeable {
 	private lateinit var driver: Driver
 	private lateinit var session: Session
 
@@ -183,7 +186,7 @@ class Neo4jRepository : Closeable {
 				)
 			}
 
-			graphPageView.graphViewModel = GraphViewModel(graph, vertexType, isUnweighted)
+			graphPageView.graphViewModel = GraphViewModel(graph, vertexType, isUnweighted, settings)
 
 			graphPageView.graphViewModel!!.vertices.forEach {
 				val vertex = vertexMap[it.id] ?: return@forEach

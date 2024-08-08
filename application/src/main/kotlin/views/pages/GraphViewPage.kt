@@ -113,7 +113,13 @@ fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
 				.clip(JetTheme.shapes.cornerStyle)
 				.background(Color(175, 218, 252), JetTheme.shapes.cornerStyle)
 		) {
-			GraphView(graphViewModel, idVerticesInfo, Offset(maxWidth.value, maxHeight.value), changeCenter)
+			GraphView(
+				graphViewModel,
+				idVerticesInfo,
+				Offset(maxWidth.value, maxHeight.value),
+				changeCenter,
+				graphPageViewModel.settings
+			)
 			ButtonResetGraphDisplay(
 				graphViewModel,
 				changeCenter,
