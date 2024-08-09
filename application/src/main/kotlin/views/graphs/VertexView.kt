@@ -2,20 +2,18 @@ package views.graphs
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.IconButton
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.isShiftPressed
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import models.SettingsModel
@@ -62,38 +60,7 @@ fun VertexView(
 			color = vertexViewModel.color
 		)
 	}
-	IconButton(
-		onClick = {
-			if (idVerticesInfo.value == null) {
-				curVertexColor = vertexViewModel.color
-			}
-
-			if (isKeyboardPressed.value) {
-				if (idVerticesInfo.value != null) {
-					val vertexSource = idVerticesInfo.value!!
-					idVerticesInfo.value = null
-					graphViewModel.addEdge(vertexSource.id, vertexViewModel.id)
-					idVerticesInfo.value = vertexSource
-				}
-				isKeyboardPressed.value = !isKeyboardPressed.value
-			} else {
-				if (idVerticesInfo.value != vertexViewModel) {
-					if (idVerticesInfo.value != null && !colorChangeFlag.value) {
-						idVerticesInfo.value!!.color = curVertexColor
-					}
-					colorChangeFlag.value = false
-					idVerticesInfo.value = vertexViewModel
-					curVertexColor = vertexViewModel.color
-					idVerticesInfo.value!!.color = whiteCustom
-				} else {
-					if (!colorChangeFlag.value) {
-						idVerticesInfo.value!!.color = curVertexColor
-					}
-					colorChangeFlag.value = false
-					idVerticesInfo.value = null
-				}
-			}
-		},
+	BoxWithConstraints(
 		modifier = Modifier
 			.size(vertexViewModel.radius * zoomAnimated * 2, vertexViewModel.radius * zoomAnimated * 2)
 			.offset(
@@ -113,6 +80,39 @@ fun VertexView(
 					}
 				}
 			}
+			.pointerInput(vertexViewModel) {
+				detectTapGestures {
+					if (idVerticesInfo.value == null) {
+						curVertexColor = vertexViewModel.color
+					}
+
+					if (isKeyboardPressed.value) {
+						if (idVerticesInfo.value != null) {
+							val vertexSource = idVerticesInfo.value!!
+							idVerticesInfo.value = null
+							graphViewModel.addEdge(vertexSource.id, vertexViewModel.id)
+							idVerticesInfo.value = vertexSource
+						}
+						isKeyboardPressed.value = !isKeyboardPressed.value
+					} else {
+						if (idVerticesInfo.value != vertexViewModel) {
+							if (idVerticesInfo.value != null && !colorChangeFlag.value) {
+								idVerticesInfo.value!!.color = curVertexColor
+							}
+							colorChangeFlag.value = false
+							idVerticesInfo.value = vertexViewModel
+							curVertexColor = vertexViewModel.color
+							idVerticesInfo.value!!.color = whiteCustom
+						} else {
+							if (!colorChangeFlag.value) {
+								idVerticesInfo.value!!.color = curVertexColor
+							}
+							colorChangeFlag.value = false
+							idVerticesInfo.value = null
+						}
+					}
+				}
+			}
 			.onPreviewKeyEvent {
 				// isKeyboardPressed = it.key == Key.CtrlLeft || it.key == Key.CtrlRight || it.isCtrlPressed
 				isKeyboardPressed.value = it.isShiftPressed
@@ -120,7 +120,12 @@ fun VertexView(
 			},
 		content = {
 			if (vertexViewModel.visibility && (vertexViewModel.radius * zoomAnimated * 2).value > 22) {
-				Text(text = vertexViewModel.label, maxLines = 1)
+				Text(
+					text = vertexViewModel.label,
+					modifier = Modifier.align(Alignment.Center),
+					maxLines = 1,
+					fontSize = 10.sp
+				)
 			}
 		}
 	)

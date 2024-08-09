@@ -50,36 +50,40 @@ fun EdgeView(edgeViewModel: EdgeViewModel, center: Offset, zoomAnimated: Float, 
 
 			val vectorSEX = endX - startX
 			val vectorSEY = endY - startY
+			val distance = vectorSEX.toPx().pow(2) + vectorSEY.toPx().pow(2) -
+				radius.toPx().pow(2) - (edgeViewModel.source.radius * zoomAnimated).toPx().pow(2)
 
-			val lengthSE = sqrt(vectorSEX.toPx().pow(2) + vectorSEY.toPx().pow(2))
-			val normalizeSEX = vectorSEX / lengthSE
-			val normalizeSEY = vectorSEY / lengthSE
+			if (distance > lengthArrow.pow(2)) {
+				val lengthSE = sqrt(vectorSEX.toPx().pow(2) + vectorSEY.toPx().pow(2))
+				val normalizeSEX = vectorSEX / lengthSE
+				val normalizeSEY = vectorSEY / lengthSE
 
-			val vectorAX = endX - normalizeSEX * radius.toPx()
-			val vectorAY = endY - normalizeSEY * radius.toPx()
-			val deltaAX = endX - normalizeSEX * (radius.toPx() + lengthArrow * cos(angle).toFloat())
-			val deltaAY = endY - normalizeSEY * (radius.toPx() + lengthArrow * cos(angle).toFloat())
+				val vectorAX = endX - normalizeSEX * radius.toPx()
+				val vectorAY = endY - normalizeSEY * radius.toPx()
+				val deltaAX = endX - normalizeSEX * (radius.toPx() + lengthArrow * cos(angle).toFloat())
+				val deltaAY = endY - normalizeSEY * (radius.toPx() + lengthArrow * cos(angle).toFloat())
 
-			val normalizeOrtX = -normalizeSEY
-			val normalizeOrtY = normalizeSEX
+				val normalizeOrtX = -normalizeSEY
+				val normalizeOrtY = normalizeSEX
 
-			val vectorBX = deltaAX + normalizeOrtX * lengthArrow * sin(angle).toFloat()
-			val vectorBY = deltaAY + normalizeOrtY * lengthArrow * sin(angle).toFloat()
-			val vectorCX = deltaAX - normalizeOrtX * lengthArrow * sin(angle).toFloat()
-			val vectorCY = deltaAY - normalizeOrtY * lengthArrow * sin(angle).toFloat()
+				val vectorBX = deltaAX + normalizeOrtX * lengthArrow * sin(angle).toFloat()
+				val vectorBY = deltaAY + normalizeOrtY * lengthArrow * sin(angle).toFloat()
+				val vectorCX = deltaAX - normalizeOrtX * lengthArrow * sin(angle).toFloat()
+				val vectorCY = deltaAY - normalizeOrtY * lengthArrow * sin(angle).toFloat()
 
-			drawLine(
-				start = Offset(vectorAX.toPx(), vectorAY.toPx()),
-				end = Offset(vectorBX.toPx(), vectorBY.toPx()),
-				color = edgeViewModel.color,
-				strokeWidth = edgeViewModel.width
-			)
-			drawLine(
-				start = Offset(vectorAX.toPx(), vectorAY.toPx()),
-				end = Offset(vectorCX.toPx(), vectorCY.toPx()),
-				color = edgeViewModel.color,
-				strokeWidth = edgeViewModel.width
-			)
+				drawLine(
+					start = Offset(vectorAX.toPx(), vectorAY.toPx()),
+					end = Offset(vectorBX.toPx(), vectorBY.toPx()),
+					color = edgeViewModel.color,
+					strokeWidth = edgeViewModel.width
+				)
+				drawLine(
+					start = Offset(vectorAX.toPx(), vectorAY.toPx()),
+					end = Offset(vectorCX.toPx(), vectorCY.toPx()),
+					color = edgeViewModel.color,
+					strokeWidth = edgeViewModel.width
+				)
+			}
 		}
 	}
 	if (edgeViewModel.visibility) {
