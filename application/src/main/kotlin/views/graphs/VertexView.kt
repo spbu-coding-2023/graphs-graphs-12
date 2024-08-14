@@ -1,9 +1,11 @@
 package views.graphs
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -50,23 +52,15 @@ fun VertexView(
 	isKeyboardPressed: MutableState<Boolean>,
 	settings: SettingsModel
 ) {
-	Canvas(Modifier) {
-		drawCircle(
-			center = Offset(
-				(center.x.dp + (vertexViewModel.xPos - center.x.dp) * zoomAnimated).toPx(),
-				(center.y.dp + (vertexViewModel.yPos - center.y.dp) * zoomAnimated).toPx()
-			),
-			radius = vertexViewModel.radius.toPx() * zoomAnimated,
-			color = vertexViewModel.color
-		)
-	}
 	BoxWithConstraints(
 		modifier = Modifier
 			.size(vertexViewModel.radius * zoomAnimated * 2, vertexViewModel.radius * zoomAnimated * 2)
 			.offset(
-				center.x.dp + (vertexViewModel.xPos - center.x.dp) * zoomAnimated - vertexViewModel.radius * zoomAnimated,
-				center.y.dp + (vertexViewModel.yPos - center.y.dp) * zoomAnimated - vertexViewModel.radius * zoomAnimated
+				center.x.dp - (center.x.dp - vertexViewModel.xPos) * zoomAnimated - vertexViewModel.radius * zoomAnimated,
+				center.y.dp - (center.y.dp - vertexViewModel.yPos) * zoomAnimated - vertexViewModel.radius * zoomAnimated
 			)
+			.background(vertexViewModel.color, CircleShape)
+			.aspectRatio(1f)
 			.pointerInput(vertexViewModel) {
 				detectDragGestures { change, dragAmount ->
 					change.consume()
@@ -124,7 +118,7 @@ fun VertexView(
 					text = vertexViewModel.label,
 					modifier = Modifier.align(Alignment.Center),
 					maxLines = 1,
-					fontSize = 10.sp
+					fontSize = 10.sp * zoomAnimated
 				)
 			}
 		}
