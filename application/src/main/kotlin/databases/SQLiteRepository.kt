@@ -299,14 +299,13 @@ class SQLiteRepository(val settings: SettingsModel) {
 					it.degree = vertex.degree
 				}
 
-				logger.info { "Loaded $pathToDB graph." }
+				logger.info { "Load graph: ${graphViewModel?.graph}." }
 			} catch (exception: SQLException) {
 				logger.error(exception) { "Cannot load $realPath graph." }
 			} finally {
 				connection.close()
 			}
 		}
-		logger.info { "Load graph: ${graphViewModel?.graph}" }
 		return graphViewModel
 	}
 

@@ -6,7 +6,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.PointerMatcher
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -24,7 +23,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.input.pointer.pointerMoveFilter
 import kotlinx.coroutines.Dispatchers
 import models.SettingsModel
 import themes.JetTheme

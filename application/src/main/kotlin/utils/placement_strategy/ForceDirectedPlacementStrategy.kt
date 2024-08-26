@@ -5,7 +5,10 @@ import mu.KotlinLogging
 import themes.radiusVerticesStart
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
-import kotlin.math.*
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 private val logger = KotlinLogging.logger("ForceDirectedPlacementStrategy")
 
@@ -97,7 +100,7 @@ class ForceDirectedPlacementStrategy(
 			mutableListOf(0.0, 0.0)
 		}.toMutableMap()
 
-		repeat (countIteration) {
+		repeat(countIteration) {
 			val tableForce = viewModel.vertices.associateWith {
 				mutableListOf(0.0, 0.0)
 			}.toMutableMap()
@@ -141,7 +144,10 @@ class ForceDirectedPlacementStrategy(
 			}
 
 			viewModel.vertices.forEach { vertexViewModel ->
-				val forceCur = getNorm(checkAndGetFirst(tableForce[vertexViewModel]), checkAndGetSecond(tableForce[vertexViewModel]))
+				val forceCur = getNorm(
+					checkAndGetFirst(tableForce[vertexViewModel]),
+					checkAndGetSecond(tableForce[vertexViewModel])
+				)
 				val switchingCur = abs(forceCur - checkAndGetFirst(tableForceLastAndSwitching[vertexViewModel]))
 				val tractionCur = abs(forceCur + checkAndGetFirst(tableForceLastAndSwitching[vertexViewModel])) / 2
 

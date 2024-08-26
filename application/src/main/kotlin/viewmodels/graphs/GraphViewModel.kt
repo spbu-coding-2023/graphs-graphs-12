@@ -71,7 +71,7 @@ class GraphViewModel(
 				if (graph.isDirected) targetViewModel.degree++
 			}
 		}
-		logger.info { "Finish init graph: ${graph.label}" }
+		logger.info { "Finish init graph: ${graph.label}." }
 	}
 
 	/**
@@ -101,7 +101,7 @@ class GraphViewModel(
 	 * @param vertex the [VertexViewModel] representing the vertex to be added
 	 */
 	fun addVertex(vertex: VertexViewModel) {
-		logger.info { "Add vertex with id '${vertex.id}' to graph: ${graph.label}" }
+		logger.info { "Add vertex with id '${vertex.id}' to graph: ${graph.label}." }
 		graph.addVertex(vertex.id)
 		_vertices.putIfAbsent(vertex.id, vertex)
 	}
@@ -112,7 +112,7 @@ class GraphViewModel(
 	 * @param id the id of the vertex to be removed
 	 */
 	fun removeVertex(id: VertexID) {
-		logger.info { "Remove vertex with id '$id' from graph: ${graph.label}" }
+		logger.info { "Remove vertex with id '$id' from graph: ${graph.label}." }
 		_vertices.remove(id)
 		_edges.forEach {
 			if (it.key.idSource == id || it.key.idTarget == id) {
@@ -139,7 +139,7 @@ class GraphViewModel(
 	fun addEdge(idSource: VertexID, idTarget: VertexID, weight: Double = 1.0) {
 		logger.info {
 			val weightInfo = if (isUnweighted) "" else "with weight $weight"
-			"Add edge between vertices '$idSource' and '$idTarget' $weightInfo on graph: ${graph.label}"
+			"Add edge between vertices '$idSource' and '$idTarget' $weightInfo on graph: ${graph.label}."
 		}
 		graph.addEdge(idSource, idTarget, weight)
 		val sourceViewModel = _vertices.getOrPut(idSource) {
@@ -207,7 +207,7 @@ class GraphViewModel(
 		val sourceVertexViewModel = _vertices[idSource] ?: return
 		val targetVertexViewModel = _vertices[idTarget] ?: return
 
-		logger.info { "Remove edge between vertices '$idSource' and '$idTarget' on graph: ${graph.label}" }
+		logger.info { "Remove edge between vertices '$idSource' and '$idTarget' on graph: ${graph.label}." }
 		sourceVertexViewModel.degree--
 		if (!graph.isDirected) targetVertexViewModel.degree--
 		_edges.remove(WeightedEdge(idSource, idTarget, 1.0))
@@ -227,11 +227,11 @@ class GraphViewModel(
 	 */
 	fun parseDijkstraAlgorithm(idSource: VertexID, idTarget: VertexID) {
 		logger.info {
-			"Run Dijkstra algorithm  which start on '$idSource' and finish on '$idTarget' for graph: ${graph.label}"
+			"Run Dijkstra algorithm  which start on '$idSource' and finish on '$idTarget' for graph: ${graph.label}."
 		}
 		val resultAlgo = DijkstraAlgorithm(graph)
 		val path = resultAlgo.getPath(idSource, idTarget) ?: return
-		logger.info { "Dijkstra algorithm result: $path" }
+		logger.info { "Dijkstra algorithm result: $path." }
 
 		var idLast = idSource
 		path.forEach { id ->
@@ -256,11 +256,11 @@ class GraphViewModel(
 	 */
 	fun parseBellmanFordAlgorithm(idSource: VertexID, idTarget: VertexID) {
 		logger.info {
-			"Run Bellman-Ford algorithm  which start on '$idSource' and finish on '$idTarget' for graph: ${graph.label}"
+			"Run Bellman-Ford algorithm  which start on '$idSource' and finish on '$idTarget' for graph: ${graph.label}."
 		}
 		val resultAlgo = BellmanFordShortestPath(graph)
 		val path = resultAlgo.getPath(idSource, idTarget) ?: return
-		logger.info { "Bellman-Ford algorithm result: $path" }
+		logger.info { "Bellman-Ford algorithm result: $path." }
 
 		var idLast = idSource
 		path.forEach { id ->
@@ -282,11 +282,11 @@ class GraphViewModel(
 	 */
 	fun parseTarjanStrongConnectivityAlgorithm() {
 		logger.info {
-			"Run Tarjan strong connectivity algorithm for graph: ${graph.label}"
+			"Run Tarjan strong connectivity algorithm for graph: ${graph.label}."
 		}
 		val resultAlgo = TarjanStrongConnectivityInspector(graph)
 		val components = resultAlgo.stronglyConnectedComponents()
-		logger.info { "Tarjan strong connectivity algorithm result: $components" }
+		logger.info { "Tarjan strong connectivity algorithm result: $components." }
 
 		for (i in 0 until components.size) {
 			val color = Color(
@@ -318,11 +318,11 @@ class GraphViewModel(
 	 */
 	fun parseCyclesSearchAlgorithm(idVertex: VertexID) {
 		logger.info {
-			"Run cycles search algorithm for vertex $idVertex on graph: ${graph.label}"
+			"Run cycles search algorithm for vertex $idVertex on graph: ${graph.label}."
 		}
 		val resultAlgo = CyclesSearchAlgorithms(graph)
 		val cycles = resultAlgo.searchVertexCycles(idVertex)
-		logger.info { "Cycles search algorithm result: $cycles" }
+		logger.info { "Cycles search algorithm result: $cycles." }
 
 		cycles.forEach { cycle ->
 			val color = Color(
@@ -351,11 +351,11 @@ class GraphViewModel(
 	 */
 	fun parseKruskalAlgorithm() {
 		logger.info {
-			"Run Kruskal's MST algorithm for graph: ${graph.label}"
+			"Run Kruskal's MST algorithm for graph: ${graph.label}."
 		}
 		val resultAlgo = MSTAlgorithms(graph)
 		val mst = resultAlgo.kruskalAlgorithm()
-		logger.info { "Kruskal's MST algorithm result: $mst" }
+		logger.info { "Kruskal's MST algorithm result: $mst." }
 
 		mst.forEach {
 			val idSource = it.idSource
@@ -379,11 +379,11 @@ class GraphViewModel(
 	 */
 	fun parsePrimAlgorithm() {
 		logger.info {
-			"Run Prim's MST algorithm for graph: ${graph.label}"
+			"Run Prim's MST algorithm for graph: ${graph.label}."
 		}
 		val resultAlgo = MSTAlgorithms(graph)
 		val mst = resultAlgo.primAlgorithm()
-		logger.info { "Prim's of MST algorithm result: $mst" }
+		logger.info { "Prim's of MST algorithm result: $mst." }
 
 		mst.forEach {
 			val idSource = it.idSource
@@ -407,11 +407,11 @@ class GraphViewModel(
 	 */
 	fun parseTarjanBridgeFinding() {
 		logger.info {
-			"Run Tarjan's bridge finding algorithm for graph: ${graph.label}"
+			"Run Tarjan's bridge finding algorithm for graph: ${graph.label}."
 		}
 		val resultAlgo = TarjanBridgeFinding(graph)
 		val bridges = resultAlgo.getBridges()
-		logger.info { "Tarjan's bridge finding algorithm result: $bridges" }
+		logger.info { "Tarjan's bridge finding algorithm result: $bridges." }
 
 		bridges.forEach {
 			val idSource = it.idSource
@@ -436,11 +436,11 @@ class GraphViewModel(
 	 */
 	fun parseLeaderRank() {
 		logger.info {
-			"Run leader rank algorithm for graph: ${graph.label}"
+			"Run leader rank algorithm for graph: ${graph.label}."
 		}
 		val resultAlgo = LeaderRank(graph)
 		val scores = resultAlgo.getVerticesScores()
-		logger.info { "Leader rank algorithm result: $scores" }
+		logger.info { "Leader rank algorithm result: $scores." }
 
 		scores.forEach { (id, score) ->
 			val vertex = _vertices[id] ?: return@forEach
@@ -458,10 +458,10 @@ class GraphViewModel(
 	 */
 	fun parseLouvainClustering() {
 		logger.info {
-			"Run Louvain clustering algorithm for graph: ${graph.label}"
+			"Run Louvain clustering algorithm for graph: ${graph.label}."
 		}
 		val resultAlgo = louvainClusteringMethod(graph)
-		logger.info { "Louvain clustering algorithm result: $resultAlgo" }
+		logger.info { "Louvain clustering algorithm result: $resultAlgo." }
 
 		colorChangeFlag.value = true
 		resultAlgo.first.getPartition().forEach { cluster ->
