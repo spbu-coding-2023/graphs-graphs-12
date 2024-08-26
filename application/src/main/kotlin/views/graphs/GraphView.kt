@@ -48,12 +48,12 @@ fun GraphView(
 	changeCenter: MutableState<Boolean>,
 	settings: SettingsModel
 ) {
-	var zoom by remember { mutableFloatStateOf(0.80f) }
+	var zoom by remember { mutableFloatStateOf(0.8f) }
 	val zoomAnimated by animateFloatAsState(zoom, tween(200, 0, LinearOutSlowInEasing))
-	var center by remember { mutableStateOf(centerBox) }
+	var center by remember { mutableStateOf(centerBox.div(2f)) }
 	if (changeCenter.value) {
 		center = centerBox
-		zoom = 0.80f
+		zoom = 0.8f
 		changeCenter.value = false
 	}
 
@@ -65,7 +65,7 @@ fun GraphView(
 			.clip(JetTheme.shapes.cornerStyle)
 			.pointerInput(Unit) {
 				detectDragGestures(PointerMatcher.Primary) {
-					if (1 / zoom >= 1) {
+					if (zoom <= 1) {
 						center += it * (1 / zoom)
 					} else {
 						center -= it * (1 / zoom)
@@ -73,9 +73,9 @@ fun GraphView(
 				}
 			}
 			.onPointerEvent(PointerEventType.Scroll) {
-				if (it.changes.first().scrollDelta.y > 0) {
+				if (it.changes.first().scrollDelta.y > 0 && zoom > 0.2) {
 					zoom -= zoom / 100 // todo(10 for mouse)
-				} else {
+				} else if (zoom < 5) {
 					zoom += zoom / 100 // todo(10 for mouse)
 				}
 			}

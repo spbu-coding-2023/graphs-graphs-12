@@ -15,7 +15,7 @@ val colorVerticesStart = Color.Gray
 /**
  * Color for the start of edges.
  */
-val colorEdgesStart = Color.Black
+val colorEdgesStart = Color(0, 0, 0, 100)
 
 /**
  * Colors configuration for the base Light application theme.

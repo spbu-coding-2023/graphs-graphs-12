@@ -6,7 +6,7 @@ import themes.radiusVerticesStart
 import viewmodels.graphs.GraphViewModel
 import viewmodels.graphs.VertexViewModel
 import kotlin.math.abs
-import kotlin.math.log2
+import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -41,11 +41,9 @@ class ForceDirectedPlacementStrategy(
 			height,
 			null,
 			2000, // recommend 10000
-			5.0, // attraction: recommend 1
-			60.0, // repulsion: recommend 10
-			120.0, // repulsion overlapping: recommend 100
-			2.0, // gravity: recommend 5
-			1, // the weight effects: 0 / 1 / 2
+			60.0, // recommend 10
+			120.0, // recommend 100
+			2.0, // recommend 5
 			8.0, // recommend 0.1
 			30.0, // recommend 10
 			1.5, // recommend 1
@@ -62,19 +60,16 @@ class ForceDirectedPlacementStrategy(
 			height,
 			vertex,
 			3,
-			8.0, // 3
 			30.0,
 			60.0,
 			0.0,
-			1,
 			0.0005,
-			2.0,
+			0.6,
 			1.0,
 			0.999
 		)
 	}
 
-	// TODO(clearing param lists)
 	/**
 	 * Places the [viewModel] vertices but [vertex] on an imaginary canvas with the help of some coefficients.
 	 */
@@ -83,11 +78,9 @@ class ForceDirectedPlacementStrategy(
 		height: Double,
 		vertex: VertexViewModel?,
 		countIteration: Int,
-		kAttr: Double,
 		kRepul: Double,
 		kRepulOver: Double,
 		kGrav: Double,
-		kDegree: Int,
 		kSpeed: Double,
 		kSpeedMax: Double,
 		kTolerance: Double,
@@ -97,31 +90,24 @@ class ForceDirectedPlacementStrategy(
 			logger.info { "There is nothing to place: vertices collection is empty" }
 			return
 		}
-		if (width <= 0 || height <= 0) {
-			// TODO(Log about all koefs)
-			logger.info { "invalid canvas dimensions, by coefficient: $kDegree" }
-			return
-		}
 		logger.info { "Place graph on field with size ${width}x$height" }
+
 		var speedGlobal: Double
+		var speedGlobalLast: Double = Double.POSITIVE_INFINITY
 		var switchingGlobal = 0.0
 		var tractionGlobal = 0.0
 		val tableForceLastAndSwitching = viewModel.vertices.associateWith {
 			mutableListOf(0.0, 0.0)
 		}.toMutableMap()
 
-		var speedGlobalLast: Double = Double.POSITIVE_INFINITY
-
-		var countCur = 0
-		while (countCur++ < countIteration) {
+		repeat(countIteration) {
 			val tableForce = viewModel.vertices.associateWith {
 				mutableListOf(0.0, 0.0)
 			}.toMutableMap()
 
 			viewModel.vertices.forEach { vertexSourceViewModel ->
-				// val length = sqrt(vertexSourceViewModel.xPos.value.toDouble().pow(2) + vertexSourceViewModel.yPos.value.toDouble().pow(2))
-				// val forceGrav = kGrav * (vertexSourceViewModel.degree + 1) * length // strong gravity
-				val forceGrav = kGrav * (vertexSourceViewModel.degree + 1) // gravity
+				val length = getNorm(vertexSourceViewModel.xPos.value.toDouble(), vertexSourceViewModel.yPos.value.toDouble())
+				val forceGrav = kGrav * (vertexSourceViewModel.degree + 1) * length
 
 				tableForce[vertexSourceViewModel] = mutableListOf(forceGrav, forceGrav)
 
@@ -129,19 +115,18 @@ class ForceDirectedPlacementStrategy(
 					val difX = (vertexTargetViewModel.xPos - vertexSourceViewModel.xPos).value.toDouble()
 					val difY = (vertexTargetViewModel.yPos - vertexSourceViewModel.yPos).value.toDouble()
 
-					val distance = sqrt(difX.pow(2) + difY.pow(2))
-					val distanceOverlapping =
-						distance - vertexSourceViewModel.radius / radiusVerticesStart - vertexTargetViewModel.radius / radiusVerticesStart
-					var forceRepul = 0.0
-					if (distanceOverlapping > 0) {
-						forceRepul = kRepul * (vertexSourceViewModel.degree + 1) * (vertexTargetViewModel.degree + 1) / distanceOverlapping // prevent overlapping
-					} else if (distanceOverlapping < 0) {
-						forceRepul = kRepulOver * (vertexSourceViewModel.degree + 1) * (vertexTargetViewModel.degree + 1) // prevent overlapping
+					val distance = getNorm(difX, difY)
+					val distanceOverlapping = distance - vertexSourceViewModel.radius / radiusVerticesStart -
+						vertexTargetViewModel.radius / radiusVerticesStart - 3 * radiusVerticesStart.value // adapting the distance
+					val productDegrees = (vertexSourceViewModel.degree + 1) * (vertexTargetViewModel.degree + 1)
+					val forceRepul = when {
+						distanceOverlapping > 0 -> kRepul * productDegrees / distanceOverlapping
+						distanceOverlapping < 0 -> kRepulOver * productDegrees
+						else -> 0.0
 					}
-					// val forceRepul = kRepul * (vertexSourceViewModel.degree + 1) * (vertexTargetViewModel.degree + 1) / distance // classic
 
-					checkAndAddFirst(tableForce[vertexSourceViewModel], -forceRepul * difX)
-					checkAndAddSecond(tableForce[vertexSourceViewModel], -forceRepul * difY)
+					checkAndAddToFirst(tableForce[vertexSourceViewModel], -forceRepul * difX)
+					checkAndAddToSecond(tableForce[vertexSourceViewModel], -forceRepul * difY)
 				}
 			}
 
@@ -149,28 +134,20 @@ class ForceDirectedPlacementStrategy(
 				val difX = (edgeViewModel.target.xPos - edgeViewModel.source.xPos).value.toDouble()
 				val difY = (edgeViewModel.target.yPos - edgeViewModel.source.yPos).value.toDouble()
 
-				val distance = sqrt(difX.pow(2) + difY.pow(2))
-				// val distanceOverlapping = distance - edgeViewModel.source.radius / radiusVerticesStart - edgeViewModel.target.radius / radiusVerticesStart
+				val distance = getNorm(difX, difY)
+				val distanceOverlapping = distance - edgeViewModel.source.radius / radiusVerticesStart -
+					edgeViewModel.target.radius / radiusVerticesStart - 3 * radiusVerticesStart.value
+				val forceAttr = max(distanceOverlapping, 0.0)
 
-				val forceAttr = kAttr * (log2(1 + distance)) // linlog mode
-				// var forceAttr = 0.0
-				// if (distanceOverlapping > 0) {
-					// forceAttr = distanceOverlapping // prevent overlapping
-					// forceAttr = kAttr * (log2(1 + distanceOverlapping)) // unity linlog and prevent overlapping
-				// }
-				// val forceAttr = kAttr * edgeViewModel.edge.weight.pow(kDegree) * (distance / edgeViewModel.source.degree + 1) // dissuade hubs mode
-				// val forceAttr = kAttr * edgeViewModel.edge.weight.pow(kDegree) * (log2(1 + distance) / edgeViewModel.source.degree + 1) // unity linlog and dissuade hubs
-
-				checkAndAddFirst(tableForce[edgeViewModel.source], forceAttr * difX)
-				checkAndAddSecond(tableForce[edgeViewModel.source], forceAttr * difY)
+				checkAndAddToFirst(tableForce[edgeViewModel.source], forceAttr * difX)
+				checkAndAddToSecond(tableForce[edgeViewModel.source], forceAttr * difY)
 			}
 
 			viewModel.vertices.forEach { vertexViewModel ->
-				val forceCur = sqrt(
-					checkAndGetFirst(tableForce[vertexViewModel]).pow(2) +
-						checkAndGetSecond(tableForce[vertexViewModel]).pow(2)
+				val forceCur = getNorm(
+					checkAndGetFirst(tableForce[vertexViewModel]),
+					checkAndGetSecond(tableForce[vertexViewModel])
 				)
-
 				val switchingCur = abs(forceCur - checkAndGetFirst(tableForceLastAndSwitching[vertexViewModel]))
 				val tractionCur = abs(forceCur + checkAndGetFirst(tableForceLastAndSwitching[vertexViewModel])) / 2
 
@@ -200,6 +177,18 @@ class ForceDirectedPlacementStrategy(
 			speedGlobalLast = speedGlobal
 		}
 	}
+}
+
+/**
+ * Returns the Euclidean norm.
+ *
+ * @param [x] the x coordinate
+ * @param [y] the y coordinate
+ *
+ * @return the Euclidean norm
+ */
+fun getNorm(x: Double, y: Double): Double {
+	return sqrt(x.pow(2) + y.pow(2))
 }
 
 /**
@@ -234,7 +223,7 @@ fun checkAndGetSecond(list: MutableList<Double>?): Double {
  *
  * @throws ExceptionInInitializerError if the list is null
  */
-fun checkAndAddFirst(list: MutableList<Double>?, value: Double) {
+fun checkAndAddToFirst(list: MutableList<Double>?, value: Double) {
 	if (list == null) throw ExceptionInInitializerError(StandardErrorMessage)
 	list[0] += value
 }
@@ -247,7 +236,7 @@ fun checkAndAddFirst(list: MutableList<Double>?, value: Double) {
  *
  * @throws ExceptionInInitializerError if the list is null
  */
-fun checkAndAddSecond(list: MutableList<Double>?, value: Double) {
+fun checkAndAddToSecond(list: MutableList<Double>?, value: Double) {
 	if (list == null) throw ExceptionInInitializerError(StandardErrorMessage)
 	list[1] += value
 }
