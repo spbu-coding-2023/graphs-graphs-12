@@ -1,20 +1,19 @@
 package integrations
 
-import androidx.compose.material.Text
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.ComposeUiTest
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
 import models.JetSettings
 import models.SettingsModel
-import org.junit.Rule
 import org.junit.Test
 import viewmodels.MainScreenViewModel
 import views.MainScreen
 
-class TestGraphLoading {
+class TestApplicationInitialization {
 	@OptIn(ExperimentalTestApi::class)
 	@Test
-	fun testMainScreenView() = runJetSettingsComposeUiTest(
+	fun testSimplePageSwitching() = runJetSettingsComposeUiTest(
 		context = { jetSettings: JetSettings ->
 			val settings: SettingsModel = SettingsModel.loadSettings(jetSettings)
 			val mainScreenViewModel = MainScreenViewModel(settings)
