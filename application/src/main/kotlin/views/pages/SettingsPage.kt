@@ -40,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.Dp
 import models.JetSettings
 import mu.KotlinLogging
@@ -66,6 +67,7 @@ fun SettingsPage(jetSettings: JetSettings) {
 			.background(JetTheme.colors.primaryBackground)
 			.fillMaxSize()
 			.verticalScroll(rememberScrollState())
+			.testTag("settings-page")
 	) {
 		Row(
 			modifier = Modifier

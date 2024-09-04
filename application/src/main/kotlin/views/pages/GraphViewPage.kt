@@ -52,6 +52,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -112,6 +113,7 @@ fun GraphViewPage(graphPageViewModel: GraphPageViewModel) {
 				.padding(paddingCustom)
 				.clip(JetTheme.shapes.cornerStyle)
 				.background(Color(175, 218, 252), JetTheme.shapes.cornerStyle)
+				.testTag("graph-view-page")
 		) {
 			GraphView(
 				graphViewModel,

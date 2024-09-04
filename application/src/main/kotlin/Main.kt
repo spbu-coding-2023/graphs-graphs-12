@@ -62,7 +62,7 @@ fun main() {
 			LaunchedEffect(windowState.size) {
 				settings.actualWindowSize = windowState.size.toIntSize()
 			}
-			MaterialTheme { MainScreen(mainScreenViewModel, jetSettings) }
+			MainScreen(mainScreenViewModel, jetSettings)
 		}
 	}
 }
