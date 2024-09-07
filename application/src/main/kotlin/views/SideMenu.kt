@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import models.utils.TabItem
@@ -41,7 +42,9 @@ import viewmodels.SideMenuViewModel
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SideMenu(statePager: PagerState, indexSelectedPage: MutableState<Int>, viewModel: SideMenuViewModel) {
-	Column(Modifier.width(sizeBottom).fillMaxHeight()) {
+	Column(
+		modifier = Modifier.width(sizeBottom).fillMaxHeight().testTag("side-menu")
+	) {
 		viewModel.tabsItems.forEach { tabsColumn ->
 			if (tabsColumn == null) {
 				Spacer(Modifier.weight(1f))
@@ -101,7 +104,8 @@ fun SideMenuTabColumn(
 							contentDescription = item.title,
 							tint = JetTheme.colors.tintColor
 						)
-					}
+					},
+					modifier = Modifier.testTag("side-menu-item#${item.title}")
 				)
 				val dropDownMenuContext = item.dropDownMenuContext
 				if (dropDownMenuContext != null && indexSelectedPage.value == 1) {

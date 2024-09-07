@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import themes.JetTheme
 import themes.paddingCustom
@@ -43,7 +44,9 @@ fun HomePage(viewModel: HomePageViewModel) {
 		.clip(JetTheme.shapes.cornerStyle)
 		.background(JetTheme.colors.primaryBackground, JetTheme.shapes.cornerStyle)
 
-	Row {
+	Row(
+		modifier = Modifier.testTag("home-page")
+	) {
 		LazyListWidget(
 			modifier = modifierColumn.weight(1f),
 			listItems = viewModel.previouslyLoadedGraph,
